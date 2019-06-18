@@ -12,10 +12,10 @@ export abstract class AbstractFilter {
 
     public onFilter(value) {
         this.filter.value = value;
-        this.update.emit({ filter: this.filter, value: value });
+        this.update.emit({ filter: this.filter, value });
     }
 
-    protected onClose() {
+    public onClose() {
         this.filter.visible = false;
     }
 }

@@ -1,5 +1,5 @@
-import { Filter } from '@acpaas-ui/filter';
-import { OrderBy, TableColumnFormat } from '@acpaas-ui/table';
+import { Filter } from '@acpaas-ui/ngx-components/utils';
+import { OrderBy, TableColumnFormat } from '@acpaas-ui/ngx-components/table';
 import { Component } from '@angular/core';
 
 export interface SmartTableOptions {

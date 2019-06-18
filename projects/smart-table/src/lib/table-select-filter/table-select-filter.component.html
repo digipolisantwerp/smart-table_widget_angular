@@ -3,7 +3,7 @@
         <div class="a-input has-icon-right aui-select-filter">
             <label class="a-input__label" [for]="id">{{ filter.label }}:</label>
             <div class="a-input__wrapper a-input--filter">
-                <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value.value)">
+                <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value)">
                     <option value="null" disabled="disabled" [selected]="true" *ngIf="filter.placeholder && filter.placeholder.length">{{ filter.placeholder }}</option>
                     <option *ngFor="let option of filter.options;" [ngValue]="option">{{ option.label }}</option>
                 </select>
@@ -15,7 +15,7 @@
         <div class="a-input has-icon-right a-input--inline a-input--small aui-select-filter optional">
             <label class="a-input__label a-input__label--inline" [for]="id">{{ filter.label }}:</label>
             <div class="a-input__wrapper a-input__wrapper--inline a-input--filter">
-                <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value.value)">
+                <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value)">
                     <option value="null" disabled="disabled" [selected]="true" *ngIf="filter.placeholder && filter.placeholder.length">{{ filter.placeholder }}</option>
                     <option *ngFor="let option of filter.options;" [ngValue]="option">{{ option.label }}</option>
                 </select>

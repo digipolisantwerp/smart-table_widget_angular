@@ -39,11 +39,11 @@ export class TableFilterSelectorComponent {
             this.currentTarget = target;
         });
 
-        this.filterMoved.emit({ filter: filter, oldIndex: index, newIndex: target });
+        this.filterMoved.emit({ filter, oldIndex: index, newIndex: target });
     }
 
     public onFilterToggle(filter: SmartTableFilter) {
         filter.visible = !filter.visible;
-        this.filterToggled.emit({ filter: filter, visible: filter.visible });
+        this.filterToggled.emit({ filter, visible: filter.visible });
     }
 }

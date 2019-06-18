@@ -1,9 +1,7 @@
-import 'rxjs/add/operator/map';
-
-import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/table';
+import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/ngx-components/table';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { Headers } from '@angular/http';
+import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
@@ -29,10 +27,9 @@ import {
     templateUrl: './smart-table.component.html'
 })
 export class SmartTableComponent implements AfterViewInit {
-    @Input() dossierTypeIds: string[]; // DEPRECATED - use BaseFilters in SmartTableConfig
     @Input() rowDetailUrl: string;
     @Input() apiUrl: string;
-    @Input() httpHeaders: Headers;
+    @Input() httpHeaders: HttpHeaders;
     @Input() columnTypes: SmartTableColumnCustomType[] = [];
     @Input()
     set configuration(configuration: SmartTableConfig) {
@@ -57,24 +54,40 @@ export class SmartTableComponent implements AfterViewInit {
         return this._configuration;
     }
     protected _configuration: SmartTableConfig;
-    protected options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
 
-    protected genericFilter: SmartTableFilter;
-    protected visibleFilters: SmartTableFilter[] = [];
-    protected optionalFilters: SmartTableFilter[] = [];
-    protected baseFilters: SmartTableDataQueryFilter[] = [];
-    protected dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
+    /** @internal */
+    options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
 
+    /** @internal */
+    genericFilter: SmartTableFilter;
+    /** @internal */
+    visibleFilters: SmartTableFilter[] = [];
+    /** @internal */
+    optionalFilters: SmartTableFilter[] = [];
+
+    private baseFilters: SmartTableDataQueryFilter[] = [];
+    private dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
+
+    /** @internal */
     @ViewChild(TableComponent) tableComponent: TableComponent;
-    protected columns: TableColumn[] = [{ value: '', label: '' }];
+    columns: TableColumn[] = [{ value: '', label: '' }];
+
     public rows: Array<any> = [];
-    protected orderBy: OrderBy;
-    protected curPage = 1;
-    protected pageSize = 5;
-    protected totalResults = 0;
-    protected rowsLoading: boolean; // Used to trigger the AUI loading row when there's no data
-    protected pageChanging: boolean; // Used to trigger our custom overlay on top of old data
-    protected get hasRows(): boolean {
+
+    /** @internal */
+    orderBy: OrderBy;
+    /** @internal */
+    curPage = 1;
+    /** @internal */
+    pageSize = 5;
+    /** @internal */
+    totalResults = 0;
+    /** @internal */
+    rowsLoading: boolean; // Used to trigger the AUI loading row when there's no data
+    /** @internal */
+    pageChanging: boolean; // Used to trigger our custom overlay on top of old data
+    /** @internal */
+    get hasRows(): boolean {
         return !this.rowsLoading && this.totalResults > 0;
     }
 
@@ -88,11 +101,10 @@ export class SmartTableComponent implements AfterViewInit {
         if (!this.configuration) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
-                    this.configuration = data;
+                    this.configuration = data as SmartTableConfig;
                 },
                 err => {
-                    // TODO: hook into logging + alert service once we have one
-                    console.error('Error: could not get configuration data');
+                    console.error('Error: could not get configuration data', err);
                 }
             );
         }
@@ -197,8 +209,7 @@ export class SmartTableComponent implements AfterViewInit {
                     }
                 },
                 err => {
-                    // TODO: hook into logging + alert service once we have one
-                    console.error('Error: could not get table data');
+                    console.error('Error: could not get table data', err);
                 }
             );
     }
@@ -218,14 +229,6 @@ export class SmartTableComponent implements AfterViewInit {
         }
 
         this.dataQuery.filters = [...this.baseFilters];
-
-        // TO DEPRECATE - should use baseFilters instead
-        if (Array.isArray(this.dossierTypeIds) && this.dossierTypeIds.length) {
-            this.dataQuery.filters.push({
-                fields: ['DossierTypeId'],
-                value: this.dossierTypeIds
-            });
-        }
 
         this.dataQuery.filters = [
             ...this.dataQuery.filters,

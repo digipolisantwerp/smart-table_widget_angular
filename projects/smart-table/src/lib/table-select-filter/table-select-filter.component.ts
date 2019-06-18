@@ -1,4 +1,4 @@
-import { FilterComponent } from '@acpaas-ui/filter';
+import { FilterComponent } from '@acpaas-ui/ngx-components/utils';
 import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
 
