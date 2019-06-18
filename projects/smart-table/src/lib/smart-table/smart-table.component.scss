@@ -31,6 +31,11 @@
     display: flex;
     justify-content: space-between;
 
+    .item-counter {
+        flex: 1;
+        display: flex;
+    }
+
     .table-actions-separator {
         display: inline-block;
         line-height: 3rem;

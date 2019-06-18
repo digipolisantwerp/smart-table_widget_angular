@@ -85,6 +85,7 @@ export class SmartTableFilter extends Filter {
     label: string;
     placeholder?: string;
     visible: boolean;
+    disabled: boolean;
 }
 
 export interface UpdateFilterArgs {

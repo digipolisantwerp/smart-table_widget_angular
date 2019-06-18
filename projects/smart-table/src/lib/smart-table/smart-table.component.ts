@@ -2,7 +2,6 @@ import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/ngx-components/
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 
 import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
 import { SmartTableService } from './smart-table.service';
@@ -53,7 +52,7 @@ export class SmartTableComponent implements AfterViewInit {
     get configuration(): SmartTableConfig {
         return this._configuration;
     }
-    protected _configuration: SmartTableConfig;
+    private _configuration: SmartTableConfig;
 
     /** @internal */
     options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
@@ -91,7 +90,7 @@ export class SmartTableComponent implements AfterViewInit {
         return !this.rowsLoading && this.totalResults > 0;
     }
 
-    constructor(private dataService: SmartTableService, private router: Router, private datePipe: DatePipe) {
+    constructor(private dataService: SmartTableService, private datePipe: DatePipe) {
         this.pageSize = this.options.pageSize;
         this.rowsLoading = true;
         this.pageChanging = false;
@@ -269,7 +268,8 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public onClickRow(row) {
-        this.router.navigateByUrl(this.rowDetailUrl + '/' + row.id);
+        // TODO: do something sensible
+        console.log('row was clicked', row);
     }
 
     public onFilter(value: UpdateFilterArgs) {

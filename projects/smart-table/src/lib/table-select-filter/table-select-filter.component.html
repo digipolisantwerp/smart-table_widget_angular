@@ -1,7 +1,7 @@
 <ng-container *ngIf="filter && filter.options && filter.id">
     <ng-container *ngIf="!optional; else optional_filter">
         <div class="a-input has-icon-right aui-select-filter">
-            <label class="a-input__label" [for]="id">{{ filter.label }}:</label>
+            <label *ngIf="filter.label" class="a-input__label" [for]="id">{{ filter.label }}:</label>
             <div class="a-input__wrapper a-input--filter">
                 <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value)">
                     <option value="null" disabled="disabled" [selected]="true" *ngIf="filter.placeholder && filter.placeholder.length">{{ filter.placeholder }}</option>

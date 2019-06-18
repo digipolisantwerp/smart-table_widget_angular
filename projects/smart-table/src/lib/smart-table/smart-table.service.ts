@@ -15,8 +15,9 @@ export class SmartTableService {
     public getConfiguration(apiUrl: string, headers?: HttpHeaders) {
         if (headers) {
             return this.http.get(`${apiUrl}/config`, { headers });
+        } else {
+            return this.http.get(`${apiUrl}/config`);
         }
-        return this.http.get(`${apiUrl}/config`);
     }
 
     public getData(apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page: number, pageSize: number): Observable<any> {
@@ -24,8 +25,9 @@ export class SmartTableService {
             return this.http.post(apiUrl + `?page=${page}&pageSize=${pageSize}`,
                 JSON.stringify(dataQuery),
                 { headers });
+        } else {
+            return this.http.post(apiUrl + `?page=${page}&pageSize=${pageSize}`,
+                JSON.stringify(dataQuery));
         }
-        return this.http.post(apiUrl + `?page=${page}&pageSize=${pageSize}`,
-            JSON.stringify(dataQuery));
     }
 }
