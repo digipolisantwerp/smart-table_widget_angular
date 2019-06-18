@@ -1,0 +1,285 @@
+import 'rxjs/add/operator/map';
+
+import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/table';
+import { DatePipe } from '@angular/common';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { Headers } from '@angular/http';
+import { Router } from '@angular/router';
+
+import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
+import { SmartTableService } from './smart-table.service';
+import {
+    SmartTableColumnCustomType,
+    SmartTableColumnType,
+    SmartTableConfig,
+    SmartTableDataQuery,
+    SmartTableDataQueryFilter,
+    SmartTableFilter,
+    SmartTableFilterConfig,
+    SmartTableFilterDisplay,
+    SmartTableFilterOperator,
+    SmartTableFilterType,
+    SmartTableOptions,
+    UpdateFilterArgs,
+} from './smart-table.types';
+
+@Component({
+    selector: 'aui-smart-table',
+    styleUrls: ['./smart-table.component.scss'],
+    templateUrl: './smart-table.component.html'
+})
+export class SmartTableComponent implements AfterViewInit {
+    @Input() dossierTypeIds: string[]; // DEPRECATED - use BaseFilters in SmartTableConfig
+    @Input() rowDetailUrl: string;
+    @Input() apiUrl: string;
+    @Input() httpHeaders: Headers;
+    @Input() columnTypes: SmartTableColumnCustomType[] = [];
+    @Input()
+    set configuration(configuration: SmartTableConfig) {
+        this._configuration = configuration;
+        if (Array.isArray(configuration.columns) && configuration.columns.length) {
+            this.baseFilters = configuration.baseFilters || [];
+
+            if (configuration.options) {
+                this.options = configuration.options;
+                this.pageSize = configuration.options.pageSize;
+            }
+
+            this.initColumns();
+            this.initFilters();
+
+            if (this.columns.length) {
+                this.getTableData(1);
+            }
+        }
+    }
+    get configuration(): SmartTableConfig {
+        return this._configuration;
+    }
+    protected _configuration: SmartTableConfig;
+    protected options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
+
+    protected genericFilter: SmartTableFilter;
+    protected visibleFilters: SmartTableFilter[] = [];
+    protected optionalFilters: SmartTableFilter[] = [];
+    protected baseFilters: SmartTableDataQueryFilter[] = [];
+    protected dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
+
+    @ViewChild(TableComponent) tableComponent: TableComponent;
+    protected columns: TableColumn[] = [{ value: '', label: '' }];
+    public rows: Array<any> = [];
+    protected orderBy: OrderBy;
+    protected curPage = 1;
+    protected pageSize = 5;
+    protected totalResults = 0;
+    protected rowsLoading: boolean; // Used to trigger the AUI loading row when there's no data
+    protected pageChanging: boolean; // Used to trigger our custom overlay on top of old data
+    protected get hasRows(): boolean {
+        return !this.rowsLoading && this.totalResults > 0;
+    }
+
+    constructor(private dataService: SmartTableService, private router: Router, private datePipe: DatePipe) {
+        this.pageSize = this.options.pageSize;
+        this.rowsLoading = true;
+        this.pageChanging = false;
+    }
+
+    public ngAfterViewInit() {
+        if (!this.configuration) {
+            this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
+                data => {
+                    this.configuration = data;
+                },
+                err => {
+                    // TODO: hook into logging + alert service once we have one
+                    console.error('Error: could not get configuration data');
+                }
+            );
+        }
+    }
+
+    protected initColumns() {
+        this.columns = [];
+        this.configuration.columns.forEach(column => {
+            if (column.visible || column.visible == null) {
+                const _column: TableColumn = {
+                    value: column.key,
+                    label: column.label,
+                    disableSorting: !column.sortPath
+                };
+
+                if (Array.isArray(column.classList) && column.classList.length) {
+                    _column.classList = column.classList;
+                }
+
+                const columnType = this.columnTypes.find(ct => ct.name === column.type);
+                if (columnType) {
+                    _column.format = columnType.format;
+                    _column.component = columnType.component;
+                } else {
+                    switch (column.type) {
+                        case SmartTableColumnType.DateTime: {
+                            _column.format = value => this.datePipe.transform(value, 'dd/MM/yyyy - hh:mm');
+                            break;
+                        }
+                        case SmartTableColumnType.Date: {
+                            _column.format = value => this.datePipe.transform(value, 'dd/MM/yyyy');
+                            break;
+                        }
+                    }
+                }
+                this.columns.push(_column);
+            }
+        });
+        this.resetOrderBy();
+    }
+
+    protected initFilters() {
+        if (this.configuration && Array.isArray(this.configuration.filters) && this.configuration.filters.length) {
+            this.visibleFilters = this.setupFilter(this.configuration.filters, SmartTableFilterDisplay.Visible);
+            this.optionalFilters = this.setupFilter(this.configuration.filters, SmartTableFilterDisplay.Optional);
+            this.initGenericFilter();
+        }
+        this.syncDataQuery();
+    }
+
+    protected createFilter(filter: SmartTableFilterConfig): SmartTableFilter {
+        const _filter = new SmartTableFilter();
+        _filter.id = filter.id;
+        _filter.type = filter.type;
+        _filter.fields = [filter.field];
+        _filter.operator = filter.operator;
+        _filter.label = filter.label;
+        _filter.placeholder = filter.placeholder;
+        _filter.options = filter.options;
+        _filter.value = filter.value;
+        _filter.visible = true;
+        return _filter;
+    }
+
+    protected setupFilter(filters: SmartTableFilterConfig[], type: SmartTableFilterDisplay) {
+        return filters.filter(filter => filter.display === type).map(this.createFilter);
+    }
+
+    protected initGenericFilter() {
+        const _genericFilter = this.configuration.filters.find(
+            filter => filter.display === SmartTableFilterDisplay.Generic
+        );
+        if (_genericFilter) {
+            this.genericFilter = new SmartTableFilter();
+            this.genericFilter.id = 'generic';
+            this.genericFilter.type = SmartTableFilterType.Input;
+            this.genericFilter.fields = [..._genericFilter.fields];
+            this.genericFilter.operator = SmartTableFilterOperator.ILike;
+            this.genericFilter.label = _genericFilter.label || '';
+            this.genericFilter.placeholder = this.options.genericFilterPlaceholder;
+            this.genericFilter.visible = true;
+        }
+    }
+
+    protected getTableData(page: number, pageSize?: number) {
+        this.pageChanging = !this.rowsLoading;
+        this.dataService
+            .getData(this.apiUrl, this.httpHeaders, this.dataQuery, page, pageSize || this.pageSize)
+            .subscribe(
+                data => {
+                    this.rowsLoading = false;
+                    this.pageChanging = false;
+                    if (data._embedded) {
+                        this.rows = data._embedded.resourceList;
+                    }
+                    if (data._page) {
+                        this.curPage = data._page.number;
+                        if (pageSize) {
+                            this.pageSize = pageSize;
+                        }
+                        this.totalResults = data._page.totalElements;
+                    }
+                },
+                err => {
+                    // TODO: hook into logging + alert service once we have one
+                    console.error('Error: could not get table data');
+                }
+            );
+    }
+
+    protected resetOrderBy() {
+        if (this.options.defaultSortOrder) {
+            this.orderBy = this.options.defaultSortOrder;
+        }
+    }
+
+    protected syncDataQuery() {
+        if (this.orderBy) {
+            const sortColumn = this.configuration.columns.find(column => column.key === this.orderBy.key);
+            if (sortColumn) {
+                this.dataQuery.sort = { path: sortColumn.sortPath, ascending: this.orderBy.order === 'asc' };
+            }
+        }
+
+        this.dataQuery.filters = [...this.baseFilters];
+
+        // TO DEPRECATE - should use baseFilters instead
+        if (Array.isArray(this.dossierTypeIds) && this.dossierTypeIds.length) {
+            this.dataQuery.filters.push({
+                fields: ['DossierTypeId'],
+                value: this.dossierTypeIds
+            });
+        }
+
+        this.dataQuery.filters = [
+            ...this.dataQuery.filters,
+            ...this.createDataQueryFilters(this.visibleFilters),
+            ...this.createDataQueryFilters(this.optionalFilters)
+        ];
+
+        const createdFilter = this.createDataQueryFilter(this.genericFilter);
+        if (createdFilter) {
+            this.dataQuery.filters.push(createdFilter);
+        }
+    }
+
+    createDataQueryFilters(filters: SmartTableFilter[]) {
+        return filters.filter(filter => filter && filter.visible && filter.value).map(this.createDataQueryFilter);
+    }
+
+    createDataQueryFilter(filter: SmartTableFilter) {
+        if (filter && filter.visible && filter.value) {
+            return {
+                fields: filter.fields,
+                operator: filter.operator,
+                value: filter.operator === SmartTableFilterOperator.ILike ? `%${filter.value}%` : filter.value
+            };
+        }
+    }
+
+    public onPageChanged(page) {
+        if (!isNaN(page)) {
+            this.getTableData(parseInt(page, 10), this.pageSize);
+        }
+    }
+
+    public onPageSizeChanged(pageSize) {
+        if (!isNaN(pageSize)) {
+            this.getTableData(1, parseInt(pageSize, 10));
+        }
+    }
+
+    public onClickRow(row) {
+        this.router.navigateByUrl(this.rowDetailUrl + '/' + row.id);
+    }
+
+    public onFilter(value: UpdateFilterArgs) {
+        if (this.options.resetSortOrderOnFilter) {
+            this.resetOrderBy();
+        }
+        this.syncDataQuery();
+        this.getTableData(1);
+    }
+
+    public onOrderBy(orderBy: OrderBy) {
+        this.orderBy = orderBy;
+        this.syncDataQuery();
+        this.getTableData(this.curPage);
+    }
+}
