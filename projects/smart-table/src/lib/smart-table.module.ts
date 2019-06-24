@@ -26,7 +26,8 @@ import { components, services } from './index';
     ...services
   ],
   exports: [
-    SmartTableComponent
+    SmartTableComponent,
+    ...components
   ]
 })
 export class SmartTableModule { }

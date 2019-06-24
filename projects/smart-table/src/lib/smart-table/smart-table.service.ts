@@ -13,21 +13,19 @@ export class SmartTableService {
     }
 
     public getConfiguration(apiUrl: string, headers?: HttpHeaders) {
-        if (headers) {
-            return this.http.get(`${apiUrl}/config`, { headers });
-        } else {
-            return this.http.get(`${apiUrl}/config`);
+        if (!headers) {
+            headers = new HttpHeaders();
         }
+        return this.http.get(`${apiUrl}/config`, { headers });
     }
 
     public getData(apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page: number, pageSize: number): Observable<any> {
-        if (headers) {
-            return this.http.post(apiUrl + `?page=${page}&pageSize=${pageSize}`,
-                JSON.stringify(dataQuery),
-                { headers });
-        } else {
-            return this.http.post(apiUrl + `?page=${page}&pageSize=${pageSize}`,
-                JSON.stringify(dataQuery));
+        if (!headers) {
+            headers = new HttpHeaders();
         }
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(apiUrl + `?page=${page}&pageSize=${pageSize}`,
+            JSON.stringify(dataQuery),
+            { headers });
     }
 }

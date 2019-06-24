@@ -34,6 +34,8 @@ app.post('/api/movies', (req, res) => {
     });
   }
 
+  const filtered = response;
+
   // apply sorting
   const sortField = body.sort ? body.sort.path : null;
   const sortAsc = body.sort ? body.sort.ascending : true;
@@ -60,10 +62,10 @@ app.post('/api/movies', (req, res) => {
     },
     _page: {
       size: pageSize,
-      totalElements: movies.length,
-      totalPages: Math.floor(movies.length / pageSize),
-      number: page
-    }
+      totalElements: filtered.length,
+      totalPages: Math.floor(filtered.length / pageSize),
+      number: page,
+    },
   });
 });
 
