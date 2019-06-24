@@ -200,7 +200,7 @@ export class SmartTableComponent implements AfterViewInit {
                         this.rows = data._embedded.resourceList;
                     }
                     if (data._page) {
-                        this.curPage = data._page.number;
+                        this.curPage = parseInt(data._page.number, 10);
                         if (pageSize) {
                             this.pageSize = pageSize;
                         }
