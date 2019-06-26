@@ -93,6 +93,11 @@ app.get('/api/movies/config', (req, res) => {
       "key": "director_name",
       "type": "text",
       "sortPath": "director_name" 
+    },{
+      "label": "Rating",
+      "key": "imdb_score",
+      "type": "rating",
+      "sortPath": "imdb_score"
     }],
     filters: [{
       "id": "smartfilter",

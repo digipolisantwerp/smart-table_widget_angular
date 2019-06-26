@@ -3,16 +3,19 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { SmartTableModule } from 'projects/smart-table/src/public-api';
+import { AppRatingComponent } from './rating.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AppRatingComponent
   ],
   imports: [
     BrowserModule,
     SmartTableModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AppRatingComponent]
 })
 export class AppModule { }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppRatingComponent } from './rating.component';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'example';
+
+  moviesCustomColumns = [{
+    name: 'rating',
+    component: AppRatingComponent
+  }];
 
   onRowSelect(row) {
     console.log('selected row', row);

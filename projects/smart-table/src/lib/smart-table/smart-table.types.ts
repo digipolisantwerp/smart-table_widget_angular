@@ -55,7 +55,7 @@ export enum SmartTableColumnType {
 
 export interface SmartTableColumnCustomType {
     name: string;
-    format: TableColumnFormat;
+    format?: TableColumnFormat;
     component?: Component;
 }
 
