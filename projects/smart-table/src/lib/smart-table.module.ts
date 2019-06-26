@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TableModule } from '@acpaas-ui/ngx-components/table';
 import { PaginationModule, ItemCounterModule } from '@acpaas-ui/ngx-components/pagination';
 import { DatepickerModule } from '@acpaas-ui/ngx-components/forms';
+import { FlyoutModule } from '@acpaas-ui/ngx-components/flyout';
 import { components, services } from './index';
 
 @NgModule({
@@ -19,7 +20,8 @@ import { components, services } from './index';
     PaginationModule,
     ItemCounterModule,
     DatepickerModule,
-    HttpClientModule
+    HttpClientModule,
+    FlyoutModule
   ],
   providers: [
     DatePipe,

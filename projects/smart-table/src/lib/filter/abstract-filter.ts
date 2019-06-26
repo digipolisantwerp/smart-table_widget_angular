@@ -14,8 +14,4 @@ export abstract class AbstractFilter {
         this.filter.value = value;
         this.update.emit({ filter: this.filter, value });
     }
-
-    public onClose() {
-        this.filter.visible = false;
-    }
 }

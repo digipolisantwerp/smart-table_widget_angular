@@ -26,7 +26,6 @@ import {
     templateUrl: './smart-table.component.html'
 })
 export class SmartTableComponent implements AfterViewInit {
-    @Input() rowDetailUrl: string;
     @Input() apiUrl: string;
     @Input() httpHeaders: HttpHeaders;
     @Input() columnTypes: SmartTableColumnCustomType[] = [];
@@ -39,6 +38,7 @@ export class SmartTableComponent implements AfterViewInit {
             if (configuration.options) {
                 this.options = configuration.options;
                 this.pageSize = configuration.options.pageSize;
+                this.optionalFiltersVisible = configuration.options.optionalFiltersVisible;
             }
 
             this.initColumns();
@@ -63,6 +63,9 @@ export class SmartTableComponent implements AfterViewInit {
     visibleFilters: SmartTableFilter[] = [];
     /** @internal */
     optionalFilters: SmartTableFilter[] = [];
+
+    /** @internal Whether the optional filters are currently visible (if any exist) */
+    optionalFiltersVisible = false;
 
     private baseFilters: SmartTableDataQueryFilter[] = [];
     private dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
@@ -164,7 +167,6 @@ export class SmartTableComponent implements AfterViewInit {
         _filter.placeholder = filter.placeholder;
         _filter.options = filter.options;
         _filter.value = filter.value;
-        _filter.visible = true;
         return _filter;
     }
 
@@ -183,8 +185,7 @@ export class SmartTableComponent implements AfterViewInit {
             this.genericFilter.fields = [..._genericFilter.fields];
             this.genericFilter.operator = SmartTableFilterOperator.ILike;
             this.genericFilter.label = _genericFilter.label || '';
-            this.genericFilter.placeholder = this.options.genericFilterPlaceholder;
-            this.genericFilter.visible = true;
+            this.genericFilter.placeholder = _genericFilter.placeholder || '';
         }
     }
 
@@ -242,11 +243,11 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     createDataQueryFilters(filters: SmartTableFilter[]) {
-        return filters.filter(filter => filter && filter.visible && filter.value).map(this.createDataQueryFilter);
+        return filters.filter(filter => filter && filter.value).map(this.createDataQueryFilter);
     }
 
     createDataQueryFilter(filter: SmartTableFilter) {
-        if (filter && filter.visible && filter.value) {
+        if (filter && filter.value) {
             return {
                 fields: filter.fields,
                 operator: filter.operator,
@@ -284,5 +285,9 @@ export class SmartTableComponent implements AfterViewInit {
         this.orderBy = orderBy;
         this.syncDataQuery();
         this.getTableData(this.curPage);
+    }
+
+    public toggleOptionalFilters() {
+        this.optionalFiltersVisible = !this.optionalFiltersVisible;
     }
 }

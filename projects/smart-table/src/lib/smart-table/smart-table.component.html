@@ -15,21 +15,23 @@
         <div class="aui-smart-table-filter a-input" *ngIf="optionalFilters.length">
             <label class="a-input__label">&nbsp;</label>
             <div class="a-input__wrapper">
-                <aui-table-filter-selector [filters]="optionalFilters"></aui-table-filter-selector>
+                <button class="a-button-outline has-icon-left" (click)="toggleOptionalFilters()">
+                    <i class="fa fa-filter"></i> Meer filters
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="aui-smart-table-filters">
+    <div class="aui-smart-table-filters" *ngIf="optionalFiltersVisible">
         <ng-container *ngFor="let filter of optionalFilters" [ngSwitch]="filter.type">
             <ng-container *ngSwitchCase="'select'">
-                <aui-table-select-filter class="aui-smart-table-filter" *ngIf="filter.visible" [filter]="filter" [optional]="true" (update)="onFilter($event)"></aui-table-select-filter>
+                <aui-table-select-filter class="aui-smart-table-filter" [filter]="filter" [optional]="true" (update)="onFilter($event)"></aui-table-select-filter>
             </ng-container>
             <ng-container *ngSwitchCase="'input'">
-                <aui-table-input-filter class="aui-smart-table-filter" *ngIf="filter.visible" [filter]="filter" [optional]="true" (update)="onFilter($event)"></aui-table-input-filter>
+                <aui-table-input-filter class="aui-smart-table-filter" [filter]="filter" [optional]="true" (update)="onFilter($event)"></aui-table-input-filter>
             </ng-container>
             <ng-container *ngSwitchCase="'datepicker'">
-                <aui-table-datepicker-filter class="aui-smart-table-filter" *ngIf="filter.visible" [filter]="filter" [optional]="true" (update)="onFilter($event)"></aui-table-datepicker-filter>
+                <aui-table-datepicker-filter class="aui-smart-table-filter" [filter]="filter" [optional]="true" (update)="onFilter($event)"></aui-table-datepicker-filter>
             </ng-container>
         </ng-container>
     </div>

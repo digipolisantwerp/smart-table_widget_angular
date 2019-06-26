@@ -22,7 +22,9 @@ app.post('/api/movies', (req, res) => {
   // apply filtering
   if (body.filters && body.filters.length) {
     body.filters.forEach((filter) => {
-      const pattern = new RegExp(filter.value.replace(/%/g, '.*'), 'i');
+      const matchOn = (filter.value && filter.value.id) ? 
+        filter.value.id : filter.value.replace(/%/g, '.*')
+      const pattern = new RegExp(matchOn, 'i');
       response = response.filter((value) => {
         let include = false;
         filter.fields.forEach((field) => {
@@ -91,10 +93,31 @@ app.get('/api/movies/config', (req, res) => {
       "sortPath": "director_name" 
     }],
     filters: [{
-      "id": "generic",
+      "id": "smartfilter",
       "display": "generic",
       "type": "input",
+      "label": "Zoek een film",
+      "placeholder": "Zoek op titel, jaar, ...",
       "fields": ["movie_title", "director_name", "title_year"]
+    },{
+      "id": "title",
+      "display": "optional",
+      "type": "input",
+      "label": "Titel",
+      "field": "movie_title"
+    },{
+      "id": "director",
+      "display": "optional",
+      "type": "input",
+      "label": "Regisseur",
+      "field": "director_name"
+    },{
+      "id": "genre",
+      "display": "optional",
+      "type": "select",
+      "options": "Action|Animation|Adventure|Comedy|Family|Fantasy|Musical|Romance|Sci-Fi|Thriller".split('|').map((v) => ({ id: v, label: v })),
+      "label": "Genre",
+      "field": "genres"
     }],
     options: {
       defaultSortOrder: {
@@ -103,7 +126,6 @@ app.get('/api/movies/config', (req, res) => {
       },
       loadDataMessage: 'De films worden geladen...',
       noDataMessage: 'Er zijn geen films die voldoen aan de criteria',
-      genericFilterPlaceholder: 'Zoek op titel, jaar, ...',
       pageSize: 20,
       pageSizeOptions: [10, 20, 50],
       resetSortOrderOnFilter: true

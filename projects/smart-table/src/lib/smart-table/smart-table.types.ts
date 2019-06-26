@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 
 export interface SmartTableOptions {
     defaultSortOrder: OrderBy;
-    genericFilterPlaceholder: string;
+    optionalFiltersVisible?: boolean;
     loadDataMessage: string;
     noDataMessage: string;
     pageSize: number;
@@ -12,7 +12,6 @@ export interface SmartTableOptions {
     resetSortOrderOnFilter: boolean;
 }
 
-// NOTE: keep in sync with C#
 export enum SmartTableColumnType {
     Number = 'number',
     Text = 'text',
@@ -26,7 +25,6 @@ export interface SmartTableColumnCustomType {
     component?: Component;
 }
 
-// NOTE: keep in sync with C#
 export interface SmartTableConfig {
     baseFilters: SmartTableDataQueryFilter[];
     columns: SmartTableColumnConfig[];
@@ -34,7 +32,6 @@ export interface SmartTableConfig {
     options: SmartTableOptions;
 }
 
-// NOTE: keep in sync with C#
 export interface SmartTableColumnConfig {
     visible: boolean;
     label: string;
@@ -44,27 +41,23 @@ export interface SmartTableColumnConfig {
     sortPath: string;
 }
 
-// NOTE: keep in sync with C#
 export enum SmartTableFilterType {
     Select = 'select',
     Input = 'input',
     Datepicker = 'datepicker',
 }
 
-// NOTE: keep in sync with C#
 export enum SmartTableFilterDisplay {
     Generic = 'generic',
     Visible = 'visible',
     Optional = 'optional'
 }
 
-// NOTE: keep in sync with C#
 export enum SmartTableFilterOperator {
     Equal = '=',
     ILike = 'ILIKE'
 }
 
-// NOTE: keep in sync with C#
 export interface SmartTableFilterConfig {
     id: string;
     type: SmartTableFilterType;
@@ -84,7 +77,6 @@ export class SmartTableFilter extends Filter {
     operator?: SmartTableFilterOperator;
     label: string;
     placeholder?: string;
-    visible: boolean;
     disabled: boolean;
 }
 
@@ -93,20 +85,17 @@ export interface UpdateFilterArgs {
     value: string | any[];      // See ACPaaS Filter class
 }
 
-// NOTE: keep in sync with C#
 export interface SmartTableDataQuery {
     filters: SmartTableDataQueryFilter[];
     sort: SmartTableDataQuerySortOrder;
 }
 
-// NOTE: keep in sync with C#
 export interface SmartTableDataQueryFilter {
     fields: string[];
     operator?: SmartTableFilterOperator;
     value: any;
 }
 
-// NOTE: keep in sync with C#
 export interface SmartTableDataQuerySortOrder {
     path: string;
     ascending: boolean;
