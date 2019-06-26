@@ -2,14 +2,48 @@ import { Filter } from '@acpaas-ui/ngx-components/utils';
 import { OrderBy, TableColumnFormat } from '@acpaas-ui/ngx-components/table';
 import { Component } from '@angular/core';
 
+/**
+ * The smart table's configuration,
+ * as returned by the /config endpoint
+ */
+export interface SmartTableConfig {
+    baseFilters: SmartTableDataQueryFilter[];
+    columns: SmartTableColumnConfig[];
+    filters: SmartTableFilterConfig[];
+    options: SmartTableOptions;
+}
+
+/**
+ * Defaults are provided if these are not specified by the /config endpoint
+ * @see smart-table.defaults.ts
+ */
 export interface SmartTableOptions {
     defaultSortOrder: OrderBy;
-    optionalFiltersVisible?: boolean;
     loadDataMessage: string;
     noDataMessage: string;
     pageSize: number;
+    /** options for the pagesize dropdown */
     pageSizeOptions: number[];
     resetSortOrderOnFilter: boolean;
+    /**
+     * default format for date/time columns
+     * @see https://angular.io/api/common/DatePipe
+     */
+    columnDateTimeFormat: string;
+    /**
+     * default format for date columns
+     * @see https://angular.io/api/common/DatePipe
+     */
+    columnDateFormat: string;
+}
+
+export interface SmartTableColumnConfig {
+    visible: boolean;
+    label: string;
+    key: string;
+    type: SmartTableColumnType;
+    classList?: string[];
+    sortPath: string;
 }
 
 export enum SmartTableColumnType {
@@ -23,22 +57,6 @@ export interface SmartTableColumnCustomType {
     name: string;
     format: TableColumnFormat;
     component?: Component;
-}
-
-export interface SmartTableConfig {
-    baseFilters: SmartTableDataQueryFilter[];
-    columns: SmartTableColumnConfig[];
-    filters: SmartTableFilterConfig[];
-    options: SmartTableOptions;
-}
-
-export interface SmartTableColumnConfig {
-    visible: boolean;
-    label: string;
-    key: string;
-    type: SmartTableColumnType;
-    classList?: string[];
-    sortPath: string;
 }
 
 export enum SmartTableFilterType {

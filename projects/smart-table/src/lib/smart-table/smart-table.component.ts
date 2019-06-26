@@ -1,6 +1,6 @@
 import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/ngx-components/table';
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 
 import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
@@ -36,9 +36,8 @@ export class SmartTableComponent implements AfterViewInit {
             this.baseFilters = configuration.baseFilters || [];
 
             if (configuration.options) {
-                this.options = configuration.options;
-                this.pageSize = configuration.options.pageSize;
-                this.optionalFiltersVisible = configuration.options.optionalFiltersVisible;
+                this.options = Object.assign({}, SMARTTABLE_DEFAULT_OPTIONS, configuration.options);
+                this.pageSize = this.options.pageSize;
             }
 
             this.initColumns();
@@ -53,6 +52,9 @@ export class SmartTableComponent implements AfterViewInit {
         return this._configuration;
     }
     private _configuration: SmartTableConfig;
+
+    /** fires when the user selects a row */
+    @Output() rowselect = new EventEmitter<any>();
 
     /** @internal */
     options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
@@ -269,8 +271,7 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public onClickRow(row) {
-        // TODO: do something sensible
-        console.log('row was clicked', row);
+        this.rowselect.emit(row);
     }
 
     public onFilter(value: UpdateFilterArgs) {

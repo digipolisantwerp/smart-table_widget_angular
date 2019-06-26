@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'example';
+
+  onRowSelect(row) {
+    console.log('selected row', row);
+  }
 }

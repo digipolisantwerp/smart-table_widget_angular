@@ -71,6 +71,8 @@ app.post('/api/movies', (req, res) => {
   });
 });
 
+const GENRES = "Action|Animation|Adventure|Comedy|Drama|Family|Fantasy|Horror|Musical|Romance|Sci-Fi|Thriller";
+
 app.get('/api/movies/config', (req, res) => {
   // see src\lib\smart-table\smart-table.types.ts - SmartTableConfig
   res.send({
@@ -115,7 +117,7 @@ app.get('/api/movies/config', (req, res) => {
       "id": "genre",
       "display": "optional",
       "type": "select",
-      "options": "Action|Animation|Adventure|Comedy|Family|Fantasy|Musical|Romance|Sci-Fi|Thriller".split('|').map((v) => ({ id: v, label: v })),
+      "options": GENRES.split('|').map((v) => ({ id: v, label: v })),
       "label": "Genre",
       "field": "genres"
     }],
@@ -125,10 +127,7 @@ app.get('/api/movies/config', (req, res) => {
         order: 'asc'
       },
       loadDataMessage: 'De films worden geladen...',
-      noDataMessage: 'Er zijn geen films die voldoen aan de criteria',
-      pageSize: 20,
-      pageSizeOptions: [10, 20, 50],
-      resetSortOrderOnFilter: true
+      noDataMessage: 'Er zijn geen films die voldoen aan de criteria'
     }
   });
 });
