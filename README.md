@@ -39,7 +39,7 @@ import { SmartTableModule } from '@acpaas-ui-widgets/ngx-smart-table';
 ```html
 <aui-smart-table 
   apiUrl="/api/your-table-bff"
-  (rowselect)="onRowSelect($event)">
+  (rowClicked)="onRowClicked($event)">
 </aui-smart-table>
 ```
 
@@ -48,8 +48,8 @@ In the component code:
 ```ts
 class YourComponent {
 
-    onRowSelect(row) {
-      // when the user selects a row, you can act on that here
+    onRowClicked(row) {
+      // do something...
     }
 }
 ```
@@ -66,7 +66,7 @@ Check the example application for how these are used.
 
 ### Events
 
-- **rowselect**: triggers when the user clicks on a row
+- **rowClicked**: triggers when the user clicks on a row
 
 ### Protocol
 

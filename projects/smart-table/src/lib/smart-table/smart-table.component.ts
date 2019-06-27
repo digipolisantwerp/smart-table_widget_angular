@@ -54,7 +54,7 @@ export class SmartTableComponent implements AfterViewInit {
     private _configuration: SmartTableConfig;
 
     /** fires when the user selects a row */
-    @Output() rowselect = new EventEmitter<any>();
+    @Output() rowClicked = new EventEmitter<any>();
 
     /** @internal */
     options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
@@ -271,7 +271,7 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public onClickRow(row) {
-        this.rowselect.emit(row);
+        this.rowClicked.emit(row);
     }
 
     public onFilter(value: UpdateFilterArgs) {

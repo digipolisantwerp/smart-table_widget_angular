@@ -14,7 +14,7 @@ export class AppComponent {
     component: AppRatingComponent
   }];
 
-  onRowSelect(row) {
-    console.log('selected row', row);
+  onRowClicked(row) {
+    console.log('clicked row', row);
   }
 }
