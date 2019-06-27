@@ -4,7 +4,7 @@ First off, thanks for taking the time to contribute! :+1:
 
 ## I just have a question
 
-You can launch a quick question on the [#acpaas-ui slack channel](https://dgpls.slack.com/messages/C4M60PQJF).
+You can launch a quick question on the [#acpaas-ui slack channel](https://digantcafe.slack.com/messages/CDDLYJU65/). If you're not yet a member of the DigAnt Café slack community, you can easily [join here](https://digantcafe-slack.digipolis.be).
 
 For something that requires longer discussion it may be better to book an issue.
 
@@ -43,7 +43,7 @@ Commands:
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
-It is based on the instructions in https://blog.angularindepth.com/angular-workspace-no-application-for-you-4b451afcc2ba
+It is based on the instructions in [this article](https://blog.angularindepth.com/angular-workspace-no-application-for-you-4b451afcc2ba).
 
 Initial development was done by Vanessa De Middelaer. Angular 6+ compatibility and packaging was done by Joeri Sebrechts.
 
