@@ -37,7 +37,7 @@ import { SmartTableModule } from '@acpaas-ui-widgets/ngx-smart-table';
 ### In your template:
 
 ```html
-<aui-smart-table 
+<aui-smart-table
   apiUrl="/api/your-table-bff"
   (rowClicked)="onRowClicked($event)">
 </aui-smart-table>
