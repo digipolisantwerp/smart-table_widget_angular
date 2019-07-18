@@ -7,6 +7,6 @@ export const SMARTTABLE_DEFAULT_OPTIONS: SmartTableOptions = {
     pageSize: 10,
     pageSizeOptions: [10, 30, 50],
     resetSortOrderOnFilter: false,
-    columnDateTimeFormat: 'dd/MM/yyyy - hh:mm',
+    columnDateTimeFormat: 'dd/MM/yyyy - HH:mm',
     columnDateFormat: 'dd/MM/yyyy'
 };

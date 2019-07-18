@@ -135,11 +135,13 @@ export class SmartTableComponent implements AfterViewInit {
                 } else {
                     switch (column.type) {
                         case SmartTableColumnType.DateTime: {
-                            _column.format = value => this.datePipe.transform(value, 'dd/MM/yyyy - hh:mm');
+                            _column.format = value => this.datePipe.transform(value,
+                                this.options.columnDateTimeFormat || 'dd/MM/yyyy - hh:mm');
                             break;
                         }
                         case SmartTableColumnType.Date: {
-                            _column.format = value => this.datePipe.transform(value, 'dd/MM/yyyy');
+                            _column.format = value => this.datePipe.transform(value,
+                                this.options.columnDateFormat || 'dd/MM/yyyy');
                             break;
                         }
                     }
