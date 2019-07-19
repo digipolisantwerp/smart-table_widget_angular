@@ -1,0 +1,14 @@
+<ng-container *ngIf="filter && filter.id">
+    <ng-container *ngIf="!optional; else optional_filter">
+        <div class="a-input has-icon-right">
+            <label class="a-input__label" [for]="filter.id">{{ filter.label || '&nbsp;' }}</label>
+            <aui-datepicker id="filter-{{filter.id}}" name="filter-{{filter.id}}" autocomplete="off" placeholder="dd/mm/jjjj" [(ngModel)]="value" (ngModelChange)="onFilter(value)"></aui-datepicker>
+        </div>
+    </ng-container>
+    <ng-template #optional_filter>
+        <div class="a-input has-icon-right">
+            <label class="a-input__label" [for]="filter.id">{{ filter.label }}</label>
+            <aui-datepicker id="filter-{{filter.id}}" name="filter-{{filter.id}}" autocomplete="off" placeholder="dd/mm/jjjj" [(ngModel)]="value" (ngModelChange)="onFilter(value)"></aui-datepicker>
+        </div>
+    </ng-template>
+</ng-container>
