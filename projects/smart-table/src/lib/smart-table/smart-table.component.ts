@@ -293,4 +293,23 @@ export class SmartTableComponent implements AfterViewInit {
     public toggleOptionalFilters() {
         this.optionalFiltersVisible = !this.optionalFiltersVisible;
     }
+
+    public exportToExcel() {
+        this.pageChanging = true;
+        this.dataService.getData(this.apiUrl, this.httpHeaders, this.dataQuery)
+            .subscribe(data => {
+                const exportData = this.filterOutColumns(data._embedded.resourceList);
+                this.dataService.exportAsExcelFile(exportData, 'smart-table');
+                this.pageChanging = false;
+            });
+    }
+
+    private filterOutColumns(data): any {
+        const columnKeys = this.columns.map((col) => { return col.value });
+        return data.map(d => {
+            return Object.keys(d)
+                .filter(key => columnKeys.indexOf(key) >= 0)
+                .reduce((acc, key) => (acc[key] = d[key], acc), {})
+        });
+    }
 }
