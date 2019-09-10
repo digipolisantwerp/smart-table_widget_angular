@@ -1,4 +1,6 @@
 import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/ngx-components/table';
+import { LocalstorageService } from '@acpaas-ui/ngx-components/localstorage';
+import { FlyoutService } from '@acpaas-ui/ngx-components/flyout';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
@@ -19,6 +21,8 @@ import {
     SmartTableOptions,
     UpdateFilterArgs,
 } from './smart-table.types';
+
+const LOCAL_STORAGE_KEY = 'bleh';
 
 @Component({
     selector: 'aui-smart-table',
@@ -68,6 +72,8 @@ export class SmartTableComponent implements AfterViewInit {
 
     /** @internal Whether the optional filters are currently visible (if any exist) */
     optionalFiltersVisible = false;
+    /** @internal */
+    selectableColumns: TableColumn[] = [];
 
     private baseFilters: SmartTableDataQueryFilter[] = [];
     private dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
@@ -87,6 +93,8 @@ export class SmartTableComponent implements AfterViewInit {
     /** @internal */
     totalResults = 0;
     /** @internal */
+    columnsSelectorVisible = false;
+    /** @internal */
     rowsLoading: boolean; // Used to trigger the AUI loading row when there's no data
     /** @internal */
     pageChanging: boolean; // Used to trigger our custom overlay on top of old data
@@ -95,13 +103,14 @@ export class SmartTableComponent implements AfterViewInit {
         return !this.rowsLoading && this.totalResults > 0;
     }
 
-    constructor(private dataService: SmartTableService, private datePipe: DatePipe) {
+    constructor(private dataService: SmartTableService, private datePipe: DatePipe, private flyoutService: FlyoutService, private localstorageService: LocalstorageService) {
         this.pageSize = this.options.pageSize;
         this.rowsLoading = true;
         this.pageChanging = false;
     }
 
     public ngAfterViewInit() {
+        this.configuration = this.localstorageService.getItem(LOCAL_STORAGE_KEY);
         if (!this.configuration) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
@@ -116,14 +125,18 @@ export class SmartTableComponent implements AfterViewInit {
 
     protected initColumns() {
         this.columns = [];
+        this.selectableColumns = [];
         this.configuration.columns.forEach(column => {
-            if (column.visible || column.visible == null) {
-                const _column: TableColumn = {
-                    value: column.key,
-                    label: column.label,
-                    disableSorting: !column.sortPath
-                };
+            const _column: TableColumn = {
+                value: column.key,
+                label: column.label,
+                hidden: !(column.visible || column.visible == null),
+                disableSorting: !column.sortPath
+            };
 
+            this.selectableColumns.push(_column);
+
+            if (column.visible || column.visible == null) {
                 if (Array.isArray(column.classList) && column.classList.length) {
                     _column.classList = column.classList;
                 }
@@ -302,6 +315,22 @@ export class SmartTableComponent implements AfterViewInit {
                 this.dataService.exportAsExcelFile(exportData, 'smart-table');
                 this.pageChanging = false;
             });
+    }
+
+    public onColumnsSelected() {
+        const clonedConfiguration = Object.assign({}, this.configuration);
+        clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
+            col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
+            return col;
+        });
+        this.localstorageService.setItem(LOCAL_STORAGE_KEY, clonedConfiguration);
+        this.configuration = clonedConfiguration;
+        this.flyoutService.close();
+    }
+
+    public toggleSelectedColumn(value) {
+        const column = this.selectableColumns.find((col) => col.value === value);
+        column.hidden = !column.hidden;
     }
 
     private filterOutColumns(data): any {

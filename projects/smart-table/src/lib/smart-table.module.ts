@@ -7,6 +7,8 @@ import { TableModule } from '@acpaas-ui/ngx-components/table';
 import { PaginationModule, ItemCounterModule } from '@acpaas-ui/ngx-components/pagination';
 import { DatepickerModule } from '@acpaas-ui/ngx-components/forms';
 import { FlyoutModule } from '@acpaas-ui/ngx-components/flyout';
+import { SearchFilterModule } from '@acpaas-ui/ngx-components/forms';
+import { LocalstorageModule } from '@acpaas-ui/ngx-components/localstorage';
 import { components, services } from './index';
 
 @NgModule({
@@ -21,7 +23,11 @@ import { components, services } from './index';
     ItemCounterModule,
     DatepickerModule,
     HttpClientModule,
-    FlyoutModule
+    FlyoutModule,
+    SearchFilterModule,
+    LocalstorageModule.forRoot({
+      identifier: 'aui-ngx-smart-table',
+    }),
   ],
   providers: [
     DatePipe,

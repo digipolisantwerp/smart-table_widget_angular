@@ -28,6 +28,35 @@
                 </button>
             </div>
         </div>
+        <div class="aui-smart-table-filter a-input">
+            <label class="a-input__label">&nbsp;</label>
+            <div class="a-input__wrapper">
+                <div auiFlyout size="small" align="left">
+                    <button class="a-button-outline has-icon" auiFlyoutAction><i class="fa fa-columns"></i></button>
+                    <div auiFlyoutZone class="has-padding u-text-center">
+                        <div class="u-margin-bottom">
+                                <ul class="a-list a-list--unstyled">
+                                        <li class="m-search-filter__results-item a-list__item" *ngFor="let column of selectableColumns; index as i">
+                                             <div class="a-input__checkbox">
+                                                <input
+                                                    type="checkbox"
+                                                    id="{{ 'checkbox--' + i + '--' + id }}"
+                                                    name="{{ 'checkbox--' + i + '--' + id }}"
+                                                    [checked]="!column.hidden"
+                                                    (change)="toggleSelectedColumn(column.value)"
+                                                >
+                                                <label for="{{ 'checkbox--' + i + '--' + id }}">{{ column.label }}</label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                        </div>
+                        <div>
+                            <button class="a-button" (click)="onColumnsSelected()">Toepassen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="aui-smart-table-filters" *ngIf="optionalFiltersVisible">
