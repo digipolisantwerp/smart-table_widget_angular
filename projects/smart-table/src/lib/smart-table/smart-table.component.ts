@@ -22,7 +22,7 @@ import {
     UpdateFilterArgs,
 } from './smart-table.types';
 
-const LOCAL_STORAGE_KEY = 'bleh';
+const LOCAL_STORAGE_KEY = 'bleh'; // TODO: Determin key!
 
 @Component({
     selector: 'aui-smart-table',
@@ -110,7 +110,10 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        this.configuration = this.localstorageService.getItem(LOCAL_STORAGE_KEY);
+        const localStorageConfiguration = this.localstorageService.getItem(LOCAL_STORAGE_KEY);
+        if (localStorageConfiguration) {
+            this.configuration = localStorageConfiguration;
+        }
         if (!this.configuration) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
