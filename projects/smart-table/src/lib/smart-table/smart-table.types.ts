@@ -11,6 +11,8 @@ export interface SmartTableConfig {
     columns: SmartTableColumnConfig[];
     filters: SmartTableFilterConfig[];
     options: SmartTableOptions;
+    storageIdentifier?: string
+    persistTableConfig?: boolean
 }
 
 /**

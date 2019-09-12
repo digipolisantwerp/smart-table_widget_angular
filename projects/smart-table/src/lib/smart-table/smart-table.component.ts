@@ -22,8 +22,6 @@ import {
     UpdateFilterArgs,
 } from './smart-table.types';
 
-const LOCAL_STORAGE_KEY = 'bleh'; // TODO: Determin key!
-
 @Component({
     selector: 'aui-smart-table',
     styleUrls: ['./smart-table.component.scss'],
@@ -103,14 +101,18 @@ export class SmartTableComponent implements AfterViewInit {
         return !this.rowsLoading && this.totalResults > 0;
     }
 
+    /** @internal */
+    LOCAL_STORAGE_KEY = '';
+
     constructor(private dataService: SmartTableService, private datePipe: DatePipe, private flyoutService: FlyoutService, private localstorageService: LocalstorageService) {
         this.pageSize = this.options.pageSize;
         this.rowsLoading = true;
         this.pageChanging = false;
+        this.LOCAL_STORAGE_KEY = this.getLocalStorageKey();
     }
 
     public ngAfterViewInit() {
-        const localStorageConfiguration = this.localstorageService.getItem(LOCAL_STORAGE_KEY);
+        const localStorageConfiguration = this.localstorageService.getItem(this.LOCAL_STORAGE_KEY);
         if (localStorageConfiguration) {
             this.configuration = localStorageConfiguration;
         }
@@ -124,6 +126,10 @@ export class SmartTableComponent implements AfterViewInit {
                 }
             );
         }
+    }
+
+    private getLocalStorageKey(): string {
+        return this.configuration.identifier;
     }
 
     protected initColumns() {
@@ -326,7 +332,12 @@ export class SmartTableComponent implements AfterViewInit {
             col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
             return col;
         });
-        this.localstorageService.setItem(LOCAL_STORAGE_KEY, clonedConfiguration);
+        if (this.configuration.persistTableConfig) {
+            if (!this.configuration.storageIdentifier) {
+                throw new Error("No 'storageIdentifier' was set to be able to persist table configuration. Please set an unique `storageIdentifier` in your BFF configuration.");
+            }
+            this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration);
+        }
         this.configuration = clonedConfiguration;
         this.flyoutService.close();
     }
