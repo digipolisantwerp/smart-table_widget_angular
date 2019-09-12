@@ -108,7 +108,6 @@ export class SmartTableComponent implements AfterViewInit {
         this.pageSize = this.options.pageSize;
         this.rowsLoading = true;
         this.pageChanging = false;
-        this.LOCAL_STORAGE_KEY = this.getLocalStorageKey();
     }
 
     public ngAfterViewInit() {
@@ -120,6 +119,7 @@ export class SmartTableComponent implements AfterViewInit {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
                     this.configuration = data as SmartTableConfig;
+                    this.LOCAL_STORAGE_KEY = this.getLocalStorageKey();
                 },
                 err => {
                     console.error('Error: could not get configuration data', err);
