@@ -11,8 +11,6 @@ export interface SmartTableConfig {
     columns: SmartTableColumnConfig[];
     filters: SmartTableFilterConfig[];
     options: SmartTableOptions;
-    storageIdentifier?: string
-    persistTableConfig?: boolean
 }
 
 /**
@@ -37,6 +35,8 @@ export interface SmartTableOptions {
      * @see https://angular.io/api/common/DatePipe
      */
     columnDateFormat: string;
+    storageIdentifier?: string
+    persistTableConfig?: boolean
 }
 
 export interface SmartTableColumnConfig {

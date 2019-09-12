@@ -129,7 +129,7 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     private getLocalStorageKey(): string {
-        return this.configuration.identifier;
+        return this.configuration.options.storageIdentifier;
     }
 
     protected initColumns() {
@@ -332,8 +332,8 @@ export class SmartTableComponent implements AfterViewInit {
             col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
             return col;
         });
-        if (this.configuration.persistTableConfig) {
-            if (!this.configuration.storageIdentifier) {
+        if (this.configuration.options.persistTableConfig) {
+            if (!this.getLocalStorageKey()) {
                 throw new Error("No 'storageIdentifier' was set to be able to persist table configuration. Please set an unique `storageIdentifier` in your BFF configuration.");
             }
             this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration);
