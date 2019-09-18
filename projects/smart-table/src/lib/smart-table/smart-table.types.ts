@@ -13,6 +13,12 @@ export interface SmartTableConfig {
     options: SmartTableOptions;
 }
 
+export interface SmartTableTranslationsConfig {
+    moreFilters: string;
+    export: string;
+    apply: string;
+}
+
 /**
  * Defaults are provided if these are not specified by the /config endpoint
  * @see smart-table.defaults.ts
@@ -35,8 +41,9 @@ export interface SmartTableOptions {
      * @see https://angular.io/api/common/DatePipe
      */
     columnDateFormat: string;
-    storageIdentifier?: string
-    persistTableConfig?: boolean
+    storageIdentifier?: string;
+    persistTableConfig?: boolean;
+    translations?: SmartTableTranslationsConfig
 }
 
 export interface SmartTableColumnConfig {

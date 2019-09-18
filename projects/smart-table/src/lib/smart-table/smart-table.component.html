@@ -16,7 +16,7 @@
             <label class="a-input__label">&nbsp;</label>
             <div class="a-input__wrapper">
                 <button class="a-button-outline has-icon-left" (click)="toggleOptionalFilters()">
-                    <i class="fa fa-filter"></i> Meer filters
+                    <i class="fa fa-filter"></i> {{ options.translations?.moreFilter || 'Meer filters'}}
                 </button>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <label class="a-input__label">&nbsp;</label>
             <div class="a-input__wrapper">
                 <button class="a-button-outline has-icon-left" (click)="exportToExcel()">
-                    <i class="fa fa-file-excel-o"></i> Export
+                    <i class="fa fa-file-excel-o"></i> {{ options.translations?.export || 'Export'}}
                 </button>
             </div>
         </div>
@@ -51,7 +51,7 @@
                                     </ul>
                         </div>
                         <div>
-                            <button class="a-button" (click)="onColumnsSelected()">Toepassen</button>
+                            <button class="a-button" (click)="onColumnsSelected()">{{ options.translations?.apply || 'Toepassen'}}</button>
                         </div>
                     </div>
                 </div>
