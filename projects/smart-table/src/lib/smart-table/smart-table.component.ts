@@ -101,9 +101,6 @@ export class SmartTableComponent implements AfterViewInit {
         return !this.rowsLoading && this.totalResults > 0;
     }
 
-    /** @internal */
-    LOCAL_STORAGE_KEY = '';
-
     constructor(private dataService: SmartTableService, private datePipe: DatePipe, private flyoutService: FlyoutService, private localstorageService: LocalstorageService) {
         this.pageSize = this.options.pageSize;
         this.rowsLoading = true;
@@ -111,15 +108,12 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        const localStorageConfiguration = this.localstorageService.getItem(this.LOCAL_STORAGE_KEY);
-        if (localStorageConfiguration) {
-            this.configuration = localStorageConfiguration;
-        }
         if (!this.configuration) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
                     this.configuration = data as SmartTableConfig;
-                    this.LOCAL_STORAGE_KEY = this.getLocalStorageKey();
+                    const localStorageColumnConfiguration = this.localstorageService.getItem(this.getLocalStorageKey());
+                    this.configuration.columns = Object.assign({}, this.configuration.columns, localStorageColumnConfiguration);
                 },
                 err => {
                     console.error('Error: could not get configuration data', err);
@@ -336,7 +330,7 @@ export class SmartTableComponent implements AfterViewInit {
             if (!this.getLocalStorageKey()) {
                 throw new Error("No 'storageIdentifier' was set to be able to persist table configuration. Please set an unique `storageIdentifier` in your BFF configuration.");
             }
-            this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration);
+            this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration.columns);
         }
         this.configuration = clonedConfiguration;
         this.flyoutService.close();
