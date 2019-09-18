@@ -10,6 +10,7 @@
         apiUrl="/api/movies" 
         class="col-xs-12" 
         [columnTypes]="moviesCustomColumns"
+        [configuration]="customConfiguration"
         (rowClicked)="onRowClicked($event)">
       </aui-smart-table>
     </div>
