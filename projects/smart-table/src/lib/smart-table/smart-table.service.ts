@@ -30,11 +30,21 @@ export class SmartTableService {
         }
         let queryParams = queryString.stringify({
             page,
-            pageSize,
-            allRows: !page && !pageSize
+            pageSize
         });
         headers = headers.set('Content-Type', 'application/json');
         return this.http.post(`${apiUrl}${queryParams ? `?${queryParams}` : ''}`,
+            JSON.stringify(dataQuery),
+            { headers });
+    }
+
+    public getAllData(apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery): Observable<any> {
+        if (!headers) {
+            headers = new HttpHeaders();
+        }
+
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(`${apiUrl}/search/all`,
             JSON.stringify(dataQuery),
             { headers });
     }

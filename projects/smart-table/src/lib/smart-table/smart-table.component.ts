@@ -318,7 +318,7 @@ export class SmartTableComponent implements AfterViewInit {
 
     public exportToExcel() {
         this.pageChanging = true;
-        this.dataService.getData(this.apiUrl, this.httpHeaders, this.dataQuery)
+        this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.dataQuery)
             .subscribe(data => {
                 const exportData = this.filterOutColumns(data._embedded.resourceList);
                 this.dataService.exportAsExcelFile(exportData, 'smart-table');
