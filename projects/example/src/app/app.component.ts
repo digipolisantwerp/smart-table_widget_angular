@@ -15,11 +15,15 @@ export class AppComponent {
     component: AppRatingComponent
   }];
 
-  customConfiguration ={
-    translations: {
-      moreFilters: 'More filters',
-      export: 'Download',
-      apply: 'Apply'
+  customConfiguration = {
+    options: {
+      persistTableConfig: true,
+      storageIdentifier: 'test-tc',
+      translations: {
+        moreFilters: 'More filters',
+        export: 'Download',
+        apply: 'Apply'
+      }
     }
   };
 

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { SmartTableComponent } from './smart-table/smart-table.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -8,7 +8,7 @@ import { PaginationModule, ItemCounterModule } from '@acpaas-ui/ngx-components/p
 import { DatepickerModule } from '@acpaas-ui/ngx-components/forms';
 import { FlyoutModule } from '@acpaas-ui/ngx-components/flyout';
 import { SearchFilterModule } from '@acpaas-ui/ngx-components/forms';
-import { LocalstorageModule } from '@acpaas-ui/ngx-components/localstorage';
+import { LocalstorageModule, LOCALSTORAGE_CONFIG, LocalstorageConfig, DEFAULT_LOCALSTORAGE_CONFIG } from '@acpaas-ui/ngx-components/localstorage';
 import { components, services } from './index';
 
 @NgModule({
@@ -25,9 +25,7 @@ import { components, services } from './index';
     HttpClientModule,
     FlyoutModule,
     SearchFilterModule,
-    LocalstorageModule.forRoot({
-      identifier: 'aui-ngx-smart-table',
-    }),
+    LocalstorageModule
   ],
   providers: [
     DatePipe,
@@ -38,4 +36,17 @@ import { components, services } from './index';
     ...components
   ]
 })
-export class SmartTableModule { }
+export class SmartTableModule {
+  static forRoot(
+    localstorageConfig: LocalstorageConfig = DEFAULT_LOCALSTORAGE_CONFIG
+  ): ModuleWithProviders {
+    return {
+      ngModule: LocalstorageModule,
+      providers: [
+        { provide: LOCALSTORAGE_CONFIG, useValue: localstorageConfig },
+        DatePipe,
+        ...services
+      ],
+    };
+  }
+}

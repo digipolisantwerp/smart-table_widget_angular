@@ -4,6 +4,8 @@ import { FlyoutService } from '@acpaas-ui/ngx-components/flyout';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
+import deepMerge from 'deepmerge';
+import unionBy from 'lodash.unionby';
 
 import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
 import { SmartTableService } from './smart-table.service';
@@ -38,7 +40,7 @@ export class SmartTableComponent implements AfterViewInit {
             this.baseFilters = configuration.baseFilters || [];
 
             if (configuration.options) {
-                this.options = Object.assign({}, SMARTTABLE_DEFAULT_OPTIONS, configuration.options);
+                this.options = deepMerge(SMARTTABLE_DEFAULT_OPTIONS, configuration.options);
                 this.pageSize = this.options.pageSize;
             }
 
@@ -108,12 +110,12 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        if (!this.configuration) {
+        if (!this.configuration || (this.configuration && !this.configuration.columns)) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
-                    this.configuration = data as SmartTableConfig;
                     const localStorageColumnConfiguration = this.localstorageService.getItem(this.getLocalStorageKey());
-                    this.configuration.columns = Object.assign({}, this.configuration.columns, localStorageColumnConfiguration);
+                    data.columns = deepMerge(data.columns, localStorageColumnConfiguration || [], { arrayMerge: this.columnsMerge });
+                    this.configuration = deepMerge(data, this.configuration) as SmartTableConfig;
                 },
                 err => {
                     console.error('Error: could not get configuration data', err);
@@ -124,6 +126,10 @@ export class SmartTableComponent implements AfterViewInit {
 
     private getLocalStorageKey(): string {
         return this.configuration.options.storageIdentifier;
+    }
+
+    private columnsMerge(sourceArray, destinationArray, options) {
+        return unionBy(destinationArray, sourceArray, 'key');
     }
 
     protected initColumns() {
@@ -137,7 +143,7 @@ export class SmartTableComponent implements AfterViewInit {
                 disableSorting: !column.sortPath
             };
 
-            this.selectableColumns.push(_column);
+            this.selectableColumns.push(Object.assign({}, _column));
 
             if (column.visible || column.visible == null) {
                 if (Array.isArray(column.classList) && column.classList.length) {
@@ -321,7 +327,7 @@ export class SmartTableComponent implements AfterViewInit {
     }
 
     public onColumnsSelected() {
-        const clonedConfiguration = Object.assign({}, this.configuration);
+        const clonedConfiguration = deepMerge({}, this.configuration);
         clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
             col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
             return col;

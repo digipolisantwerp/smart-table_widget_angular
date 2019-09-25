@@ -17,7 +17,7 @@ export class SmartTableService {
     constructor(private http: HttpClient) {
     }
 
-    public getConfiguration(apiUrl: string, headers?: HttpHeaders) {
+    public getConfiguration(apiUrl: string, headers?: HttpHeaders): Observable<any> {
         if (!headers) {
             headers = new HttpHeaders();
         }
