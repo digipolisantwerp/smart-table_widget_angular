@@ -41,7 +41,7 @@ export class SmartTableModule {
     localstorageConfig: LocalstorageConfig = DEFAULT_LOCALSTORAGE_CONFIG
   ): ModuleWithProviders {
     return {
-      ngModule: LocalstorageModule,
+      ngModule: SmartTableModule,
       providers: [
         { provide: LOCALSTORAGE_CONFIG, useValue: localstorageConfig },
         DatePipe,
