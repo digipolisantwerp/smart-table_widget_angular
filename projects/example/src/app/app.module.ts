@@ -12,10 +12,12 @@ import { AppRatingComponent } from './rating.component';
   ],
   imports: [
     BrowserModule,
-    SmartTableModule
+    SmartTableModule.forRoot({
+      identifier: "aui-smarttable-ngx"
+    })
   ],
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [AppRatingComponent]
-})
+}) 
 export class AppModule { }

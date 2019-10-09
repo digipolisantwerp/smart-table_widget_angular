@@ -61,6 +61,7 @@ Every value in the backing list must have a unique id.
 - **apiUrl**: the URL of the back-end service feeding this widget
 - **httpHeaders**: custom headers to provide to the server with every request
 - **columnTypes**: custom column types, with special formatting or their own renderer component
+- **configuration**: custom configuration that will be merged with the BFF configuration. This attributes overwrites BFF configuration.
 
 Check the example application for how these are used.
 
@@ -76,6 +77,8 @@ The back-end service implements the following protocol:
   - Fetch the rows, with the specified filtering and sorting.
 - GET `/path/to/endpoint/config`
   - Fetch the smart table configuration.
+- GET `/path/to/endpoint/search/all``
+  - Fetch all data for excel export.
 
 ## Run the example app
 
