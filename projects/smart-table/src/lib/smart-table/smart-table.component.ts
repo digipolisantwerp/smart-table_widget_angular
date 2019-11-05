@@ -103,7 +103,12 @@ export class SmartTableComponent implements AfterViewInit {
         return !this.rowsLoading && this.totalResults > 0;
     }
 
-    constructor(private dataService: SmartTableService, private datePipe: DatePipe, private flyoutService: FlyoutService, private localstorageService: LocalstorageService) {
+    constructor(
+        private dataService: SmartTableService,
+        private datePipe: DatePipe,
+        private flyoutService: FlyoutService,
+        private localstorageService: LocalstorageService
+    ) {
         this.pageSize = this.options.pageSize;
         this.rowsLoading = true;
         this.pageChanging = false;
@@ -113,8 +118,12 @@ export class SmartTableComponent implements AfterViewInit {
         if (!this.configuration || (this.configuration && !this.configuration.columns)) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
-                    const localStorageColumnConfiguration = this.localstorageService.getItem(this.getLocalStorageKey());
-                    data.columns = deepMerge(data.columns, localStorageColumnConfiguration || [], { arrayMerge: this.columnsMerge });
+                    let localStorageColumns = this.localstorageService.getItem(this.getLocalStorageKey()) || [];
+                    // remove unknown / removed columns
+                    localStorageColumns = localStorageColumns.filter((column) =>
+                        !!data.columns.find((c) => c.key === column.key)
+                    );
+                    data.columns = deepMerge(data.columns, localStorageColumns, { arrayMerge: this.columnsMerge });
                     this.configuration = deepMerge(data, this.configuration) as SmartTableConfig;
                 },
                 err => {

@@ -20,9 +20,9 @@ export class AppComponent {
       persistTableConfig: true,
       storageIdentifier: 'test-tc',
       translations: {
-        moreFilters: 'More filters',
-        export: 'Download',
-        apply: 'Apply'
+        moreFilters: 'Meer filters',
+        export: 'Export',
+        apply: 'Toepassen'
       }
     }
   };
