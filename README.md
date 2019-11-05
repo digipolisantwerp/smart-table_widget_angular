@@ -78,7 +78,7 @@ The back-end service implements the following protocol:
 - POST `/path/to/endpoint?page=1&pageSize=20`
   - Fetch the rows of a given page, with the specified filtering and sorting.
   - `page` starts from 1, `pageSize` is the number of rows per page.
-- POST `/path/to/endpoint/search/all`
+- POST `/path/to/endpoint/all`
   - Fetch all rows (with filtering and sorting) for excel export.
 - GET `/path/to/endpoint/config`
   - Fetch the smart table configuration.

@@ -33,7 +33,7 @@ app.post('/api/movies', (req, res) => {
   });
 });
 
-app.post('/api/movies/search/all', (req, res) => {
+app.post('/api/movies/all', (req, res) => {
   let response = getDataFromRequest(req);
 
   res.send({

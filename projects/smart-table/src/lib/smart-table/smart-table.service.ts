@@ -46,7 +46,7 @@ export class SmartTableService {
         }
 
         headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(`${apiUrl}/search/all`,
+        return this.http.post(`${apiUrl}/all`,
             JSON.stringify(dataQuery),
             { headers });
     }
