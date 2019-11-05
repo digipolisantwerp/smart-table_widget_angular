@@ -3,5 +3,12 @@
   "dest": "../../dist/smart-table",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "deepmerge",
+    "file-saver",
+    "lodash.unionby",
+    "query-string",
+    "xlsx"
+  ]
 }
