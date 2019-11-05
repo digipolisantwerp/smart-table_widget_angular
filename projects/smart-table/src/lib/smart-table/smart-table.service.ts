@@ -24,11 +24,13 @@ export class SmartTableService {
         return this.http.get(`${apiUrl}/config`, { headers });
     }
 
-    public getData(apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page?: number, pageSize?: number): Observable<any> {
+    public getData(
+        apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page?: number, pageSize?: number
+    ): Observable<any> {
         if (!headers) {
             headers = new HttpHeaders();
         }
-        let queryParams = queryString.stringify({
+        const queryParams = queryString.stringify({
             page,
             pageSize
         });
@@ -51,7 +53,7 @@ export class SmartTableService {
 
     public exportAsExcelFile(json: any[], excelFileName: string): void {
         const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const workbook: XLSX.WorkBook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, excelFileName);
     }

@@ -36,20 +36,20 @@
                     <div auiFlyoutZone class="has-padding u-text-center">
                         <div class="u-margin-bottom">
                             <ul class="a-list a-list--unstyled">
-                                    <li class="m-search-filter__results-item a-list__item" *ngFor="let column of selectableColumns; index as i">
-                                            <div class="a-input__checkbox">
-                                            <input
-                                                type="checkbox"
-                                                id="{{ 'checkbox--' + i + '--' + id }}"
-                                                name="{{ 'checkbox--' + i + '--' + id }}"
-                                                [checked]="!column.hidden"
-                                                (change)="toggleSelectedColumn(column.value)"
-                                            >
-                                            <label for="{{ 'checkbox--' + i + '--' + id }}">{{ column.label }}</label>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                <li class="m-search-filter__results-item a-list__item" *ngFor="let column of selectableColumns; index as i">
+                                        <div class="a-input__checkbox">
+                                        <input
+                                            type="checkbox"
+                                            id="{{ 'checkbox--' + i + '--' + column.id }}"
+                                            name="{{ 'checkbox--' + i + '--' + column.id }}"
+                                            [checked]="!column.hidden"
+                                            (change)="toggleSelectedColumn(column.value)"
+                                        >
+                                        <label for="{{ 'checkbox--' + i + '--' + column.id }}">{{ column.label }}</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                         <div>
                             <button class="a-button" (click)="onColumnsSelected()">{{ options.translations?.apply || 'Toepassen'}}</button>
                         </div>

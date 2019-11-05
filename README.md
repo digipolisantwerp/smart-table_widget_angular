@@ -6,6 +6,8 @@ This is the Angular 6+ UI for a Smart Widget implementing a table whose configur
 
 There is an example app, see below for instructions on running it.
 
+Check the latest changes in the [changelog](CHANGELOG.md).
+
 ## How to use
 
 ### Installing
@@ -73,12 +75,47 @@ Check the example application for how these are used.
 
 The back-end service implements the following protocol:
 
-- POST `/path/to/endpoint`
-  - Fetch the rows, with the specified filtering and sorting.
+- POST `/path/to/endpoint?page=1&pageSize=20`
+  - Fetch the rows of a given page, with the specified filtering and sorting.
+  - `page` starts from 1, `pageSize` is the number of rows per page.
+- POST `/path/to/endpoint/search/all`
+  - Fetch all rows (with filtering and sorting) for excel export.
 - GET `/path/to/endpoint/config`
   - Fetch the smart table configuration.
-- GET `/path/to/endpoint/search/all``
-  - Fetch all data for excel export.
+  - See `SmartTableConfig` in [projects/smart-table/src/lib/smart-table/smart-table.types.ts](projects/smart-table/src/lib/smart-table/smart-table.types.ts).
+
+The `POST` endpoints accept the following JSON body:
+
+```
+{ 
+  "filters": [{
+    "value": string or { id: string },
+    "fields": string[] (field id's)
+  }, ...],
+  "sort": {
+    "path": string (field id),
+    "ascending": boolean
+  }
+}
+```
+
+And they return the following response:
+
+```
+{
+  "_embedded": {
+    "resourceList": [{
+      "field_id": "value"
+    }]
+  },
+  "_page": {
+    "size": number (page size),
+    "totalElements": number,
+    "totalPages": number,
+    "number": number (page),
+  }
+}
+```
 
 ## Run the example app
 

@@ -12,18 +12,14 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
-
-## [1.1.0] - 2019-10-09
+## [1.1.0] - 2019-11-05
 
 ### Added
 - Excel export
-- Localstorage
-- Internationalization
-
+- Remember column visibility in localstorage
 
 ## [1.0.0] - 2019-07-19
 - Initial release.
-
 
 [Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.0...v1.1.0

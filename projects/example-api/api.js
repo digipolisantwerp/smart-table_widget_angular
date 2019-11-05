@@ -13,50 +13,12 @@ app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/api', (req, res) => res.send('Hello API World!'));
 
 app.post('/api/movies', (req, res) => {
-  const pageSize = req.query.pageSize || 20;
-  const page = (req.query.page || 1);
-  const body = req.body || {};
-
-  let response = movies;
-
-  // apply filtering
-  if (body.filters && body.filters.length) {
-    body.filters.forEach((filter) => {
-      const matchOn = (filter.value && filter.value.id) ? 
-        filter.value.id : filter.value.replace(/%/g, '.*')
-      const pattern = new RegExp(matchOn, 'i');
-      response = response.filter((value) => {
-        let include = false;
-        filter.fields.forEach((field) => {
-          const str = ('' + value[field]);
-          if (str.match(pattern)) include = true;
-        });
-        return include;
-      });
-    });
-  }
-
-  const filtered = response;
-
-  // apply sorting
-  const sortField = body.sort ? body.sort.path : null;
-  const sortAsc = body.sort ? body.sort.ascending : true;
-  if (sortField) {
-    response.sort((a, b) => {
-      const aval = a[sortField];
-      const bval = b[sortField];
-      let res = 0;
-      if (typeof aval === 'string') {
-        res = aval.localeCompare(bval)
-      } else {
-        res = (aval > bval) ? 1 : ((aval < bval) ? -1 : 0)
-      }
-      return sortAsc ? res : -res;
-    });
-  }
+  let allRows = getDataFromRequest(req);
 
   // apply pagination
-  response = response.slice((page - 1) * pageSize, page * pageSize);
+  const pageSize = req.query.pageSize || 20;
+  const page = (req.query.page || 1);
+  const response = allRows.slice((page - 1) * pageSize, page * pageSize);
 
   res.send({
     _embedded: {
@@ -64,10 +26,20 @@ app.post('/api/movies', (req, res) => {
     },
     _page: {
       size: pageSize,
-      totalElements: filtered.length,
-      totalPages: Math.floor(filtered.length / pageSize),
+      totalElements: allRows.length,
+      totalPages: Math.floor(allRows.length / pageSize),
       number: page,
     },
+  });
+});
+
+app.post('/api/movies/search/all', (req, res) => {
+  let response = getDataFromRequest(req);
+
+  res.send({
+    _embedded: {
+      resourceList: response
+    }
   });
 });
 
@@ -138,3 +110,46 @@ app.get('/api/movies/config', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+function getDataFromRequest(req) {
+  const body = req.body || {};
+
+  let response = movies;
+
+  // apply filtering
+  if (body.filters && body.filters.length) {
+    body.filters.forEach((filter) => {
+      const matchOn = (filter.value && filter.value.id) ? 
+        filter.value.id : 
+        filter.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/[%*]/g, '.*')
+      const pattern = new RegExp(matchOn, 'i');
+      response = response.filter((value) => {
+        let include = false;
+        filter.fields.forEach((field) => {
+          const str = ('' + value[field]);
+          if (str.match(pattern)) include = true;
+        });
+        return include;
+      });
+    });
+  }
+
+  // apply sorting
+  const sortField = body.sort ? body.sort.path : null;
+  const sortAsc = body.sort ? body.sort.ascending : true;
+  if (sortField) {
+    response.sort((a, b) => {
+      const aval = a[sortField];
+      const bval = b[sortField];
+      let res = 0;
+      if (typeof aval === 'string') {
+        res = aval.localeCompare(bval)
+      } else {
+        res = (aval > bval) ? 1 : ((aval < bval) ? -1 : 0)
+      }
+      return sortAsc ? res : -res;
+    });
+  }
+
+  return response;
+}
