@@ -13,14 +13,6 @@
     "prepublishOnly": "npm run build"
   },
   "private": true,
-  "peerDependencies": {
-    "@a-ui/core": "^4.0.0",
-    "@acpaas-ui/ngx-components": "^2.1.1",
-    "@angular/common": ">=6.1.0",
-    "@angular/compiler": ">=6.1.0",
-    "@angular/forms": ">=6.1.0",
-    "rxjs": ">=6.1.0"
-  },
   "dependencies": {
     "deepmerge": "^4.0.0",
     "file-saver": "^2.0.2",

@@ -1,12 +1,21 @@
 {
   "name": "@acpaas-ui-widgets/ngx-smart-table",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "homepage": "https://github.com/digipolisantwerp/smart-table_widget_angular#readme",
   "peerDependencies": {
-    "@angular/common": "^6.0.0",
-    "@angular/core": "^6.0.0",
-    "@acpaas-ui/ngx-components": "^1.0.3"
+    "@acpaas-ui/ngx-components": ">=1.0.3",
+    "@angular/common": ">=6.1.0",
+    "@angular/compiler": ">=6.1.0",
+    "@angular/forms": ">=6.1.0",
+    "rxjs": ">=6.1.0"
+  },
+  "dependencies": {
+    "deepmerge": "^4.0.0",
+    "file-saver": "^2.0.2",
+    "lodash.unionby": "^4.8.0",
+    "query-string": "^6.8.3",
+    "xlsx": "^0.15.1"
   },
   "publishConfig": {
     "access": "public"
