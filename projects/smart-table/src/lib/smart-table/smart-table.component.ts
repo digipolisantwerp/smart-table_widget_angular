@@ -118,7 +118,7 @@ export class SmartTableComponent implements AfterViewInit {
         if (!this.configuration || (this.configuration && !this.configuration.columns)) {
             this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
                 data => {
-                    let localStorageColumns = this.localstorageService.getItem(this.getLocalStorageKey()) || [];
+                    let localStorageColumns = this.localstorageService.getItem(this.getLocalStorageKey(data)) || [];
                     // remove unknown / removed columns
                     localStorageColumns = localStorageColumns.filter((column) =>
                         !!data.columns.find((c) => c.key === column.key)
@@ -133,8 +133,9 @@ export class SmartTableComponent implements AfterViewInit {
         }
     }
 
-    private getLocalStorageKey(): string {
-        return this.configuration.options.storageIdentifier;
+    private getLocalStorageKey(config?): string {
+        config = config || this.configuration;
+        return config && config.options && config.options.storageIdentifier;
     }
 
     private columnsMerge(sourceArray, destinationArray, options) {

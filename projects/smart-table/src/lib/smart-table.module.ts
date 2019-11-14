@@ -8,7 +8,8 @@ import { PaginationModule, ItemCounterModule } from '@acpaas-ui/ngx-components/p
 import { DatepickerModule } from '@acpaas-ui/ngx-components/forms';
 import { FlyoutModule } from '@acpaas-ui/ngx-components/flyout';
 import { SearchFilterModule } from '@acpaas-ui/ngx-components/forms';
-import { LocalstorageModule, LOCALSTORAGE_CONFIG, LocalstorageConfig, DEFAULT_LOCALSTORAGE_CONFIG } from '@acpaas-ui/ngx-components/localstorage';
+import { LocalstorageModule, LOCALSTORAGE_CONFIG,
+         LocalstorageConfig, DEFAULT_LOCALSTORAGE_CONFIG } from '@acpaas-ui/ngx-components/localstorage';
 import { components, services } from './index';
 
 @NgModule({
