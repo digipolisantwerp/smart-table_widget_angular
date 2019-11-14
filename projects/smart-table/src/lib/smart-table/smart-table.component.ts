@@ -124,7 +124,7 @@ export class SmartTableComponent implements AfterViewInit {
                         !!data.columns.find((c) => c.key === column.key)
                     );
                     data.columns = deepMerge(data.columns, localStorageColumns, { arrayMerge: this.columnsMerge });
-                    this.configuration = deepMerge(data, this.configuration) as SmartTableConfig;
+                    this.configuration = deepMerge(data, this.configuration || {}) as SmartTableConfig;
                 },
                 err => {
                     console.error('Error: could not get configuration data', err);

@@ -12,11 +12,12 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
-## [1.1.3] - 2019-11-14
+## [1.1.4] - 2019-11-14
 
 ### Fixed
 
-- this.configuration is undefined error when initializing
+- "this.configuration is undefined" error when initializing
+- "cannot convert undefined or null to object" error when initializing
 
 ## [1.1.2] - 2019-11-05
 
@@ -35,8 +36,8 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2019-07-19
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.3...HEAD
-[1.1.3]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.2...v1.1.3
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.4...HEAD
+[1.1.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.2...v1.1.4
 [1.1.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.0...v1.1.2
 [1.1.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v0.0.1...v1.0.0
