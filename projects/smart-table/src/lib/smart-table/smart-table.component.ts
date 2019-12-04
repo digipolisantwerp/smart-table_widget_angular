@@ -79,7 +79,7 @@ export class SmartTableComponent implements AfterViewInit {
     private dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
 
     /** @internal */
-    @ViewChild(TableComponent) tableComponent: TableComponent;
+    @ViewChild(TableComponent, { static: true }) tableComponent: TableComponent;
     columns: TableColumn[] = [{ value: '', label: '' }];
 
     public rows: Array<any> = [];
