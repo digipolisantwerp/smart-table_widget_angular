@@ -9,6 +9,17 @@
 .aui-smart-table-filter {
     padding-right: .75rem;
     padding-bottom: .5rem;
+
+    .a-button-export{
+      @include to($screen-sm) {
+      .a-export-label {
+        display: none;
+      }
+      width: $spacer-lg;
+      padding-left: 0;
+
+    }
+  }
 }
 
 .aui-smart-table-wrapper {
@@ -34,19 +45,28 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    overflow: auto;
 
     .item-counter {
         flex: 1;
         display: flex;
+        flex-direction: column;
+    }
+
+    .separator-area {
+      flex-grow: 1;
     }
 
     .table-actions-separator {
-        display: inline-block;
+        display: none;
         line-height: 3rem;
         margin: 0 .5rem;
-    }
+        @include at($screen-sm) {
+          display: inline-block;
+        }
 
-    .table-actions-separator::before {
-        content: "|";
+        &::before{
+          content: "|"
+        }
     }
 }
