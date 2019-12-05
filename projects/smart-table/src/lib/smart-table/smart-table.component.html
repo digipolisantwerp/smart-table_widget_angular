@@ -35,7 +35,7 @@
     <div class="aui-smart-table-filter a-input" *ngIf="totalResults > 0">
       <div class="a-input__wrapper">
         <div auiFlyout size="small" align="left">
-          <button class="a-button-outline has-icon" title="Open columnselector flyout" auiFlyoutAction><span
+          <button class="a-button-outline has-icon" [title]="options.translations?.openColumnSelector || 'Toon kolom kiezer'" auiFlyoutAction><span
               class="fa fa-columns"></span></button>
           <div auiFlyoutZone class="has-padding u-text-center">
             <div class="u-margin-bottom">

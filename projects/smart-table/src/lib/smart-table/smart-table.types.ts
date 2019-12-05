@@ -17,6 +17,7 @@ export interface SmartTableTranslationsConfig {
     moreFilters: string;
     export: string;
     apply: string;
+    openColumnSelector: string;
 }
 
 /**
