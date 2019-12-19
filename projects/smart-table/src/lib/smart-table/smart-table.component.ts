@@ -152,9 +152,9 @@ export class SmartTableComponent implements AfterViewInit {
                 hidden: !(column.visible || column.visible == null),
                 disableSorting: !column.sortPath
             };
-
-            this.selectableColumns.push(Object.assign({}, _column));
-
+            if(column.canHide !== false){
+                this.selectableColumns.push(Object.assign({}, _column));
+            }
             if (column.visible || column.visible == null) {
                 if (Array.isArray(column.classList) && column.classList.length) {
                     _column.classList = column.classList;
