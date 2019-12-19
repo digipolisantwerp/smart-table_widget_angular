@@ -149,6 +149,7 @@ export class SmartTableComponent implements AfterViewInit {
             const _column: TableColumn = {
                 value: column.key,
                 label: column.label,
+                canHide: column.canHide,
                 hidden: !(column.visible || column.visible == null),
                 disableSorting: !column.sortPath
             };
