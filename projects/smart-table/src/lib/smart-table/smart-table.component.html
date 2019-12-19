@@ -40,8 +40,8 @@
           <div auiFlyoutZone class="has-padding u-text-center">
             <div class="u-margin-bottom">
               <ul class="a-list a-list--unstyled">
-                <li class="m-search-filter__results-item a-list__item"
-                  *ngFor="let column of selectableColumns; index as i">
+                <div *ngFor="let column of selectableColumns; index as i">
+                <li class="m-search-filter__results-item a-list__item">
                   <div *ngIf="column.canHide !== false">
                   <div class="a-input__checkbox">
                     <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.id }}"
@@ -51,6 +51,7 @@
                   </div>
                 </div>
                 </li>
+              </div>
               </ul>
             </div>
             <div>
