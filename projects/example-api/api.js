@@ -55,7 +55,7 @@ app.get('/api/movies/config', (req, res) => {
       "key": "movie_title",
       "type": "text",
       "sortPath": "movie_title",
-      "canHide" : "false"
+      "canHide" : false
     },{
       "label": "Jaar",
       "key": "title_year",
