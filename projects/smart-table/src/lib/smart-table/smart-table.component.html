@@ -42,12 +42,14 @@
               <ul class="a-list a-list--unstyled">
                 <li class="m-search-filter__results-item a-list__item"
                   *ngFor="let column of selectableColumns; index as i">
+                  <div *ngIf="column.canHide !== false">
                   <div class="a-input__checkbox">
                     <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.id }}"
                       name="{{ 'checkbox--' + i + '--' + column.id }}" [checked]="!column.hidden"
                       (change)="toggleSelectedColumn(column.value)">
                     <label for="{{ 'checkbox--' + i + '--' + column.id }}">{{ column.label }}</label>
                   </div>
+                </div>
                 </li>
               </ul>
             </div>
