@@ -2,7 +2,7 @@
   <div class="aui-smart-table-filters">
     <aui-table-input-filter class="aui-smart-table-filter" *ngIf="genericFilter" [filter]="genericFilter"
       (update)="onFilter($event)"></aui-table-input-filter>
-    <ng-container *ngFor="let filter of visibleFilters" [ngSwitch]="filter.type">
+    <ng-container *ngFor="let filter of visibleFilters" [ngSwitch]="filter.type" class="u-margin-top">
       <ng-container *ngSwitchCase="'select'">
         <aui-table-select-filter class="aui-smart-table-filter" [filter]="filter" (update)="onFilter($event)">
         </aui-table-select-filter>
@@ -16,8 +16,6 @@
         </aui-table-datepicker-filter>
       </ng-container>
     </ng-container>
-  </div>
-  <div class="aui-smart-table-filters u-margin-top-xs">
     <div class="aui-smart-table-filter a-input" *ngIf="optionalFilters.length">
       <div class="a-input__wrapper">
         <button class="a-button-outline has-icon-left" (click)="toggleOptionalFilters()">
@@ -27,15 +25,16 @@
     </div>
     <div class="aui-smart-table-filter a-input" *ngIf="totalResults > 0">
       <div class="a-input__wrapper">
-        <button class="a-button-outline a-button-export has-icon-left" (click)="exportToExcel()">
-          <span class="fa fa-file-excel-o"></span> <span class="a-export-label">{{ options.translations?.export || 'Export'}}</span>
+        <button class="a-button-outline a-button-export has-icon-left" (click)="exportToExcel()" [attr.aria-label]="options.translations?.export || 'Export'">
+          <span class="fa fa-share"></span>
         </button>
       </div>
     </div>
     <div class="aui-smart-table-filter a-input" *ngIf="totalResults > 0">
       <div class="a-input__wrapper">
         <div auiFlyout size="small" align="left">
-          <button class="a-button-outline has-icon" [title]="options.translations?.openColumnSelector || 'Toon kolom kiezer'" auiFlyoutAction><span
+          <button class="a-button-outline has-icon"
+            [title]="options.translations?.openColumnSelector || 'Toon kolom kiezer'" auiFlyoutAction><span
               class="fa fa-columns"></span></button>
           <div auiFlyoutZone class="has-padding u-text-center">
             <div class="u-margin-bottom">
@@ -86,7 +85,8 @@
       (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
   </div>
   <div class="table-actions" *ngIf="hasRows">
-    <aui-item-counter class="u-margin-bottom-xs" [currentPage]="curPage" [totalAmount]="totalResults" [amountPerPage]="pageSize">
+    <aui-item-counter class="u-margin-bottom-xs" [currentPage]="curPage" [totalAmount]="totalResults"
+      [amountPerPage]="pageSize">
     </aui-item-counter>
     <div class="table-actions-separator"></div>
     <aui-items-per-page class="u-margin-bottom-xs" [selectOptions]="options.pageSizeOptions" [amountPerPage]="pageSize"
