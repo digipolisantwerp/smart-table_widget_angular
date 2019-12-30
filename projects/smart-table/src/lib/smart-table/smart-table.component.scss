@@ -4,6 +4,13 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+
+    // Since the first input of the first 'row' of filter contains a label, align all but the first inputs
+    &:first-child .aui-smart-table-filter:not(:first-child){
+      @include at($screen-xs){
+        margin-top: $spacer;
+      }
+    }
 }
 
 .aui-smart-table-filter {
@@ -11,15 +18,9 @@
     padding-bottom: .5rem;
 
     .a-button-export{
-      @include to($screen-sm) {
-      .a-export-label {
-        display: none;
-      }
-      width: $spacer-lg;
-      padding-left: 0;
-
+        width: $spacer-lg;
+        padding-left: 0;
     }
-  }
 }
 
 .aui-smart-table-wrapper {
