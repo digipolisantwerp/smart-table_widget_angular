@@ -7,7 +7,7 @@
 
     // Since the first input of the first 'row' of filter contains a label, align all but the first inputs
     &:first-child .aui-smart-table-filter:not(:first-child){
-      @include at($screen-sm){
+      @include at($screen-xs){
         margin-top: $spacer;
       }
     }
