@@ -152,9 +152,9 @@ export class SmartTableComponent implements AfterViewInit {
                 hidden: !(column.visible || column.visible == null),
                 disableSorting: !column.sortPath
             };
-
-            this.selectableColumns.push(Object.assign({}, _column));
-
+            if(column.canHide !== false){
+                this.selectableColumns.push(Object.assign({}, _column));
+            }
             if (column.visible || column.visible == null) {
                 if (Array.isArray(column.classList) && column.classList.length) {
                     _column.classList = column.classList;
@@ -338,8 +338,10 @@ export class SmartTableComponent implements AfterViewInit {
 
     public onColumnsSelected() {
         const clonedConfiguration = deepMerge({}, this.configuration);
-        clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
-            col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
+        clonedConfiguration.columns = clonedConfiguration.columns.map(col => {          
+            if(col.canHide === undefined){
+                col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
+            }
             return col;
         });
         if (this.configuration.options.persistTableConfig) {
