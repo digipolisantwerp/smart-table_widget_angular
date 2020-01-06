@@ -12,12 +12,20 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+## [1.2.0] - 2020-01-06
+
+### Added
+
+- Added the possibility to prevent columns from hiding
+
+
 ## [1.1.4] - 2019-11-14
 
 ### Fixed
 
 - "this.configuration is undefined" error when initializing
 - "cannot convert undefined or null to object" error when initializing
+
 
 ## [1.1.2] - 2019-11-05
 
@@ -27,16 +35,19 @@ All notable changes to this project will be documented in this file.
 - Don't show persisted columns that are not in the config
 - Fix broken path for `all` endpoint
 
+
 ## [1.1.0] - 2019-11-05
 
 ### Added
 - Excel export
 - Remember column visibility in localstorage
 
+
 ## [1.0.0] - 2019-07-19
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.4...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.4...v1.2.0
 [1.1.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.2...v1.1.4
 [1.1.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.0...v1.1.2
 [1.1.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.0.0...v1.1.0
