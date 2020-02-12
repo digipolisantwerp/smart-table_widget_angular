@@ -1,18 +1,11 @@
 <main class="u-wrapper">
   <div class="u-container u-margin-top-lg u-margin-bottom-lg" role="main">
-    <div class="row">
-      <div class="col-xs-12">
-        <h1 class="u-margin-top-xl">Smart Table Demo</h1>
-      </div>
-    </div>
-    <div class="row u-margin-top">
-      <aui-smart-table 
-        apiUrl="/api/movies" 
-        class="col-xs-12" 
-        [columnTypes]="moviesCustomColumns"
-        [configuration]="customConfiguration"
-        (rowClicked)="onRowClicked($event)">
-      </aui-smart-table>
-    </div>
+    <h1 class="u-margin-top-xl u-margin-bottom">Smart Table Demo</h1>
+    <aui-smart-table
+      apiUrl="/api/movies"
+      [columnTypes]="moviesCustomColumns"
+      [configuration]="customConfiguration"
+      (rowClicked)="onRowClicked($event)">
+    </aui-smart-table>
   </div>
 </main>

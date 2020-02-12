@@ -1,57 +1,67 @@
 @import '~@a-ui/core/dist/assets/styles/_quarks';
 
-.aui-smart-table-filters {
+$loading-overlay-color: rgba($white, .75);
+
+.aui-smart-table {
+  &__filters {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: -$spacer-xs; // Make up for separate filters
 
-    // Since the first input of the first 'row' of filter contains a label, align all but the first inputs
-    &:first-child .aui-smart-table-filter:not(:first-child){
-      @include at($screen-xs){
-        margin-top: $spacer;
-      }
+    &--visible {
+      flex-direction: row-reverse;
     }
-}
 
-.aui-smart-table-filter {
-    padding-right: .75rem;
-    padding-bottom: .5rem;
-
-    .a-button-export{
-        width: $spacer-lg;
-        padding-left: 0;
+    &--toggle {
+      margin-top: $spacer-xs;
     }
-}
 
-.aui-smart-table-wrapper {
-    display: block;
-    position: relative;
-}
+    &--left,
+    &--right {
+      align-items: flex-end;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
 
-.loading-overlay {
-    display: flex;
+    &--right {
+      justify-content: flex-end;
+    }
+  }
+
+  &__filter {
+    margin-bottom: $spacer-xs;
+  }
+
+  &__loading-overlay {
     align-items: center;
+    background-color: $loading-overlay-color;
+    display: flex;
+    height: 100%;
     justify-content: center;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(160, 160, 160, .3);
     z-index: layer('base');
-}
+  }
 
-.table-actions {
-    margin: 1.5rem 0;
+  &__wrapper {
+    display: block;
+    position: relative;
+  }
+
+  &__actions {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: space-between;
     overflow: auto;
 
     .item-counter {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
     }
 
     .separator-area {
@@ -59,15 +69,42 @@
     }
 
     .table-actions-separator {
-        display: none;
-        line-height: 3rem;
-        margin: 0 .5rem;
-        @include at($screen-sm) {
-          display: inline-block;
-        }
+      display: none;
+      line-height: 3rem;
+      margin: 0 .5rem;
 
-        &::before{
-          content: "|"
-        }
+      @include at($screen-sm) {
+        display: inline-block;
+      }
+
+      &:before {
+        content: "|"
+      }
     }
+  }
+}
+
+/**
+ * The next lines are going to be fixed in the Core Branding
+ * They should be removed later
+ */
+
+.a-input .a-input__checkbox {
+  text-align: left;
+
+  input {
+    width: auto;
+  }
+
+  label {
+    width: 100%;
+
+    &:after {
+      top: auto;
+    }
+  }
+}
+
+.m-flyout {
+  outline: none;
 }
