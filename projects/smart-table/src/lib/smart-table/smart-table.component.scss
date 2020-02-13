@@ -53,34 +53,48 @@ $loading-overlay-color: rgba($white, .75);
   }
 
   &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    overflow: auto;
+    align-items: center;
+    display:flex;
+    flex-direction: column;
 
-    .item-counter {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
+    @include at($screen-md) {
+      flex-direction: row;
+      justify-content: space-between;
     }
 
-    .separator-area {
-      flex-grow: 1;
-    }
-
-    .table-actions-separator {
-      display: none;
-      line-height: 3rem;
-      margin: 0 .5rem;
-
+    &--left {
       @include at($screen-sm) {
-        display: inline-block;
+        display: flex;
+        margin-bottom: $spacer-xs;
+      }
+      @include at($screen-md) {
+        margin-bottom: 0;
       }
 
-      &:before {
-        content: "|"
+      > * {
+        justify-content: center;
+        text-align: center;
+
+        @include at($screen-sm) {
+          &:not(:first-child):before { // Separate all child items
+            content: '|';
+            padding: 0 $spacer-xs;
+          }
+        }
       }
     }
+  }
+}
+
+.u-hide-on-mobile-devices {
+  @include to($screen-xs-max) {
+    display: none;
+  }
+}
+
+.u-show-on-mobile-devices {
+  @include at($screen-sm) {
+    display: none;
   }
 }
 

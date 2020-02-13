@@ -100,17 +100,42 @@
     </div>
 
     <div class="aui-smart-table__actions" *ngIf="hasRows">
-      <aui-item-counter class="u-margin-bottom-xs" [currentPage]="curPage" [totalAmount]="totalResults"
-        [amountPerPage]="pageSize">
-      </aui-item-counter>
-      <div class="table-actions-separator"></div>
-      <aui-items-per-page class="u-margin-bottom-xs" [selectOptions]="options.pageSizeOptions" [amountPerPage]="pageSize"
-        (returnAmount)="onPageSizeChanged($event)"></aui-items-per-page>
-      <div class="separator-area"></div>
+      <div class="aui-smart-table__actions--left">
+        <aui-items-per-page
+          class="aui-smart-table__items-per-page"
+          [selectOptions]="options.pageSizeOptions"
+          [amountPerPage]="pageSize"
+          (returnAmount)="onPageSizeChanged($event)">
+        </aui-items-per-page>
+        <aui-item-counter
+          *ngIf="totalResults > 0"
+          class="aui-smart-table__item-counter u-margin-top-xs u-margin-bottom-xs"
+          [currentPage]="curPage"
+          [totalAmount]="totalResults"
+          [amountPerPage]="pageSize">
+        </aui-item-counter>
+      </div>
 
-      <aui-pagination display="numbers" [itemsPerPage]="pageSize" [totalValues]="totalResults" [currentPage]="curPage"
-        (update)="onPageChanged($event)"></aui-pagination>
+      <div class="aui-smart-table__actions--right" *ngIf="totalResults > 0">
+        <aui-pagination
+          class="u-hide-on-mobile-devices"
+          display="numbers"
+          [itemsPerPage]="pageSize"
+          [totalValues]="totalResults"
+          [currentPage]="curPage"
+          (update)="onPageChanged($event)">
+        </aui-pagination>
+        <aui-pagination
+          class="u-show-on-mobile-devices"
+          display="text"
+          [itemsPerPage]="pageSize"
+          [totalValues]="totalResults"
+          [currentPage]="curPage"
+          (update)="onPageChanged($event)">
+        </aui-pagination>
+      </div>
     </div>
+
     <div class="aui-smart-table__loading-overlay" *ngIf="pageChanging">
       <div class="a-spinner a-spinner--lg u-margin-bottom-xx" role="alert" aria-busy="true"></div>
     </div>
