@@ -12,17 +12,20 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+### Fixed
+- Fixed responsive behaviour
+- Made the table more accessible
+
+
 ## [1.2.0] - 2020-01-06
 
 ### Added
-
 - Added the possibility to prevent columns from hiding
 
 
 ## [1.1.4] - 2019-11-14
 
 ### Fixed
-
 - "this.configuration is undefined" error when initializing
 - "cannot convert undefined or null to object" error when initializing
 
@@ -30,7 +33,6 @@ All notable changes to this project will be documented in this file.
 ## [1.1.2] - 2019-11-05
 
 ### Fixed
-
 - Cosmetic issues with filters
 - Don't show persisted columns that are not in the config
 - Fix broken path for `all` endpoint
