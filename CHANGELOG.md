@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+## [1.2.1] - 2020-02-14
+
 ### Fixed
 - Fixed responsive behaviour
 - Made the table more accessible
@@ -48,7 +50,8 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2019-07-19
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.4...v1.2.0
 [1.1.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.2...v1.1.4
 [1.1.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.0...v1.1.2
