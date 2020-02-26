@@ -5,7 +5,7 @@
             <div class="a-input__wrapper a-input--filter">
                 <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value)">
                     <option value="null" disabled="disabled" [selected]="true" *ngIf="filter.placeholder && filter.placeholder.length">{{ filter.placeholder }}</option>
-                    <option *ngFor="let option of filter.options;" [ngValue]="option">{{ option.label }}</option>
+                    <option *ngFor="let option of filter.options;" [attr.value]="option.id">{{ option.label }}</option>
                 </select>
                 <span class="fa fa-angle-down"></span>
             </div>
@@ -17,7 +17,7 @@
             <div class="a-input__wrapper a-input__wrapper--inline a-input--filter">
                 <select [id]="id" name="filter-{{ filter.id }}" [(ngModel)]="value" (ngModelChange)="onFilter(value)">
                     <option value="" [selected]="true">{{ filter.placeholder || '&nbsp;' }}</option>
-                    <option *ngFor="let option of filter.options;" [ngValue]="option">{{ option.label }}</option>
+                    <option *ngFor="let option of filter.options;" [attr.value]="option.id">{{ option.label }}</option>
                 </select>
                 <span class="fa fa-angle-down"></span>
             </div>

@@ -338,7 +338,7 @@ export class SmartTableComponent implements AfterViewInit {
 
     public onColumnsSelected() {
         const clonedConfiguration = deepMerge({}, this.configuration);
-        clonedConfiguration.columns = clonedConfiguration.columns.map(col => {          
+        clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
             if(col.canHide === undefined){
                 col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
             }
