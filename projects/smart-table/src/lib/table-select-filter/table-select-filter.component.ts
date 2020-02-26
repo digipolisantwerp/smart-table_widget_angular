@@ -16,7 +16,7 @@ export class TableSelectFilterComponent extends AbstractFilter implements OnInit
             this.value = this.filter.options.find(option => option && option.value === this.filter.value);
         }
         if (this.filter && this.filter.placeholder) {
-            this.value = '_placeholder';
+            this.value = '';
         }
     }
 }
