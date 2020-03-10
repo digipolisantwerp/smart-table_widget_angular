@@ -89,12 +89,14 @@ $loading-overlay-color: rgba($white, .75);
 .u-hide-on-mobile-devices {
   @include to($screen-xs-max) {
     display: none;
+    visibility: hidden;
   }
 }
 
 .u-show-on-mobile-devices {
   @include at($screen-sm) {
     display: none;
+    visibility: hidden;
   }
 }
 
@@ -103,22 +105,22 @@ $loading-overlay-color: rgba($white, .75);
  * They should be removed later
  */
 
-.a-input .a-input__checkbox {
-  text-align: left;
+// .a-input .a-input__checkbox {
+//   text-align: left;
 
-  input {
-    width: auto;
-  }
+//   input {
+//     width: auto;
+//   }
 
-  label {
-    width: 100%;
+//   label {
+//     width: 100%;
 
-    &:after {
-      top: auto;
-    }
-  }
-}
+//     &:after {
+//       top: auto;
+//     }
+//   }
+// }
 
-.m-flyout {
-  outline: none;
-}
+// .m-flyout {
+//   outline: none;
+// }

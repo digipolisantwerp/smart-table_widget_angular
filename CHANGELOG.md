@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 "### Security" in case of vulnerabilities.
 -->
 
+## [1.3.0] - 2020-03-09
+
+### Added
+- Made the smart table widget WCAG 2.1 AA compliant.
+
+
 ## [1.2.1] - 2020-02-14
 
 ### Fixed
@@ -50,7 +56,8 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2019-07-19
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.4...v1.2.0
 [1.1.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.2...v1.1.4

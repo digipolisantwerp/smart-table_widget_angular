@@ -4,7 +4,9 @@
       <div class="aui-smart-table__filter u-margin-left-xs a-input" *ngIf="totalResults > 0">
         <div class="a-input__wrapper">
           <button class="a-button-outline a-button-export has-icon"
-            (click)="exportToExcel()" [attr.aria-label]="options.translations?.export || 'Exporteer'">
+            (click)="exportToExcel()"
+            [attr.aria-label]="options.translations?.export || 'Exporteer'"
+            [title]="options.translations?.export || 'Exporteer'">
             <span class="fa fa-file-o"></span>
           </button>
         </div>
@@ -14,6 +16,7 @@
         <div class="a-input__wrapper">
           <div auiFlyout size="small" align="right">
             <button class="a-button-outline has-icon"
+              [attr.aria-label]="options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
               [title]="options.translations?.openColumnSelector || 'Toon/verberg kolommen'" auiFlyoutAction>
               <span class="fa fa-columns"></span>
             </button>
@@ -128,6 +131,8 @@
         <aui-pagination
           class="u-show-on-mobile-devices"
           display="text"
+          aria-hidden="true"
+          ariaNavigationLabel="Mobiele paginering"
           [itemsPerPage]="pageSize"
           [totalValues]="totalResults"
           [currentPage]="curPage"

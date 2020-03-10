@@ -5,33 +5,32 @@ import _ from 'lodash';
 import { AbstractFilter } from '../filter/abstract-filter';
 
 @Component({
-    selector: 'aui-table-input-filter',
-    styleUrls: ['./table-input-filter.component.scss'],
-    templateUrl: './table-input-filter.component.html'
+  selector: 'aui-table-input-filter',
+  templateUrl: './table-input-filter.component.html'
 })
 export class TableInputFilterComponent extends AbstractFilter implements OnInit, FilterComponent {
-    @Input() commitOnValueChange = false;
+  @Input() commitOnValueChange = false;
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    public ngOnInit() {
-        this.id = `filter-${this.filter.id}-${_.uniqueId()}`;
-        if ( (this.filter) && (_.isString(this.filter.value)) ) {
-            this.value = this.filter.value as string;
-        }
+  public ngOnInit() {
+    this.id = `filter-${this.filter.id}-${_.uniqueId()}`;
+    if ( (this.filter) && (_.isString(this.filter.value)) ) {
+      this.value = this.filter.value as string;
     }
+  }
 
-    public onModelChanged(value: string) {
-        if (this.commitOnValueChange) {
-            this.onFilter(value);
-        }
+  public onModelChanged(value: string) {
+    if (this.commitOnValueChange) {
+      this.onFilter(value);
     }
+  }
 
-    public onCommit() {
-        if (!this.commitOnValueChange) {
-            this.onFilter(this.value);
-        }
+  public onCommit() {
+    if (!this.commitOnValueChange) {
+      this.onFilter(this.value);
     }
+  }
 }

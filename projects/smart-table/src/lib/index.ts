@@ -5,12 +5,12 @@ import { TableInputFilterComponent } from './table-input-filter/table-input-filt
 import { TableSelectFilterComponent } from './table-select-filter/table-select-filter.component';
 
 export const components = [
-    SmartTableComponent,
-    TableInputFilterComponent,
-    TableSelectFilterComponent,
-    TableDatepickerFilterComponent
+  SmartTableComponent,
+  TableInputFilterComponent,
+  TableSelectFilterComponent,
+  TableDatepickerFilterComponent
 ];
 
 export const services = [
-    SmartTableService
+  SmartTableService
 ];
