@@ -105,22 +105,22 @@ $loading-overlay-color: rgba($white, .75);
  * They should be removed later
  */
 
-// .a-input .a-input__checkbox {
-//   text-align: left;
+.a-input .a-input__checkbox {
+  text-align: left;
 
-//   input {
-//     width: auto;
-//   }
+  input {
+    width: auto;
+  }
 
-//   label {
-//     width: 100%;
+  label {
+    width: 100%;
 
-//     &:after {
-//       top: auto;
-//     }
-//   }
-// }
+    &:after {
+      top: auto;
+    }
+  }
+}
 
-// .m-flyout {
-//   outline: none;
-// }
+.m-flyout {
+  outline: none;
+}

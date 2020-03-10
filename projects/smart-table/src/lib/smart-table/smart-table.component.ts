@@ -103,6 +103,9 @@ export class SmartTableComponent implements AfterViewInit {
     return !this.rowsLoading && this.totalResults > 0;
   }
 
+  // Use this to have unique ids with multiple smart table instances on one page.
+  public instanceId: string = Math.random().toString(36).substr(2, 9);
+
   constructor(
     private dataService: SmartTableService,
     private datePipe: DatePipe,
@@ -304,6 +307,25 @@ export class SmartTableComponent implements AfterViewInit {
     }
   }
 
+  public onColumnsSelected() {
+    const clonedConfiguration = deepMerge({}, this.configuration);
+    clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
+      if (col.canHide === undefined) {
+        col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
+      }
+      return col;
+    });
+    if (this.configuration.options.persistTableConfig) {
+      if (!this.getLocalStorageKey()) {
+        // tslint:disable-next-line:max-line-length
+        throw new Error('No \'storageIdentifier\' was set to be able to persist table configuration. Please set an unique `storageIdentifier` in your BFF configuration.');
+      }
+      this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration.columns);
+    }
+    this.configuration = clonedConfiguration;
+    this.flyoutService.close();
+  }
+
   public onClickRow(row) {
     this.rowClicked.emit(row);
   }
@@ -334,25 +356,6 @@ export class SmartTableComponent implements AfterViewInit {
       this.dataService.exportAsExcelFile(exportData, 'smart-table');
       this.pageChanging = false;
     });
-  }
-
-  public onColumnsSelected() {
-    const clonedConfiguration = deepMerge({}, this.configuration);
-    clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
-      if (col.canHide === undefined) {
-        col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
-      }
-      return col;
-    });
-    if (this.configuration.options.persistTableConfig) {
-      if (!this.getLocalStorageKey()) {
-        // tslint:disable-next-line:max-line-length
-        throw new Error('No \'storageIdentifier\' was set to be able to persist table configuration. Please set an unique `storageIdentifier` in your BFF configuration.');
-      }
-      this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration.columns);
-    }
-    this.configuration = clonedConfiguration;
-    this.flyoutService.close();
   }
 
   public toggleSelectedColumn(value) {

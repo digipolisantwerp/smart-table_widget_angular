@@ -65,7 +65,7 @@ app.get('/api/movies/config', (req, res) => {
       "label": "Regisseur",
       "key": "director_name",
       "type": "text",
-      "sortPath": "director_name" 
+      "sortPath": "director_name"
     },{
       "label": "Rating",
       "key": "imdb_score",
@@ -95,9 +95,10 @@ app.get('/api/movies/config', (req, res) => {
       "id": "genre",
       "display": "optional",
       "type": "select",
-      "options": GENRES.split('|').map((v) => ({ id: v, label: v })),
+      "options": GENRES.split('|').map((v) => ({id: v, label: v})),
       "label": "Genre",
-      "field": "genres"
+      "field": "genres",
+      "placeholder": "All Genres"
     }],
     options: {
       defaultSortOrder: {
@@ -120,8 +121,8 @@ function getDataFromRequest(req) {
   // apply filtering
   if (body.filters && body.filters.length) {
     body.filters.forEach((filter) => {
-      const matchOn = (filter.value && filter.value.id) ? 
-        filter.value.id : 
+      const matchOn = (filter.value && filter.value.id) ?
+        filter.value.id :
         filter.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/[%*]/g, '.*')
       const pattern = new RegExp(matchOn, 'i');
       response = response.filter((value) => {

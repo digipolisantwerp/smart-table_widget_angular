@@ -9,10 +9,14 @@ import { AbstractFilter } from '../filter/abstract-filter';
   templateUrl: './table-select-filter.component.html'
 })
 export class TableSelectFilterComponent extends AbstractFilter implements OnInit, FilterComponent {
+
   public ngOnInit() {
     this.id = `filter-${this.filter.id}-${_.uniqueId()}`;
     if (this.filter && _.isString(this.filter.value)) {
       this.value = this.filter.options.find(option => option && option.value === this.filter.value);
+    }
+    if (this.filter && this.filter.placeholder) {
+      this.value = '';
     }
   }
 }

@@ -68,7 +68,7 @@
 
       <div class="aui-smart-table__filter u-margin-right-xs a-input" *ngIf="optionalFilters.length">
         <div class="a-input__wrapper">
-          <button class="a-button-outline has-icon-right" (click)="toggleOptionalFilters()">
+          <button class="a-button-outline has-icon-right" (click)="toggleOptionalFilters()" [attr.aria-controls]="'toggle-' + instanceId" [attr.aria-expanded]="optionalFiltersVisible">
             {{ options.translations?.moreFilters || 'Extra filters'}} <span class="fa" [ngClass]="[!optionalFiltersVisible ? 'fa-angle-down' : 'fa-angle-up']"></span>
           </button>
         </div>
@@ -76,7 +76,7 @@
     </div>
   </div>
 
-  <div class="aui-smart-table__filters aui-smart-table__filters--toggle" *ngIf="optionalFiltersVisible">
+  <div class="aui-smart-table__filters aui-smart-table__filters--toggle" *ngIf="optionalFiltersVisible" id="toggle-{{ instanceId }}">
     <ng-container *ngFor="let filter of optionalFilters" [ngSwitch]="filter.type">
       <ng-container *ngSwitchCase="'select'">
         <aui-table-select-filter class="aui-smart-table__filter u-margin-right-xs" [filter]="filter" [optional]="true"
