@@ -89,12 +89,14 @@ $loading-overlay-color: rgba($white, .75);
 .u-hide-on-mobile-devices {
   @include to($screen-xs-max) {
     display: none;
+    visibility: hidden;
   }
 }
 
 .u-show-on-mobile-devices {
   @include at($screen-sm) {
     display: none;
+    visibility: hidden;
   }
 }
 

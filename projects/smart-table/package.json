@@ -4,7 +4,7 @@
   "license": "MIT",
   "homepage": "https://github.com/digipolisantwerp/smart-table_widget_angular#readme",
   "peerDependencies": {
-    "@acpaas-ui/ngx-components": ">=1.0.3",
+    "@acpaas-ui/ngx-components": "^3.0.0",
     "@angular/common": ">=6.1.0",
     "@angular/compiler": ">=6.1.0",
     "@angular/forms": ">=6.1.0",
