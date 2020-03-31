@@ -2,7 +2,6 @@
   "name": "smart-table-widget",
   "version": "0.1.0",
   "scripts": {
-    "ng": "ng",
     "start": "concurrently --kill-others \"npm run start:api\" \"npm run start:ng\"",
     "start:api": "cd projects/example-api && nodemon api.js",
     "start:ng": "ng serve --proxy-config proxy.conf.json",
