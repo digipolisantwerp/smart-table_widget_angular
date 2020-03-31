@@ -1,5 +1,4 @@
 import {EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-
 import {SmartTableFilter, UpdateFilterArgs} from '../smart-table/smart-table.types';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
@@ -16,7 +15,9 @@ export abstract class AbstractFilter implements OnDestroy {
   public destroy$ = new Subject();
 
   public onFilter(value) {
-    this.filter.value = value;
+    if (this.filter) {
+      this.filter.value = value;
+    }
     this.update.emit({filter: this.filter, value});
   }
 
