@@ -8,7 +8,7 @@ import {SmartTableFilter} from '../filter/filter.decorator';
 @Component({
   selector: 'aui-table-input-filter',
   templateUrl: './table-input-filter.component.html',
-  styles: [':host {flex-grow: 1}']
+  styleUrls: ['../filter/filter.component.scss']
 })
 @SmartTableFilter()
 export class TableInputFilterComponent extends AbstractFilter implements OnInit, FilterComponent {
