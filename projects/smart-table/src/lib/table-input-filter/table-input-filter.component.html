@@ -1,17 +1,13 @@
 <ng-container *ngIf="filter">
-  <ng-container *ngIf="!optional; else optional_filter">
-    <div class="a-input has-icon-right aui-input-filter regular">
-      <label class="a-input__label" [for]="id">{{ filter.label }}</label>
-      <div class="a-input__wrapper">
-        <input type="text" [id]="id" name="filter-{{ filter.id }}" [placeholder]="filter.placeholder || ''" [(ngModel)]="value" (ngModelChange)="onModelChanged(value)" (change)="onCommit()">
-        <span class="fa fa-search"></span>
-      </div>
+  <div class="a-input aui-input-filter regular"
+       [ngClass]="{'a-input--small optional': optional, 'has-icon-right': !optional}">
+    <label class="a-input__label" [for]="id">
+      {{ filter.label }}
+    </label>
+    <div class="a-input__wrapper">
+      <input type="text" [id]="id" name="filter-{{ filter.id }}" [placeholder]="filter.placeholder || ''"
+             [formControl]="formControl" ngDefaultControl>
+      <span class="fa fa-search" *ngIf="!optional"></span>
     </div>
-  </ng-container>
-  <ng-template #optional_filter>
-    <div class="a-input a-input--inline a-input--small aui-input-filter optional">
-      <label class="a-input__label a-input__label--inline" [for]="id">{{ filter.label }}</label>
-      <input type="text" [id]="id" name="filter-{{ filter.id }}" [placeholder]="filter.placeholder || ''" [(ngModel)]="value" (ngModelChange)="onModelChanged(value)" (change)="onCommit()">
-    </div>
-  </ng-template>
+  </div>
 </ng-container>
