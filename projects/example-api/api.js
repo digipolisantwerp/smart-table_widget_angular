@@ -56,17 +56,17 @@ app.get('/api/movies/config', (req, res) => {
       "type": "text",
       "sortPath": "movie_title",
       "canHide": false
-    },{
+    }, {
       "label": "Jaar",
       "key": "title_year",
       "type": "number",
       "sortPath": "title_year"
-    },{
+    }, {
       "label": "Regisseur",
       "key": "director_name",
       "type": "text",
       "sortPath": "director_name"
-    },{
+    }, {
       "label": "Rating",
       "key": "imdb_score",
       "type": "rating",
@@ -79,19 +79,19 @@ app.get('/api/movies/config', (req, res) => {
       "label": "Zoek een film",
       "placeholder": "Zoek op titel, jaar, ...",
       "fields": ["movie_title", "director_name", "title_year"]
-    },{
+    }, {
       "id": "title",
       "display": "optional",
       "type": "input",
       "label": "Titel",
       "field": "movie_title"
-    },{
+    }, {
       "id": "director",
       "display": "optional",
       "type": "input",
       "label": "Regisseur",
       "field": "director_name"
-    },{
+    }, {
       "id": "genre",
       "display": "optional",
       "type": "select",
@@ -105,6 +105,8 @@ app.get('/api/movies/config', (req, res) => {
         key: 'movie_title',
         order: 'asc'
       },
+      pageSizeOptions: [5, 10, 15],
+      pageSize: 10,
       loadDataMessage: 'De films worden geladen...',
       noDataMessage: 'Er zijn geen films die voldoen aan de criteria'
     }

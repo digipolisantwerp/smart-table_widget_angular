@@ -40,7 +40,10 @@ export class SmartTableComponent implements AfterViewInit {
       this.baseFilters = configuration.baseFilters || [];
 
       if (configuration.options) {
-        this.options = deepMerge(SMARTTABLE_DEFAULT_OPTIONS, configuration.options);
+        this.options = {
+          ...SMARTTABLE_DEFAULT_OPTIONS,
+          ...configuration.options
+        };
         this.pageSize = this.options.pageSize;
       }
 
