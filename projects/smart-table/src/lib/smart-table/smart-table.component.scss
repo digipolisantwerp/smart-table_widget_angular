@@ -4,8 +4,8 @@ $loading-overlay-color: rgba($white, .75);
 
 .aui-smart-table {
   .a-toggle-filters {
-    & > .fa {
-      transition: transform $animation-duration ease;
+    > .fa {
+      transition: transform $animation-duration $animation-easing;
 
       &.is-toggled {
         transform: rotate(180deg);
@@ -25,7 +25,7 @@ $loading-overlay-color: rgba($white, .75);
     &--toggle {
       margin-top: $spacer-xs;
       max-height: 0;
-      transition: max-height $animation-duration ease;
+      transition: max-height $animation-duration $animation-easing;
       overflow: hidden;
 
       @include at($screen-xs) {
@@ -33,7 +33,7 @@ $loading-overlay-color: rgba($white, .75);
       }
 
       &.is-visible {
-        max-height: 30em;
+        max-height: 75em;
       }
     }
 
@@ -59,7 +59,8 @@ $loading-overlay-color: rgba($white, .75);
     margin-bottom: $spacer-xs;
 
     @include at($screen-xs) {
-      &:first-child, & + .aui-smart-table__filter {
+      &:first-child,
+      + .aui-smart-table__filter {
         margin-right: $spacer-xs;
       }
     }
