@@ -3,12 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+
+## [1.4.0] - 2020-03-11
+
 ### Changed
 - Table filters are now based on Reactive Forms
 - Flexible grid for extra filters, better mobile support
 
 ### Added
 - Decorator support for smart table filters
+
 
 ## [1.3.0] - 2020-03-11
 
@@ -54,7 +59,8 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2019-07-19
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.1.4...v1.2.0

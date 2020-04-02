@@ -48,13 +48,13 @@ export interface SmartTableOptions {
 }
 
 export interface SmartTableColumnConfig {
-visible: boolean;
-label: string;
-key: string;
-type: SmartTableColumnType;
-classList?: string[];
-sortPath: string;
-canHide: boolean
+  visible: boolean;
+  label: string;
+  key: string;
+  type: SmartTableColumnType;
+  classList?: string[];
+  sortPath: string;
+  canHide: boolean;
 }
 
 export enum SmartTableColumnType {
