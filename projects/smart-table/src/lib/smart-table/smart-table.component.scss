@@ -51,6 +51,18 @@ $loading-overlay-color: rgba($white, .75);
     }
   }
 
+  /**
+   * Hidden overflow of the filters results in focus borders being chopped off.
+   * This trick fixes the problem.
+   */
+  &__overflow {
+    margin: 0 -$spacer-xs / 4;
+
+    > .aui-smart-table__filters {
+      padding: 0 $spacer-xs / 4;
+    }
+  }
+
   &__button {
     margin-bottom: $spacer-xs;
   }

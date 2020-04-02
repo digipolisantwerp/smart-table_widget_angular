@@ -77,24 +77,26 @@
     </div>
   </div>
 
-  <div class="aui-smart-table__filters aui-smart-table__filters--toggle"
-       [ngClass]="{'is-visible': optionalFiltersVisible}" id="toggle-{{ instanceId }}">
-    <ng-container *ngFor="let filter of optionalFilters" [ngSwitch]="filter.type">
-      <ng-container *ngSwitchCase="'select'">
-        <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                 (update)="onFilter($event)"></aui-table-select-filter>
-      </ng-container>
+  <div class="aui-smart-table__overflow">
+    <div class="aui-smart-table__filters aui-smart-table__filters--toggle"
+         [ngClass]="{'is-visible': optionalFiltersVisible}" id="toggle-{{ instanceId }}">
+      <ng-container *ngFor="let filter of optionalFilters" [ngSwitch]="filter.type">
+        <ng-container *ngSwitchCase="'select'">
+          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
+                                   (update)="onFilter($event)"></aui-table-select-filter>
+        </ng-container>
 
-      <ng-container *ngSwitchCase="'input'">
-        <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                (update)="onFilter($event)"></aui-table-input-filter>
-      </ng-container>
+        <ng-container *ngSwitchCase="'input'">
+          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
+                                  (update)="onFilter($event)"></aui-table-input-filter>
+        </ng-container>
 
-      <ng-container *ngSwitchCase="'datepicker'">
-        <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                     (update)="onFilter($event)"></aui-table-datepicker-filter>
+        <ng-container *ngSwitchCase="'datepicker'">
+          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
+                                       (update)="onFilter($event)"></aui-table-datepicker-filter>
+        </ng-container>
       </ng-container>
-    </ng-container>
+    </div>
   </div>
 
   <div class="aui-smart-table__wrapper">
