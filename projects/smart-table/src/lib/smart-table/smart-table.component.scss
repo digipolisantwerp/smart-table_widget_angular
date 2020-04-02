@@ -3,6 +3,16 @@
 $loading-overlay-color: rgba($white, .75);
 
 .aui-smart-table {
+  .a-toggle-filters {
+    > .fa {
+      transition: transform $animation-duration $animation-easing;
+
+      &.is-toggled {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
   &__filters {
     display: flex;
     flex-wrap: wrap;
@@ -14,6 +24,17 @@ $loading-overlay-color: rgba($white, .75);
 
     &--toggle {
       margin-top: $spacer-xs;
+      max-height: 0;
+      transition: max-height $animation-duration $animation-easing;
+      overflow: hidden;
+
+      @include at($screen-xs) {
+        margin-right: -$spacer-xs;
+      }
+
+      &.is-visible {
+        max-height: 75em;
+      }
     }
 
     &--left,
@@ -30,8 +51,19 @@ $loading-overlay-color: rgba($white, .75);
     }
   }
 
+  &__button {
+    margin-bottom: $spacer-xs;
+  }
+
   &__filter {
     margin-bottom: $spacer-xs;
+
+    @include at($screen-xs) {
+      &:first-child,
+      + .aui-smart-table__filter {
+        margin-right: $spacer-xs;
+      }
+    }
   }
 
   &__loading-overlay {
@@ -54,7 +86,7 @@ $loading-overlay-color: rgba($white, .75);
 
   &__actions {
     align-items: center;
-    display:flex;
+    display: flex;
     flex-direction: column;
 
     @include at($screen-md) {

@@ -1,16 +1,19 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
-import { SmartTableComponent } from './smart-table/smart-table.component';
-import { CommonModule, DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { TableModule } from '@acpaas-ui/ngx-components/table';
-import { PaginationModule, ItemCounterModule } from '@acpaas-ui/ngx-components/pagination';
-import { DatepickerModule } from '@acpaas-ui/ngx-components/forms';
-import { FlyoutModule } from '@acpaas-ui/ngx-components/flyout';
-import { SearchFilterModule } from '@acpaas-ui/ngx-components/forms';
-import { LocalstorageModule, LOCALSTORAGE_CONFIG,
-         LocalstorageConfig, DEFAULT_LOCALSTORAGE_CONFIG } from '@acpaas-ui/ngx-components/localstorage';
-import { components, services } from './index';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {SmartTableComponent} from './smart-table/smart-table.component';
+import {CommonModule, DatePipe} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
+import {ReactiveFormsModule} from '@angular/forms';
+import {TableModule} from '@acpaas-ui/ngx-components/table';
+import {ItemCounterModule, PaginationModule} from '@acpaas-ui/ngx-components/pagination';
+import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-components/forms';
+import {FlyoutModule} from '@acpaas-ui/ngx-components/flyout';
+import {
+  DEFAULT_LOCALSTORAGE_CONFIG,
+  LOCALSTORAGE_CONFIG,
+  LocalstorageConfig,
+  LocalstorageModule
+} from '@acpaas-ui/ngx-components/localstorage';
+import {components, services} from './index';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,7 @@ import { components, services } from './index';
   ],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     TableModule,
     PaginationModule,
     ItemCounterModule,
@@ -44,7 +47,7 @@ export class SmartTableModule {
     return {
       ngModule: SmartTableModule,
       providers: [
-        { provide: LOCALSTORAGE_CONFIG, useValue: localstorageConfig },
+        {provide: LOCALSTORAGE_CONFIG, useValue: localstorageConfig},
         DatePipe,
         ...services
       ],
