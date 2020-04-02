@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+### Fixed
+- Filter class build error due to decorators
 
 ## [1.4.0] - 2020-03-11
 

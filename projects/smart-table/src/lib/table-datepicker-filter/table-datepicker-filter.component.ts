@@ -1,15 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import _ from 'lodash';
-
 import {AbstractFilter} from '../filter/abstract-filter';
-import {SmartTableFilter} from '../filter/filter.decorator';
 
 @Component({
   selector: 'aui-table-datepicker-filter',
   templateUrl: 'table-datepicker-filter.component.html',
   styleUrls: ['../filter/filter.component.scss']
 })
-@SmartTableFilter()
 export class TableDatepickerFilterComponent extends AbstractFilter implements OnInit {
   ngOnInit() {
     if (this.filter && _.isString(this.filter.value)) {
