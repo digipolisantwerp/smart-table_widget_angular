@@ -2,6 +2,8 @@ import {EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {SmartTableFilter, UpdateFilterArgs} from '../smart-table/smart-table.types';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
+import {debounceTime, takeUntil, tap} from 'rxjs/operators';
+import * as _ from 'lodash';
 
 export abstract class AbstractFilter implements OnDestroy {
   @Input() filter: SmartTableFilter;
@@ -13,6 +15,15 @@ export abstract class AbstractFilter implements OnDestroy {
 
   public formControl: FormControl = new FormControl();
   public destroy$ = new Subject();
+
+  constructor() {
+    this.id = `filter-${_.uniqueId()}`;
+    this.formControl.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      debounceTime(200),
+      tap((newValue: string) => this.onFilter(newValue)),
+    ).subscribe();
+  }
 
   public onFilter(value) {
     if (this.filter) {
