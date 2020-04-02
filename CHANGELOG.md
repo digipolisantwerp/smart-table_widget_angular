@@ -3,14 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-<!--
-"### Added" for new features.
-"### Changed" for changes in existing functionality.
-"### Deprecated" for soon-to-be removed features.
-"### Removed" for now removed features.
-"### Fixed" for any bug fixes.
-"### Security" in case of vulnerabilities.
--->
+### Changed
+- Table filters are now based on Reactive Forms
+- Flexible grid for extra filters, better mobile support
+
+### Added
+- Decorator support for smart table filters
 
 ## [1.3.0] - 2020-03-11
 
