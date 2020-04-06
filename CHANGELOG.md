@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+### Fixed
+- Overflow visibility issue with extra filters
 
 ## [1.4.1] - 2020-04-02
 

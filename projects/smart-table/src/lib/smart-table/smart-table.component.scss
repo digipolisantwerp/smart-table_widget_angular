@@ -17,6 +17,7 @@ $loading-overlay-color: rgba($white, .75);
     display: flex;
     flex-wrap: wrap;
     margin-bottom: -$spacer-xs; // Make up for separate filters
+    overflow: visible;
 
     &--visible {
       flex-direction: row-reverse;
