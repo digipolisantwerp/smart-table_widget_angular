@@ -17,7 +17,6 @@ $loading-overlay-color: rgba($white, .75);
     display: flex;
     flex-wrap: wrap;
     margin-bottom: -$spacer-xs; // Make up for separate filters
-    overflow: visible;
 
     &--visible {
       flex-direction: row-reverse;
@@ -35,6 +34,7 @@ $loading-overlay-color: rgba($white, .75);
 
       &.is-visible {
         max-height: 75em;
+        overflow: visible;
       }
     }
 
