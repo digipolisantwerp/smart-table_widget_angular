@@ -1,14 +1,13 @@
-import { OrderBy, TableColumn, TableComponent } from '@acpaas-ui/ngx-components/table';
-import { LocalstorageService } from '@acpaas-ui/ngx-components/localstorage';
-import { FlyoutService } from '@acpaas-ui/ngx-components/flyout';
-import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import {OrderBy, TableColumn, TableComponent} from '@acpaas-ui/ngx-table';
+import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
+import {FlyoutService} from '@acpaas-ui/ngx-flyout';
+import {DatePipe} from '@angular/common';
+import {AfterViewInit, Component, EventEmitter, Inject, Input, Output, ViewChild} from '@angular/core';
+import {HttpHeaders} from '@angular/common/http';
 import deepMerge from 'deepmerge';
-import unionBy from 'lodash.unionby';
 
-import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
-import { SmartTableService } from './smart-table.service';
+import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
+import {SmartTableService} from './smart-table.service';
 import {
   SmartTableColumnCustomType,
   SmartTableColumnType,
@@ -23,41 +22,50 @@ import {
   SmartTableOptions,
   UpdateFilterArgs,
 } from './smart-table.types';
+import {first, map, tap} from 'rxjs/operators';
+import {PROVIDE_ID} from '../indentifier.provider';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'aui-smart-table',
   styleUrls: ['./smart-table.component.scss'],
   templateUrl: './smart-table.component.html'
 })
-export class SmartTableComponent implements AfterViewInit {
+export class SmartTableComponent {
   @Input() apiUrl: string;
   @Input() httpHeaders: HttpHeaders;
   @Input() columnTypes: SmartTableColumnCustomType[] = [];
+
   @Input()
   set configuration(configuration: SmartTableConfig) {
-    this._configuration = configuration;
-    if (Array.isArray(configuration.columns) && configuration.columns.length) {
-      this.baseFilters = configuration.baseFilters || [];
-
-      if (configuration.options) {
-        this.options = {
-          ...SMARTTABLE_DEFAULT_OPTIONS,
-          ...configuration.options
+    this.getConfiguration().pipe(
+      first(),
+      map(config => {
+        return {
+          ...config,
+          ...configuration,
+          options : {
+            ...config.options,
+            ...configuration.options
+          }
         };
-        this.pageSize = this.options.pageSize;
-      }
+      }),
+      tap(config => this._configuration = config),
+      tap(() => {
+        this.initColumns();
+        this.initFilters();
 
-      this.initColumns();
-      this.initFilters();
-
-      if (this.columns.length) {
-        this.getTableData(1);
-      }
-    }
+        if (this.columns.length) {
+          this.getTableData(1);
+        }
+      })
+    ).subscribe();
   }
+
   get configuration(): SmartTableConfig {
     return this._configuration;
   }
+
   private _configuration: SmartTableConfig;
 
   /** fires when the user selects a row */
@@ -79,11 +87,11 @@ export class SmartTableComponent implements AfterViewInit {
   selectableColumns: TableColumn[] = [];
 
   private baseFilters: SmartTableDataQueryFilter[] = [];
-  private dataQuery: SmartTableDataQuery = { filters: [], sort: { path: '', ascending: false } };
+  private dataQuery: SmartTableDataQuery = {filters: [], sort: {path: '', ascending: false}};
 
   /** @internal */
   @ViewChild(TableComponent) tableComponent: TableComponent;
-  columns: TableColumn[] = [{ value: '', label: '' }];
+  columns: TableColumn[] = [{value: '', label: ''}];
 
   public rows: Array<any> = [];
 
@@ -113,39 +121,56 @@ export class SmartTableComponent implements AfterViewInit {
     private dataService: SmartTableService,
     private datePipe: DatePipe,
     private flyoutService: FlyoutService,
-    private localstorageService: LocalstorageService
-    ) {
+    private localstorageService: LocalstorageService,
+    @Inject(PROVIDE_ID) private storageIdentifier: string,
+  ) {
     this.pageSize = this.options.pageSize;
     this.rowsLoading = true;
     this.pageChanging = false;
   }
 
-  public ngAfterViewInit() {
-    if (!this.configuration || (this.configuration && !this.configuration.columns)) {
-      this.dataService.getConfiguration(this.apiUrl, this.httpHeaders).subscribe(
-        data => {
-          let localStorageColumns = this.localstorageService.getItem(this.getLocalStorageKey(data)) || [];
-          // remove unknown / removed columns
-          localStorageColumns = localStorageColumns.filter((column) =>
-            !!data.columns.find((c) => c.key === column.key)
-            );
-          data.columns = deepMerge(data.columns, localStorageColumns, { arrayMerge: this.columnsMerge });
-          this.configuration = deepMerge(data, this.configuration || {}) as SmartTableConfig;
-        },
-        err => {
-          console.error('Error: could not get configuration data', err);
-        }
-        );
+  private getConfiguration(): Observable<SmartTableConfig> {
+    return this.dataService.getConfiguration(this.apiUrl, this.httpHeaders)
+      .pipe(
+        first(),
+        map((configuration: SmartTableConfig) => {
+          return {
+            ...configuration,
+            baseFilters: configuration.baseFilters || [],
+            options: {
+              ...SMARTTABLE_DEFAULT_OPTIONS,
+              storageIdentifier: this.storageIdentifier,
+              ...configuration.options
+            }
+          };
+        }),
+        map((configuration: SmartTableConfig) => {
+          // Find columns that were saved in storage
+          const localStorageColumns = (this.getLocalStorageColumns(configuration.options.storageIdentifier) || [])
+            .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
+          const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
+          configuration.columns = [
+            ...localStorageColumns,
+            ...columnsNotInStorage
+          ];
+          return {
+            ...configuration,
+            columns: [
+              ...localStorageColumns,
+              ...columnsNotInStorage
+            ]
+          };
+        }),
+      );
+  }
+
+  private getLocalStorageColumns(identifier) {
+    const json = this.localstorageService.storage.getItem(identifier);
+    try {
+      return JSON.parse(json);
+    } catch (err) {
+      return null;
     }
-  }
-
-  private getLocalStorageKey(config?): string {
-    config = config || this.configuration;
-    return config && config.options && config.options.storageIdentifier;
-  }
-
-  private columnsMerge(sourceArray, destinationArray, options) {
-    return unionBy(destinationArray, sourceArray, 'key');
   }
 
   protected initColumns() {
@@ -219,7 +244,7 @@ export class SmartTableComponent implements AfterViewInit {
   protected initGenericFilter() {
     const _genericFilter = this.configuration.filters.find(
       filter => filter.display === SmartTableFilterDisplay.Generic
-      );
+    );
     if (_genericFilter) {
       this.genericFilter = new SmartTableFilter();
       this.genericFilter.id = 'generic';
@@ -234,25 +259,25 @@ export class SmartTableComponent implements AfterViewInit {
   protected getTableData(page: number, pageSize?: number) {
     this.pageChanging = !this.rowsLoading;
     this.dataService
-    .getData(this.apiUrl, this.httpHeaders, this.dataQuery, page, pageSize || this.pageSize)
-    .subscribe(
-      data => {
-        this.rowsLoading = false;
-        this.pageChanging = false;
-        if (data._embedded) {
-          this.rows = data._embedded.resourceList;
-        }
-        if (data._page) {
-          this.curPage = parseInt(data._page.number, 10);
-          if (pageSize) {
-            this.pageSize = pageSize;
+      .getData(this.apiUrl, this.httpHeaders, this.dataQuery, page, pageSize || this.pageSize)
+      .subscribe(
+        data => {
+          this.rowsLoading = false;
+          this.pageChanging = false;
+          if (data._embedded) {
+            this.rows = data._embedded.resourceList;
           }
-          this.totalResults = data._page.totalElements;
+          if (data._page) {
+            this.curPage = parseInt(data._page.number, 10);
+            if (pageSize) {
+              this.pageSize = pageSize;
+            }
+            this.totalResults = data._page.totalElements;
+          }
+        },
+        err => {
+          console.error('Error: could not get table data', err);
         }
-      },
-      err => {
-        console.error('Error: could not get table data', err);
-      }
       );
   }
 
@@ -266,16 +291,16 @@ export class SmartTableComponent implements AfterViewInit {
     if (this.orderBy) {
       const sortColumn = this.configuration.columns.find(column => column.key === this.orderBy.key);
       if (sortColumn) {
-        this.dataQuery.sort = { path: sortColumn.sortPath, ascending: this.orderBy.order === 'asc' };
+        this.dataQuery.sort = {path: sortColumn.sortPath, ascending: this.orderBy.order === 'asc'};
       }
     }
 
     this.dataQuery.filters = [...this.baseFilters];
 
     this.dataQuery.filters = [
-    ...this.dataQuery.filters,
-    ...this.createDataQueryFilters(this.visibleFilters),
-    ...this.createDataQueryFilters(this.optionalFilters)
+      ...this.dataQuery.filters,
+      ...this.createDataQueryFilters(this.visibleFilters),
+      ...this.createDataQueryFilters(this.optionalFilters)
     ];
 
     const createdFilter = this.createDataQueryFilter(this.genericFilter);
@@ -319,11 +344,11 @@ export class SmartTableComponent implements AfterViewInit {
       return col;
     });
     if (this.configuration.options.persistTableConfig) {
-      if (!this.getLocalStorageKey()) {
+      if (!this.configuration.options.storageIdentifier) {
         // tslint:disable-next-line:max-line-length
         throw new Error('No \'storageIdentifier\' was set to be able to persist table configuration. Please set an unique `storageIdentifier` in your BFF configuration.');
       }
-      this.localstorageService.setItem(this.getLocalStorageKey(), clonedConfiguration.columns);
+      this.localstorageService.storage.setItem(this.configuration.options.storageIdentifier, JSON.stringify(clonedConfiguration.columns));
     }
     this.configuration = clonedConfiguration;
     this.flyoutService.close();
@@ -354,11 +379,11 @@ export class SmartTableComponent implements AfterViewInit {
   public exportToExcel() {
     this.pageChanging = true;
     this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.dataQuery)
-    .subscribe(data => {
-      const exportData = this.filterOutColumns(data._embedded.resourceList);
-      this.dataService.exportAsExcelFile(exportData, 'smart-table');
-      this.pageChanging = false;
-    });
+      .subscribe(data => {
+        const exportData = this.filterOutColumns(data._embedded.resourceList);
+        this.dataService.exportAsExcelFile(exportData, 'smart-table');
+        this.pageChanging = false;
+      });
   }
 
   public toggleSelectedColumn(value) {
@@ -370,8 +395,8 @@ export class SmartTableComponent implements AfterViewInit {
     const columnKeys = this.columns.map((col) => col.value);
     return data.map(d => {
       return Object.keys(d)
-      .filter(key => columnKeys.indexOf(key) >= 0)
-      .reduce((acc, key) => (acc[key] = d[key], acc), {});
+        .filter(key => columnKeys.indexOf(key) >= 0)
+        .reduce((acc, key) => (acc[key] = d[key], acc), {});
     });
   }
 }

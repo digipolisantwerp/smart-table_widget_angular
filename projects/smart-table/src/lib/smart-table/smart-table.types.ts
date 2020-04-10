@@ -1,23 +1,29 @@
-import { Filter } from '@acpaas-ui/ngx-components/utils';
-import { OrderBy, TableColumnFormat } from '@acpaas-ui/ngx-components/table';
-import { Component } from '@angular/core';
+import {Filter} from '@acpaas-ui/ngx-utils';
+import {OrderBy, TableColumnFormat} from '@acpaas-ui/ngx-table';
+import {Component} from '@angular/core';
+import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
+
+export interface IModuleConfig {
+  storageType?: LocalStorageType;
+  identifier?: string;
+}
 
 /**
  * The smart table's configuration,
  * as returned by the /config endpoint
  */
 export interface SmartTableConfig {
-  baseFilters: SmartTableDataQueryFilter[];
-  columns: SmartTableColumnConfig[];
-  filters: SmartTableFilterConfig[];
-  options: SmartTableOptions;
+  baseFilters?: SmartTableDataQueryFilter[];
+  columns?: SmartTableColumnConfig[];
+  filters?: SmartTableFilterConfig[];
+  options?: SmartTableOptions;
 }
 
 export interface SmartTableTranslationsConfig {
-  moreFilters: string;
-  export: string;
-  apply: string;
-  openColumnSelector: string;
+  moreFilters?: string;
+  export?: string;
+  apply?: string;
+  openColumnSelector?: string;
 }
 
 /**
@@ -25,23 +31,23 @@ export interface SmartTableTranslationsConfig {
  * @see smart-table.defaults.ts
  */
 export interface SmartTableOptions {
-  defaultSortOrder: OrderBy;
-  loadDataMessage: string;
-  noDataMessage: string;
-  pageSize: number;
+  defaultSortOrder?: OrderBy;
+  loadDataMessage?: string;
+  noDataMessage?: string;
+  pageSize?: number;
   /** options for the pagesize dropdown */
-  pageSizeOptions: number[];
-  resetSortOrderOnFilter: boolean;
+  pageSizeOptions?: number[];
+  resetSortOrderOnFilter?: boolean;
   /**
    * default format for date/time columns
    * @see https://angular.io/api/common/DatePipe
    */
-  columnDateTimeFormat: string;
+  columnDateTimeFormat?: string;
   /**
    * default format for date columns
    * @see https://angular.io/api/common/DatePipe
    */
-  columnDateFormat: string;
+  columnDateFormat?: string;
   storageIdentifier?: string;
   persistTableConfig?: boolean;
   translations?: SmartTableTranslationsConfig;
