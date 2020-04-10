@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - [BREAKING] Update to @acpaas-ui v.4
+### Fixed
+- Persist hide/show columns in storage of choice
 
 ## [1.4.2] - 2020-04-06
 
