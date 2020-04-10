@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Cell } from '@acpaas-ui/ngx-components/table';
+import {Component} from '@angular/core';
+import {Cell} from '@acpaas-ui/ngx-table';
 
 @Component({
   template: `
@@ -10,7 +10,7 @@ import { Cell } from '@acpaas-ui/ngx-components/table';
       <span class="fa {{ (starRating() >= 4) ? 'fa-star' : 'fa-star-o' }}"></span>
       <span class="fa {{ (starRating() == 5) ? 'fa-star' : 'fa-star-o' }}"></span>
     </div>
-	`,
+  `,
 })
 export class AppRatingComponent implements Cell {
   // score from 0 to 10

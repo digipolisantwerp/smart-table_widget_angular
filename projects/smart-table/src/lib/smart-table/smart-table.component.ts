@@ -37,7 +37,8 @@ export class SmartTableComponent {
 
   @Input()
   set configuration(configuration: SmartTableConfig) {
-    this.getConfiguration().pipe(
+    const id: string = configuration && configuration.options && configuration.options.storageIdentifier;
+    this.getConfiguration(id).pipe(
       first(),
       map(config => {
         return {
@@ -128,7 +129,7 @@ export class SmartTableComponent {
     this.pageChanging = false;
   }
 
-  private getConfiguration(): Observable<SmartTableConfig> {
+  public getConfiguration(storageIdentifier: string = this.storageIdentifier): Observable<SmartTableConfig> {
     // Buffer the configuration, we don't need to get it from the service every time
     if (!!this.configuration && !!this.configuration.options) {
       return of(this.configuration);
@@ -143,7 +144,7 @@ export class SmartTableComponent {
             baseFilters: configuration.baseFilters || [],
             options: {
               ...SMARTTABLE_DEFAULT_OPTIONS,
-              storageIdentifier: this.storageIdentifier,
+              storageIdentifier,
               ...configuration.options
             }
           };

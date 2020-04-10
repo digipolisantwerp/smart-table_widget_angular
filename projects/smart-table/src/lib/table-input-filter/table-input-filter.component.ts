@@ -1,4 +1,4 @@
-import {FilterComponent} from '@acpaas-ui/ngx-components/utils';
+import {FilterComponent} from '@acpaas-ui/ngx-utils';
 import {Component, OnInit} from '@angular/core';
 import _ from 'lodash';
 import {AbstractFilter} from '../filter/abstract-filter';
