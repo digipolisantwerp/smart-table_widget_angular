@@ -18,7 +18,6 @@
     "@acpaas-ui/ngx-localstorage": "^4.1.0",
     "@acpaas-ui/ngx-pagination": "^4.0.0",
     "@acpaas-ui/ngx-table": "^4.0.0",
-    "deepmerge": "^4.0.0",
     "file-saver": "^2.0.2",
     "lodash.unionby": "^4.8.0",
     "query-string": "^6.8.3",
