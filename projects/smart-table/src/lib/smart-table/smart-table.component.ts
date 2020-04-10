@@ -2,9 +2,8 @@ import {OrderBy, TableColumn, TableComponent} from '@acpaas-ui/ngx-table';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {DatePipe} from '@angular/common';
-import {AfterViewInit, Component, EventEmitter, Inject, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, Output, ViewChild} from '@angular/core';
 import {HttpHeaders} from '@angular/common/http';
-import deepMerge from 'deepmerge';
 
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {SmartTableService} from './smart-table.service';
@@ -24,7 +23,7 @@ import {
 } from './smart-table.types';
 import {first, map, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'aui-smart-table',
@@ -44,7 +43,7 @@ export class SmartTableComponent {
         return {
           ...config,
           ...configuration,
-          options : {
+          options: {
             ...config.options,
             ...configuration.options
           }
@@ -130,6 +129,11 @@ export class SmartTableComponent {
   }
 
   private getConfiguration(): Observable<SmartTableConfig> {
+    // Buffer the configuration, we don't need to get it from the service every time
+    if (!!this.configuration && !!this.configuration.options) {
+      return of(this.configuration);
+    }
+
     return this.dataService.getConfiguration(this.apiUrl, this.httpHeaders)
       .pipe(
         first(),
@@ -336,13 +340,18 @@ export class SmartTableComponent {
   }
 
   public onColumnsSelected() {
-    const clonedConfiguration = deepMerge({}, this.configuration);
-    clonedConfiguration.columns = clonedConfiguration.columns.map(col => {
-      if (col.canHide === undefined) {
-        col.visible = !this.selectableColumns.find(sCol => sCol.value === col.key).hidden;
-      }
-      return col;
-    });
+    const clonedConfiguration = {
+      ...this.configuration,
+      columns: this.configuration.columns.map(col => {
+        if (!col.canHide) {
+          const found = this.selectableColumns.find(sCol => sCol.value === col.key);
+          if (found) {
+            col.visible = !found.hidden;
+          }
+        }
+        return col;
+      })
+    };
     if (this.configuration.options.persistTableConfig) {
       if (!this.configuration.options.storageIdentifier) {
         // tslint:disable-next-line:max-line-length
