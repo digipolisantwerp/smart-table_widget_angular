@@ -105,7 +105,6 @@ app.get('/api/movies/config', (req, res) => {
         key: 'movie_title',
         order: 'asc'
       },
-      persistTableConfig: true,
       pageSizeOptions: [5, 10, 15],
       pageSize: 10,
       loadDataMessage: 'De films worden geladen...',

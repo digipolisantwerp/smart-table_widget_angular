@@ -21,7 +21,7 @@ import {
 } from './smart-table.types';
 import {filter, first, map, mapTo, scan, shareReplay, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
-import {combineLatest, forkJoin, merge, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
 
 @Component({
@@ -33,8 +33,12 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   @Input() apiUrl: string;
   @Input() httpHeaders: HttpHeaders;
   @Input() columnTypes: SmartTableColumnCustomType[] = [];
+
   @Input()
-  configuration;
+  set configuration(value: SmartTableConfig) {
+    (this.customConfiguration$ as BehaviorSubject<SmartTableConfig>).next(value);
+  }
+
   /** fires when the user selects a row */
   @Output() rowClicked = new EventEmitter<any>();
 
@@ -61,6 +65,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
    *  - manual @input() configuration that may override api configuration
    */
   configuration$: Observable<SmartTableConfig>;
+  /**
+   * Custom configuration that comes in with setting the @input() configuration
+   */
+  private customConfiguration$: Observable<SmartTableConfig> = new BehaviorSubject(null);
   /**
    * Represents all the columns that the table may contain
    */
@@ -116,8 +124,26 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.configuration$ = merge(
-      this.getConfiguration()
+      this.getConfiguration(),
+      this.customConfiguration$.pipe(
+        filter(config => !!config),
+        switchMap((customConfig) => combineLatest(of(customConfig), this.configuration$).pipe(first())),
+        map(([customConfig, configuration]) => {
+          // Whenever we have custom configuration coming in, override existing configuration
+          return {
+            ...configuration,
+            ...customConfig,
+            options: {
+              ...configuration.options,
+              ...customConfig.options
+            }
+          };
+        })
+      )
     ).pipe(
+      // Every time configuration changes, get the columns from the storage again
+      // (because storage identifier will most likely have changed)
+      map(config => config.options.persistTableConfig ? this.getLocalStorageColumns(config) : config),
       shareReplay(1)
     );
 
@@ -245,33 +271,30 @@ export class SmartTableComponent implements OnInit, OnDestroy {
           } else {
             return config;
           }
-        }),
-        map((configuration: SmartTableConfig) => {
-          // Find columns that were saved in storage
-          const localStorageColumns = (this.getLocalStorageColumns(configuration.options.storageIdentifier) || [])
-            .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
-          const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
-          configuration.columns = [
-            ...localStorageColumns,
-            ...columnsNotInStorage
-          ];
-          return {
-            ...configuration,
-            columns: [
-              ...localStorageColumns,
-              ...columnsNotInStorage
-            ]
-          };
-        }),
+        })
       );
   }
 
-  private getLocalStorageColumns(identifier) {
-    const json = this.localstorageService.storage.getItem(identifier);
+  private getLocalStorageColumns(configuration: SmartTableConfig) {
+    const json = this.localstorageService.storage.getItem(configuration.options.storageIdentifier);
     try {
-      return JSON.parse(json);
-    } catch (err) {
-      return null;
+      const localStorageColumns = (JSON.parse(json) || [])
+        .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
+      const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
+      configuration.columns = [
+        ...localStorageColumns,
+        ...columnsNotInStorage
+      ];
+      return {
+        ...configuration,
+        columns: [
+          ...localStorageColumns,
+          ...columnsNotInStorage
+        ]
+      };
+    } catch (error) {
+      console.warn('Warning: could not parse smart table columns from storage!');
+      return configuration;
     }
   }
 

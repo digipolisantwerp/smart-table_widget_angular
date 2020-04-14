@@ -18,6 +18,7 @@ export class AppComponent {
   customConfiguration: SmartTableConfig = {
     options: {
       persistTableConfig: true,
+      storageIdentifier: 'test-smart-table',
       translations: {
         moreFilters: 'Extra filters',
         export: 'Exporteer',
