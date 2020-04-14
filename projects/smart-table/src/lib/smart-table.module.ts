@@ -11,6 +11,7 @@ import {components, services} from './index';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
 import {IModuleConfig} from './smart-table/smart-table.types';
 import {PROVIDE_ID} from './indentifier.provider';
+import {TableFactory} from './services/table.factory';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -35,7 +36,12 @@ const defaultConfiguration: IModuleConfig = {
   ],
   providers: [
     DatePipe,
-    ...services
+    ...services,
+    TableFactory,
+    {
+      provide: PROVIDE_ID,
+      useValue: null
+    }
   ],
   exports: [
     SmartTableComponent,
@@ -58,7 +64,8 @@ export class SmartTableModule {
           }
         },
         DatePipe,
-        ...services
+        ...services,
+        TableFactory
       ],
     };
   }

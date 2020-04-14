@@ -24,7 +24,7 @@
               <div class="u-margin-xs">
                 <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs">
                   <li class="a-list__item"
-                      *ngFor="let column of selectableColumns; index as i">
+                      *ngFor="let column of (selectableColumns$ | async); index as i">
                     <div class="a-input__checkbox">
                       <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
                              name="{{ 'checkbox--' + i + '--' + column.value }}" [checked]="!column.hidden"
