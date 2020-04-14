@@ -26,10 +26,10 @@
                   <li class="a-list__item"
                       *ngFor="let column of selectableColumns; index as i">
                     <div class="a-input__checkbox">
-                      <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.id }}"
-                             name="{{ 'checkbox--' + i + '--' + column.id }}" [checked]="!column.hidden"
+                      <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
+                             name="{{ 'checkbox--' + i + '--' + column.value }}" [checked]="!column.hidden"
                              (change)="toggleSelectedColumn(column.value)">
-                      <label for="{{ 'checkbox--' + i + '--' + column.id }}">{{ column.label }}</label>
+                      <label for="{{ 'checkbox--' + i + '--' + column.value }}">{{ column.label }}</label>
                     </div>
                   </li>
                 </ul>
@@ -102,7 +102,7 @@
   <div class="aui-smart-table__wrapper">
     <div class="u-margin-top u-margin-bottom">
       <aui-table [loadDataMessage]="options.loadDataMessage" [noDataMessage]="options.noDataMessage"
-                 [loading]="rowsLoading" [columns]="columns" [rows]="rows" [hasClickAction]="true"
+                 [loading]="rowsLoading" [columns]="visibleColumns$ | async" [rows]="rows" [hasClickAction]="true"
                  [activeSorting]="orderBy"
                  (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
     </div>
