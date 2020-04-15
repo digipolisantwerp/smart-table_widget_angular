@@ -21,7 +21,7 @@ import {
 } from './smart-table.types';
 import {filter, first, map, mapTo, scan, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
-import {BehaviorSubject, combineLatest, forkJoin, merge, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
 
 @Component({
@@ -80,10 +80,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   visibleColumns$: Observable<TableColumn[]>;
 
   // Fires when the user wants to hide columns
-  private toggleHideColumn$: Subject<void> = new Subject();
+  public toggleHideColumn$: Subject<void> = new Subject();
   // Fires when the user toggles a checkbox to hide a column.
   // This doesn't actually hide the columns but changes data
-  private toggleSelectedColumn$: Subject<{ key: string }> = new Subject();
+  public toggleSelectedColumn$: Subject<{ key: string }> = new Subject();
 
   private destroy$ = new Subject();
 
@@ -149,7 +149,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
     // Columns are extracted from configuration
     this.allColumns$ = this.configuration$.pipe(
-      take(1),
       map((config: SmartTableConfig) =>
         config.columns.map(c => this.factory.createTableColumnFromConfig(c, this.columnTypes, this.options.columnDateFormat))),
       startWith([]),
@@ -218,26 +217,22 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }),
       ),
       this.toggleSelectedColumn$.pipe(
-        switchMap((v) => combineLatest(of(v.key), this.selectableColumns$).pipe(first())),
-        scan((acc, currentValue) => {
-          const [key, selectableColumns] = currentValue;
-          const i = (selectableColumns as TableColumn[]).findIndex(c => c.value === key);
-          if (i > -1) {
-            selectableColumns[i].hidden = !selectableColumns[i].hidden;
-          }
-          return selectableColumns;
-        }, [])
-      )
-    ).pipe(
+        switchMap((v) => this.selectableColumns$.pipe(take(1), scan((acc, selectableColumns) => {
+            const i = (selectableColumns as TableColumn[]).findIndex(c => c.value === v.key);
+            if (i > -1) {
+              selectableColumns[i].hidden = !selectableColumns[i].hidden;
+            }
+            return selectableColumns;
+          }, []))
+        )
+      )).pipe(
       startWith([]),
       shareReplay(1),
     );
 
     // Start the show!
     this.configuration$.pipe(
-      switchMap(() => forkJoin(
-        this.initFilters()
-      )),
+      switchMap(() => this.initFilters()),
       switchMap(() => this.getTableData(1))
     ).subscribe();
   }
@@ -298,7 +293,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected initFilters(): Observable<void> {
+  public initFilters(): Observable<void> {
     return this.configuration$.pipe(
       take(1),
       filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
@@ -344,7 +339,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  protected getTableData(page: number, pageSize?: number): Observable<void> {
+  public getTableData(page: number, pageSize?: number): Observable<void> {
     this.pageChanging = !this.rowsLoading;
     return this.dataService
       .getData(this.apiUrl, this.httpHeaders, this.dataQuery, page, pageSize || this.pageSize)
