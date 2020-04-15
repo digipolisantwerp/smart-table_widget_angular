@@ -53,7 +53,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   /** @internal */
   selectableColumns$: Observable<TableColumn[]>;
 
-  private baseFilters: SmartTableDataQueryFilter[] = [];
   private dataQuery$: Observable<SmartTableDataQuery>;
 
   /**
@@ -92,7 +91,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public rows$: Observable<Array<any>>;
 
   /** @internal */
-  orderBy: OrderBy;
+  orderBy: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
   /** @internal */
   currentPage$ = new BehaviorSubject<number>(1);
   /** @internal */
@@ -250,7 +249,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
     this.optionalFilters$ = merge(this.optionalFilters$, onFilter(this.optionalFilters$));
-    this.optionalFilters$.subscribe(console.log);
 
     this.visibleFilters$ = this.configuration$.pipe(
       filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
@@ -281,11 +279,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.visibleFilters$,
       this.optionalFilters$,
       this.genericFilter$,
-      this.configuration$
+      this.configuration$,
+      this.orderBy
     ).pipe(
-      map(([visibleFilters, optionalFilters, genericFilter, configuration]:
-             [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig]) => {
+      map(([visibleFilters, optionalFilters, genericFilter, configuration, orderBy]:
+             [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig, OrderBy]) => {
         const filters = [
+          ...configuration.baseFilters,
           ...this.createDataQueryFilters(visibleFilters),
           ...this.createDataQueryFilters(optionalFilters)
         ];
@@ -293,19 +293,19 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         if (createdFilter) {
           filters.push(createdFilter);
         }
-        return [filters, configuration];
+        return [filters, configuration, orderBy];
       }),
-      map(([filters, configuration]: [any[], SmartTableConfig]) => {
-        if (!this.orderBy) {
+      map(([filters, configuration, orderBy]: [any[], SmartTableConfig, OrderBy]) => {
+        if (!orderBy) {
           return {filters};
         }
-        const sortColumn = configuration.columns.find(column => column.key === this.orderBy.key);
+        const sortColumn = configuration.columns.find(column => column.key === orderBy.key);
         if (!sortColumn) {
           return {filters};
         }
         return {
           filters,
-          sort: {path: sortColumn.sortPath, ascending: this.orderBy.order === 'asc'}
+          sort: {path: sortColumn.sortPath, ascending: orderBy.order === 'asc'}
         };
       }),
       startWith({filters: [], sort: {path: '', ascending: false}})
@@ -327,14 +327,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }
         return data._embedded ? data._embedded.resourceList : [];
       }),
-      tap(console.log),
       startWith([])
     );
 
-    // Start the show!
-    this.configuration$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();
     this.persistInStorage$.pipe(
       takeUntil(this.destroy$)
     ).subscribe();
@@ -413,7 +408,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   protected resetOrderBy() {
     if (SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder) {
-      this.orderBy = SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
+      this.orderBy.next(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
     }
   }
 
@@ -459,11 +454,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   public onOrderBy(orderBy: OrderBy) {
-    this.orderBy = orderBy;
-    /* TODO this.syncDataQuery().pipe(
-      switchMap(() => this.getTableData(this.curPage)),
-      first()
-    ).subscribe();*/
+    this.orderBy.next(orderBy);
   }
 
   public toggleOptionalFilters() {
@@ -472,12 +463,14 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public exportToExcel() {
     this.pageChanging = true;
-    /* TODO this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.dataQuery).pipe(
+    this.dataQuery$.pipe(
+      first(),
+      switchMap(dataQuery => this.dataService.getAllData(this.apiUrl, this.httpHeaders, dataQuery)),
       switchMap((data) => this.filterOutColumns(data._embedded.resourceList)),
       tap(exportData => this.dataService.exportAsExcelFile(exportData, 'smart-table')),
       tap(() => this.pageChanging = false),
       first()
-    ).subscribe();*/
+    ).subscribe();
   }
 
   public toggleSelectedColumn(value) {
