@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {filter, first, map, scan, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -186,8 +186,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.allColumns$,
       this.toggleHideColumn$.pipe(
         switchMap(() => combineLatest(this.allColumns$, this.selectableColumns$).pipe((take(1)))),
-        scan((acc, array) => {
-          const [columns, selectableColumns] = array;
+        map(([columns, selectableColumns]) => {
           return columns.map(column => {
             const found = selectableColumns.find(c => c.value === column.value);
             if (found) {
@@ -195,7 +194,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
             }
             return column;
           });
-        }, [])
+        })
       )
     ).pipe(
       map((columns: Array<TableColumn>) => columns.filter(c => !!c && !c.hidden)),
@@ -218,13 +217,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }),
       ),
       this.toggleSelectedColumn$.pipe(
-        switchMap((v) => this.selectableColumns$.pipe(take(1), scan((acc, selectableColumns) => {
+        switchMap((v) => this.selectableColumns$.pipe(take(1), map((selectableColumns) => {
             const i = (selectableColumns as TableColumn[]).findIndex(c => c.value === v.key);
             if (i > -1) {
               selectableColumns[i].hidden = !selectableColumns[i].hidden;
             }
             return selectableColumns;
-          }, [])
+          })
         ))
       )
     ).pipe(
@@ -232,6 +231,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1),
     );
 
+    // Helper so not to have duplicate code
     const onFilter = (filters: Observable<SmartTableFilter[]>) => this.onFilter$.pipe(
       switchMap((event: UpdateFilterArgs) => filters.pipe(take(1), map((list: Array<SmartTableFilter>) => {
         const found = list.find(f => f.id === event.filter.id);
@@ -242,6 +242,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       })))
     );
 
+    // Filters are based on the configuration coming in
     this.optionalFilters$ = this.configuration$.pipe(
       filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
       map((config: SmartTableConfig) => this.setupFilter(config.filters, SmartTableFilterDisplay.Optional)),
@@ -275,6 +276,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
 
+    // Build up the data query based on the different filters
+    // A new data query will be created every time that new filters come in
     this.dataQuery$ = combineLatest(
       this.visibleFilters$,
       this.optionalFilters$,
@@ -311,6 +314,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       startWith({filters: [], sort: {path: '', ascending: false}})
     );
 
+    // Get the data on the bases of the data query
+    // or when we change the pagination
     this.rows$ = combineLatest(
       this.dataQuery$,
       this.pageSize$,
@@ -331,6 +336,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       startWith([])
     );
 
+    // Start the show!
+    // the html template subscribes to the configuration, so we don't have to do that manually
     this.persistInStorage$.pipe(
       takeUntil(this.destroy$)
     ).subscribe();
