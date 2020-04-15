@@ -5,8 +5,8 @@
         <div class="a-input__wrapper">
           <button class="a-button-outline a-button-export has-icon"
                   (click)="exportToExcel()"
-                  [attr.aria-label]="options.translations?.export || 'Exporteer'"
-                  [title]="options.translations?.export || 'Exporteer'">
+                  [attr.aria-label]="(configuration$ | async)?.options.translations?.export || 'Exporteer'"
+                  [title]="(configuration$ | async)?.options.translations?.export || 'Exporteer'">
             <span class="fa fa-file-o"></span>
           </button>
         </div>
@@ -15,8 +15,9 @@
         <div class="a-input__wrapper">
           <div auiFlyout size="small" align="right">
             <button class="a-button-outline has-icon"
-                    [attr.aria-label]="options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
-                    [title]="options.translations?.openColumnSelector || 'Toon/verberg kolommen'" auiFlyoutAction>
+                    [attr.aria-label]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+                    [title]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+                    auiFlyoutAction>
               <span class="fa fa-columns"></span>
             </button>
 
@@ -34,7 +35,7 @@
                   </li>
                 </ul>
                 <button class="a-button a-button--small a-button--block" (click)="onColumnsSelected()">
-                  {{ options.translations?.apply || 'Toepassen'}}
+                  {{ (configuration$ | async)?.options.translations?.apply || 'Toepassen'}}
                 </button>
               </div>
             </div>
@@ -69,8 +70,9 @@
         <div class="a-input__wrapper">
           <button class="a-button-outline has-icon-right a-toggle-filters" (click)="toggleOptionalFilters()"
                   [attr.aria-controls]="'toggle-' + instanceId" [attr.aria-expanded]="optionalFiltersVisible">
-            {{ options.translations?.moreFilters || 'Extra filters'}} <span class="fa fa-angle-down"
-                                                                            [ngClass]="{'is-toggled': optionalFiltersVisible }"></span>
+            {{ (configuration$ | async)?.options.translations?.moreFilters || 'Extra filters'}} <span
+            class="fa fa-angle-down"
+            [ngClass]="{'is-toggled': optionalFiltersVisible }"></span>
           </button>
         </div>
       </div>
@@ -101,7 +103,8 @@
 
   <div class="aui-smart-table__wrapper">
     <div class="u-margin-top u-margin-bottom">
-      <aui-table [loadDataMessage]="options.loadDataMessage" [noDataMessage]="options.noDataMessage"
+      <aui-table [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
+                 [noDataMessage]="(configuration$ | async)?.options.noDataMessage"
                  [loading]="rowsLoading" [columns]="visibleColumns$ | async" [rows]="rows" [hasClickAction]="true"
                  [activeSorting]="orderBy"
                  (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
@@ -111,7 +114,7 @@
       <div class="aui-smart-table__actions--left">
         <aui-items-per-page
           class="aui-smart-table__items-per-page"
-          [selectOptions]="options.pageSizeOptions"
+          [selectOptions]="(configuration$ | async)?.options.pageSizeOptions"
           [amountPerPage]="pageSize"
           (returnAmount)="onPageSizeChanged($event)">
         </aui-items-per-page>

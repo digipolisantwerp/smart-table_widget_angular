@@ -17,7 +17,6 @@ import {
   SmartTableFilterDisplay,
   SmartTableFilterOperator,
   SmartTableFilterType,
-  SmartTableOptions,
   UpdateFilterArgs,
 } from './smart-table.types';
 import {filter, first, map, mapTo, scan, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
@@ -43,8 +42,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   /** fires when the user selects a row */
   @Output() rowClicked = new EventEmitter<any>();
 
-  /** @internal */
-  options: SmartTableOptions = SMARTTABLE_DEFAULT_OPTIONS;
   /** @internal */
   genericFilter: SmartTableFilter;
   /** @internal */
@@ -97,7 +94,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   /** @internal */
   curPage = 1;
   /** @internal */
-  pageSize = 5;
+  pageSize = SMARTTABLE_DEFAULT_OPTIONS.pageSize;
   /** @internal */
   totalResults = 0;
   /** @internal */
@@ -120,7 +117,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     @Inject(PROVIDE_ID) private storageIdentifier: string,
     private factory: TableFactory
   ) {
-    this.pageSize = this.options.pageSize;
     this.rowsLoading = true;
     this.pageChanging = false;
   }
@@ -153,7 +149,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     // Columns are extracted from configuration
     this.allColumns$ = this.configuration$.pipe(
       map((config: SmartTableConfig) =>
-        config.columns.map(c => this.factory.createTableColumnFromConfig(c, this.columnTypes, this.options.columnDateFormat))),
+        config.columns.map(c =>
+          this.factory.createTableColumnFromConfig(c, this.columnTypes, SMARTTABLE_DEFAULT_OPTIONS.columnDateFormat))),
       startWith([]),
       tap(() => this.resetOrderBy()),
       shareReplay(1)
@@ -371,8 +368,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   protected resetOrderBy() {
-    if (this.options.defaultSortOrder) {
-      this.orderBy = this.options.defaultSortOrder;
+    if (SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder) {
+      this.orderBy = SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
     }
   }
 
@@ -443,7 +440,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   public onFilter(value: UpdateFilterArgs) {
-    if (this.options.resetSortOrderOnFilter) {
+    if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
       this.resetOrderBy();
     }
     this.syncDataQuery().pipe(
