@@ -20,8 +20,6 @@ import {cold} from 'jasmine-marbles';
 describe('Smart Table Test', () => {
   let component: SmartTableComponent;
   let fixture: ComponentFixture<SmartTableComponent>;
-  let smartTableService: SmartTableService;
-  let datePipe: DatePipe;
   let storageService: LocalstorageService;
   let mockConfiguration: SmartTableConfig;
   let sandbox: SinonSandbox;
@@ -125,14 +123,14 @@ describe('Smart Table Test', () => {
       fixture.detectChanges();
       const result$ = component.configuration$;
       expect(result$).toBeObservable(cold('---(ab)', {
-        a: {
+        a: {...mockConfiguration},
+        b: {
           ...mockConfiguration,
           options: {
             ...mockConfiguration.options,
             pageSizeOptions: [10, 11, 12]
           }
         },
-        b: {...mockConfiguration}
       }));
     });
 
@@ -309,6 +307,44 @@ describe('Smart Table Test', () => {
           hidden: true
         }],
       }));
+    });
+  });
+
+  describe('Persisting Columns in configuration', () => {
+    it('should persist columns if set so in configuration', () => {
+
+      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+        a: {
+          ...mockConfiguration,
+          columns: [{
+            key: 'a',
+            visible: true
+          }, {
+            key: 'b',
+            visible: false
+          }],
+          options: {
+            ...mockConfiguration,
+            persistTableConfig: true,
+            storageIdentifier: 'test'
+          }
+        }
+      }));
+      (factory.createTableColumnFromConfig as SinonStub).callsFake((column) => {
+        return {value: column.key, hidden: !column.visible};
+      });
+      component.toggleHideColumn$ = cold('-----a') as any;
+      fixture.detectChanges();
+      expect(component.persistInStorage$).toBeObservable(cold('-----a', {
+        a: [{
+          key: 'a',
+          visible: true
+        }, {
+          key: 'b',
+          visible: false
+        }]
+      }));
+      expect((storageService.storage.setItem as SinonStub).called).toBe(true);
     });
   });
 });

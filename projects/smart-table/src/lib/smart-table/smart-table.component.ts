@@ -7,6 +7,7 @@ import {HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {SmartTableService} from './smart-table.service';
 import {
+  SmartTableColumnConfig,
   SmartTableColumnCustomType,
   SmartTableConfig,
   SmartTableDataQuery,
@@ -21,7 +22,7 @@ import {
 } from './smart-table.types';
 import {filter, first, map, mapTo, scan, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
-import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
 
 @Component({
@@ -36,7 +37,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   @Input()
   set configuration(value: SmartTableConfig) {
-    (this.customConfiguration$ as BehaviorSubject<SmartTableConfig>).next(value);
+    this.customConfiguration$.next(value);
   }
 
   /** fires when the user selects a row */
@@ -68,7 +69,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   /**
    * Custom configuration that comes in with setting the @input() configuration
    */
-  private customConfiguration$: Observable<SmartTableConfig> = new BehaviorSubject(null);
+  private customConfiguration$ = new BehaviorSubject<SmartTableConfig>(null);
   /**
    * Represents all the columns that the table may contain
    */
@@ -84,6 +85,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   // Fires when the user toggles a checkbox to hide a column.
   // This doesn't actually hide the columns but changes data
   public toggleSelectedColumn$: Subject<{ key: string }> = new Subject();
+
+  public persistInStorage$: Observable<SmartTableColumnConfig[]>;
 
   private destroy$ = new Subject();
 
@@ -123,9 +126,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.configuration$ = merge(
-      this.getConfiguration(),
-      this.customConfiguration$.pipe(
+    this.configuration$ = concat(
+      this.getConfiguration(),  // First get the default configuration
+      this.customConfiguration$.pipe( // And then override with configuration we get from the user
         filter(config => !!config),
         switchMap((customConfig) => combineLatest(of(customConfig), this.configuration$).pipe(first())),
         map(([customConfig, configuration]) => {
@@ -157,8 +160,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     );
 
     // Persist columns configuration in storage whenever we show/hide columns
-    this.toggleHideColumn$.pipe(
-      takeUntil(this.destroy$),
+    this.persistInStorage$ = this.toggleHideColumn$.pipe(
       tap(() => this.flyOutService.close()),
       switchMap(() => combineLatest(this.configuration$, this.selectableColumns$)),
       filter(([config, selectableColumns]: [SmartTableConfig, TableColumn[]]) =>
@@ -174,8 +176,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         return configuration;
       }),
       tap((config: SmartTableConfig) =>
-        this.localstorageService.storage.setItem(config.options.storageIdentifier, JSON.stringify(config.columns)))
-    ).subscribe();
+        this.localstorageService.storage.setItem(config.options.storageIdentifier, JSON.stringify(config.columns))),
+      map(config => config.columns)
+    );
 
     /**
      * Visible columns start of with all columns and then
@@ -223,17 +226,22 @@ export class SmartTableComponent implements OnInit, OnDestroy {
               selectableColumns[i].hidden = !selectableColumns[i].hidden;
             }
             return selectableColumns;
-          }, []))
-        )
-      )).pipe(
+          }, [])
+        ))
+      )
+    ).pipe(
       startWith([]),
       shareReplay(1),
     );
 
     // Start the show!
     this.configuration$.pipe(
+      takeUntil(this.destroy$),
       switchMap(() => this.initFilters()),
       switchMap(() => this.getTableData(1))
+    ).subscribe();
+    this.persistInStorage$.pipe(
+      takeUntil(this.destroy$)
     ).subscribe();
   }
 
