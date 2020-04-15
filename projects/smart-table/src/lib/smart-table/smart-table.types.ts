@@ -122,7 +122,7 @@ export interface UpdateFilterArgs {
 
 export interface SmartTableDataQuery {
   filters: SmartTableDataQueryFilter[];
-  sort: SmartTableDataQuerySortOrder;
+  sort?: SmartTableDataQuerySortOrder;
 }
 
 export interface SmartTableDataQueryFilter {

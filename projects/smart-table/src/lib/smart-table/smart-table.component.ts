@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {filter, first, map, mapTo, scan, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, first, map, scan, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -43,18 +43,18 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   @Output() rowClicked = new EventEmitter<any>();
 
   /** @internal */
-  genericFilter: SmartTableFilter;
+  genericFilter$: Observable<SmartTableFilter>;
   /** @internal */
-  visibleFilters: SmartTableFilter[] = [];
+  visibleFilters$: Observable<SmartTableFilter[]>;
   /** @internal */
-  optionalFilters: SmartTableFilter[] = [];
+  optionalFilters$: Observable<SmartTableFilter[]>;
   /** @internal Whether the optional filters are currently visible (if any exist) */
   optionalFiltersVisible = false;
   /** @internal */
   selectableColumns$: Observable<TableColumn[]>;
 
   private baseFilters: SmartTableDataQueryFilter[] = [];
-  private dataQuery: SmartTableDataQuery = {filters: [], sort: {path: '', ascending: false}};
+  private dataQuery$: Observable<SmartTableDataQuery>;
 
   /**
    * Observable that contains the configuration set for the smart table.
@@ -85,16 +85,18 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public persistInStorage$: Observable<SmartTableColumnConfig[]>;
 
+  public onFilter$ = new Subject<UpdateFilterArgs>();
+
   private destroy$ = new Subject();
 
-  public rows: Array<any> = [];
+  public rows$: Observable<Array<any>>;
 
   /** @internal */
   orderBy: OrderBy;
   /** @internal */
-  curPage = 1;
+  currentPage$ = new BehaviorSubject<number>(1);
   /** @internal */
-  pageSize = SMARTTABLE_DEFAULT_OPTIONS.pageSize;
+  pageSize$ = new BehaviorSubject<number>(SMARTTABLE_DEFAULT_OPTIONS.pageSize);
   /** @internal */
   totalResults = 0;
   /** @internal */
@@ -231,11 +233,107 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1),
     );
 
+    const onFilter = (filters: Observable<SmartTableFilter[]>) => this.onFilter$.pipe(
+      switchMap((event: UpdateFilterArgs) => filters.pipe(take(1), map((list: Array<SmartTableFilter>) => {
+        const found = list.find(f => f.id === event.filter.id);
+        if (found) {
+          found.value = event.value;
+        }
+        return list;
+      })))
+    );
+
+    this.optionalFilters$ = this.configuration$.pipe(
+      filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
+      map((config: SmartTableConfig) => this.setupFilter(config.filters, SmartTableFilterDisplay.Optional)),
+      startWith([]),
+      shareReplay(1)
+    );
+    this.optionalFilters$ = merge(this.optionalFilters$, onFilter(this.optionalFilters$));
+    this.optionalFilters$.subscribe(console.log);
+
+    this.visibleFilters$ = this.configuration$.pipe(
+      filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
+      map((config: SmartTableConfig) => this.setupFilter(config.filters, SmartTableFilterDisplay.Visible)),
+      startWith([]),
+      shareReplay(1)
+    );
+    this.visibleFilters$ = merge(this.visibleFilters$, onFilter(this.visibleFilters$));
+
+    this.genericFilter$ = this.configuration$.pipe(
+      map((config: SmartTableConfig) => config.filters.find(f => f.display === SmartTableFilterDisplay.Generic)),
+      filter(f => !!f),
+      map(genericFilter => {
+        const f = new SmartTableFilter();
+        f.id = 'generic';
+        f.type = SmartTableFilterType.Input;
+        f.fields = [...genericFilter.fields];
+        f.operator = SmartTableFilterOperator.ILike;
+        f.label = genericFilter.label || '';
+        f.placeholder = genericFilter.placeholder || '';
+        return f;
+      }),
+      startWith(null),
+      shareReplay(1)
+    );
+
+    this.dataQuery$ = combineLatest(
+      this.visibleFilters$,
+      this.optionalFilters$,
+      this.genericFilter$,
+      this.configuration$
+    ).pipe(
+      map(([visibleFilters, optionalFilters, genericFilter, configuration]:
+             [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig]) => {
+        const filters = [
+          ...this.createDataQueryFilters(visibleFilters),
+          ...this.createDataQueryFilters(optionalFilters)
+        ];
+        const createdFilter = this.createDataQueryFilter(genericFilter);
+        if (createdFilter) {
+          filters.push(createdFilter);
+        }
+        return [filters, configuration];
+      }),
+      map(([filters, configuration]: [any[], SmartTableConfig]) => {
+        if (!this.orderBy) {
+          return {filters};
+        }
+        const sortColumn = configuration.columns.find(column => column.key === this.orderBy.key);
+        if (!sortColumn) {
+          return {filters};
+        }
+        return {
+          filters,
+          sort: {path: sortColumn.sortPath, ascending: this.orderBy.order === 'asc'}
+        };
+      }),
+      startWith({filters: [], sort: {path: '', ascending: false}})
+    );
+
+    this.rows$ = combineLatest(
+      this.dataQuery$,
+      this.pageSize$,
+      this.currentPage$
+    ).pipe(
+      tap(() => this.pageChanging = !this.rowsLoading),
+      switchMap(([dataQuery, pageSize, page]) =>
+        this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),
+      map((data) => {
+        this.rowsLoading = false;
+        this.pageChanging = false;
+        if (data._page) {
+          this.totalResults = data._page.totalElements;
+        }
+        return data._embedded ? data._embedded.resourceList : [];
+      }),
+      tap(console.log),
+      startWith([])
+    );
+
     // Start the show!
     this.configuration$.pipe(
-      takeUntil(this.destroy$),
-      switchMap(() => this.initFilters()),
-      switchMap(() => this.getTableData(1))
+      takeUntil(this.destroy$)
     ).subscribe();
     this.persistInStorage$.pipe(
       takeUntil(this.destroy$)
@@ -298,20 +396,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  public initFilters(): Observable<void> {
-    return this.configuration$.pipe(
-      take(1),
-      filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
-      tap((config: SmartTableConfig) => {
-        this.visibleFilters = this.setupFilter(config.filters, SmartTableFilterDisplay.Visible);
-        this.optionalFilters = this.setupFilter(config.filters, SmartTableFilterDisplay.Optional);
-        this.initGenericFilter();
-      }),
-      switchMap(() => this.syncDataQuery()),
-      take(1)
-    );
-  }
-
   protected setupFilter(filters: SmartTableFilterConfig[], type: SmartTableFilterDisplay): Array<SmartTableFilter> {
     return filters.filter(f => f.display === type).map((filterConfig) => {
       const _filter = new SmartTableFilter();
@@ -327,89 +411,17 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  protected initGenericFilter() {
-    this.configuration$.pipe(
-      take(1),
-      map((config: SmartTableConfig) => config.filters.find(f => f.display === SmartTableFilterDisplay.Generic)),
-      filter(f => !!f),
-      tap(genericFilter => {
-        this.genericFilter = new SmartTableFilter();
-        this.genericFilter.id = 'generic';
-        this.genericFilter.type = SmartTableFilterType.Input;
-        this.genericFilter.fields = [...genericFilter.fields];
-        this.genericFilter.operator = SmartTableFilterOperator.ILike;
-        this.genericFilter.label = genericFilter.label || '';
-        this.genericFilter.placeholder = genericFilter.placeholder || '';
-      })
-    ).subscribe();
-  }
-
-  public getTableData(page: number, pageSize?: number): Observable<void> {
-    this.pageChanging = !this.rowsLoading;
-    return this.dataService
-      .getData(this.apiUrl, this.httpHeaders, this.dataQuery, page, pageSize || this.pageSize)
-      .pipe(
-        tap((data) => {
-          this.rowsLoading = false;
-          this.pageChanging = false;
-          if (data._embedded) {
-            this.rows = data._embedded.resourceList;
-          }
-          if (data._page) {
-            this.curPage = parseInt(data._page.number, 10);
-            if (pageSize) {
-              this.pageSize = pageSize;
-            }
-            this.totalResults = data._page.totalElements;
-          }
-        }),
-        take(1)
-      );
-  }
-
   protected resetOrderBy() {
     if (SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder) {
       this.orderBy = SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
     }
   }
 
-  protected syncDataQuery(): Observable<void> {
-    return this.configuration$.pipe(
-      take(1),
-      tap(() => {
-        this.dataQuery.filters = [...this.baseFilters];
-
-        this.dataQuery.filters = [
-          ...this.dataQuery.filters,
-          ...this.createDataQueryFilters(this.visibleFilters),
-          ...this.createDataQueryFilters(this.optionalFilters)
-        ];
-
-        const createdFilter = this.createDataQueryFilter(this.genericFilter);
-        if (createdFilter) {
-          this.dataQuery.filters.push(createdFilter);
-        }
-      }),
-      tap((config: SmartTableConfig) => {
-        if (!this.orderBy) {
-          return;
-        }
-        const sortColumn = config.columns.find(column => column.key === this.orderBy.key);
-        if (!sortColumn) {
-          return;
-        }
-        this.dataQuery.sort = {path: sortColumn.sortPath, ascending: this.orderBy.order === 'asc'};
-
-      }),
-      mapTo(undefined)
-    );
-  }
-
-  createDataQueryFilters(filters: SmartTableFilter[]) {
+  createDataQueryFilters(filters: SmartTableFilter[]): SmartTableDataQueryFilter[] {
     return filters.filter(f => f && f.value).map(this.createDataQueryFilter);
   }
 
-  createDataQueryFilter(f: SmartTableFilter) {
+  createDataQueryFilter(f: SmartTableFilter): SmartTableDataQueryFilter {
     if (f && f.value) {
       return {
         fields: f.fields,
@@ -421,13 +433,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public onPageChanged(page) {
     if (!isNaN(page)) {
-      this.getTableData(parseInt(page, 10), this.pageSize).subscribe();
+      this.currentPage$.next(Number(page));
     }
   }
 
   public onPageSizeChanged(pageSize) {
     if (!isNaN(pageSize)) {
-      this.getTableData(1, parseInt(pageSize, 10)).subscribe();
+      this.pageSize$.next(Number(pageSize));
     }
   }
 
@@ -443,18 +455,15 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
       this.resetOrderBy();
     }
-    this.syncDataQuery().pipe(
-      switchMap(() => this.getTableData(1)),
-      first()
-    ).subscribe();
+    this.onFilter$.next(value);
   }
 
   public onOrderBy(orderBy: OrderBy) {
     this.orderBy = orderBy;
-    this.syncDataQuery().pipe(
+    /* TODO this.syncDataQuery().pipe(
       switchMap(() => this.getTableData(this.curPage)),
       first()
-    ).subscribe();
+    ).subscribe();*/
   }
 
   public toggleOptionalFilters() {
@@ -463,12 +472,12 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public exportToExcel() {
     this.pageChanging = true;
-    this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.dataQuery).pipe(
+    /* TODO this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.dataQuery).pipe(
       switchMap((data) => this.filterOutColumns(data._embedded.resourceList)),
       tap(exportData => this.dataService.exportAsExcelFile(exportData, 'smart-table')),
       tap(() => this.pageChanging = false),
       first()
-    ).subscribe();
+    ).subscribe();*/
   }
 
   public toggleSelectedColumn(value) {
