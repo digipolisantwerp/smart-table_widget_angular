@@ -65,7 +65,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   /**
    * Custom configuration that comes in with setting the @input() configuration
    */
-  private customConfiguration$ = new BehaviorSubject<SmartTableConfig>(null);
+  public customConfiguration$ = new BehaviorSubject<SmartTableConfig>(null);
   /**
    * Represents all the columns that the table may contain
    */
@@ -162,7 +162,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       tap(() => this.flyOutService.close()),
       switchMap(() => combineLatest(this.configuration$, this.selectableColumns$)),
       filter(([config, selectableColumns]: [SmartTableConfig, TableColumn[]]) =>
-        config.options.persistTableConfig === true && !!config.options.storageIdentifier),
+        config.options.persistTableConfig === true && !!config.options.storageIdentifier && !!selectableColumns),
       map(([configuration, selectableColumns]) => {
         configuration.columns.map(column => {
           const found = (selectableColumns as Array<TableColumn>).find(c => c.value === column.key);
@@ -319,6 +319,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
         this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),
+      filter(data => !!data),
       map((data) => {
         this.rowsLoading = false;
         this.pageChanging = false;
@@ -391,19 +392,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected setupFilter(filters: SmartTableFilterConfig[], type: SmartTableFilterDisplay): Array<SmartTableFilter> {
-    return filters.filter(f => f.display === type).map((filterConfig) => {
-      const _filter = new SmartTableFilter();
-      _filter.id = filterConfig.id;
-      _filter.type = filterConfig.type;
-      _filter.fields = [filterConfig.field];
-      _filter.operator = filterConfig.operator;
-      _filter.label = filterConfig.label;
-      _filter.placeholder = filterConfig.placeholder;
-      _filter.options = filterConfig.options;
-      _filter.value = filterConfig.value;
-      return _filter;
-    });
+  public setupFilter(filters: SmartTableFilterConfig[], type: SmartTableFilterDisplay): Array<SmartTableFilter> {
+    return filters.filter(f => f.display === type).map(filterConfig => this.factory.createSmartFilterFromConfig(filterConfig));
   }
 
   protected resetOrderBy() {
@@ -484,7 +474,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         return data.map(d => {
           return Object.keys(d)
             .filter(key => columnKeys.indexOf(key) >= 0)
-            .reduce((acc, key) => (acc[key] = d[key], acc), {});
+            .reduce((acc, key) => {
+              acc[key] = d[key];
+              return acc;
+            }, {});
         });
       })
     );

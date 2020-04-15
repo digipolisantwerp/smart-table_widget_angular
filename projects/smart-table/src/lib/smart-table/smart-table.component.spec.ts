@@ -14,7 +14,7 @@ import {DatePipe} from '@angular/common';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {TableFactory} from '../services/table.factory';
-import {SmartTableConfig} from './smart-table.types';
+import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from './smart-table.types';
 import {cold} from 'jasmine-marbles';
 
 describe('Smart Table Test', () => {
@@ -24,6 +24,8 @@ describe('Smart Table Test', () => {
   let mockConfiguration: SmartTableConfig;
   let sandbox: SinonSandbox;
   let factory: TableFactory;
+  let service: SmartTableService;
+  let mockFilters: SmartTableFilterConfig[];
 
   beforeEach(async () => {
     sandbox = sinon.createSandbox();
@@ -78,12 +80,25 @@ describe('Smart Table Test', () => {
       }
     };
 
+    mockFilters = [
+      {
+        id: 'a',
+        display: SmartTableFilterDisplay.Visible
+      },
+      {
+        id: 'b',
+        display: SmartTableFilterDisplay.Optional
+      }
+    ] as any;
+
     storageService = TestBed.get(LocalstorageService);
     factory = TestBed.get(TableFactory);
     sandbox.stub(storageService, 'storage').value({
       getItem: sinon.stub(),
       setItem: sinon.stub()
     });
+    service = TestBed.get(SmartTableService);
+    (service.getData as SinonStub).returns(cold('a'));
   });
 
   afterEach(() => {
@@ -99,22 +114,13 @@ describe('Smart Table Test', () => {
 
   describe('Sourcing Configuration', () => {
     it('should get configuration from api service', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('--(a|)', {a: mockConfiguration}));
+      sinon.stub(component, 'getConfiguration').returns(cold('--a|', {a: mockConfiguration}));
       const spyOnGetColumns = sinon.stub(component, 'getLocalStorageColumns');
       fixture.detectChanges();
       const result$ = component.configuration$;
+      fixture.detectChanges();
       expect(result$).toBeObservable(cold('--a', {a: mockConfiguration}));
       expect(spyOnGetColumns.calledOnce).toBe(false);
-    });
-
-    it('should initialize filters and get data when configuration comes in', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('(a|)', {a: mockConfiguration}));
-      const spyOnInitFilters = sinon.stub(component, 'initFilters').returns(cold('a'));
-      const spyOnGetData = sinon.stub(component, 'getTableData').returns(cold('a'));
-      fixture.detectChanges();
-      expect(component.configuration$).toBeObservable(cold('a', {a: mockConfiguration}));
-      expect(spyOnInitFilters.calledOnce).toBe(true);
-      expect(spyOnGetData.withArgs(1).calledOnce).toBe(true);
     });
 
     it('should override the configuration by having custom configuration coming in', () => {
@@ -345,6 +351,86 @@ describe('Smart Table Test', () => {
         }]
       }));
       expect((storageService.storage.setItem as SinonStub).called).toBe(true);
+    });
+  });
+
+  describe('Filters', () => {
+    it('should create the visible filters', () => {
+      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+        a: {
+          ...mockConfiguration,
+          filters: [...mockFilters]
+        }
+      }));
+      (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
+        return {
+          id: config.id
+        };
+      });
+      fixture.detectChanges();
+      expect(component.visibleFilters$).toBeObservable(cold('a--b', {
+        a: [],
+        b: [{
+          id: 'a'
+        }]
+      }));
+    });
+    it('should create the optional filters', () => {
+      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+        a: {
+          ...mockConfiguration,
+          filters: [...mockFilters]
+        }
+      }));
+      (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
+        return {
+          id: config.id
+        };
+      });
+      fixture.detectChanges();
+      expect(component.optionalFilters$).toBeObservable(cold('a--b', {
+        a: [],
+        b: [{
+          id: 'b'
+        }]
+      }));
+    });
+
+    it('should update the optional filter value when onFilter$', () => {
+      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+        a: {
+          ...mockConfiguration,
+          filters: [...mockFilters]
+        }
+      }));
+      (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
+        return {id: config.id};
+      });
+      component.onFilter$ = cold('------a', {a: {filter: {id: 'a'}, value: 'new value'}}) as any;
+      fixture.detectChanges();
+      expect(component.visibleFilters$).toBeObservable(cold('a--b--c', {
+        a: [],
+        b: [{id: 'a', value: 'new value'}],
+        c: [{id: 'a', value: 'new value'}]
+      }));
+    });
+    it('should update the visible filter value when onFilter$', () => {
+      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+        a: {
+          ...mockConfiguration,
+          filters: [...mockFilters]
+        }
+      }));
+      (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
+        return {id: config.id};
+      });
+      component.onFilter$ = cold('------a', {a: {filter: {id: 'b'}, value: 'new value'}}) as any;
+      fixture.detectChanges();
+      expect(component.optionalFilters$).toBeObservable(cold('a--b--c', {
+        a: [],
+        b: [{id: 'b', value: 'new value'}],
+        c: [{id: 'b', value: 'new value'}]
+      }));
     });
   });
 });
