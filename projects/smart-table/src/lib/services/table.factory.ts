@@ -16,7 +16,8 @@ export class TableFactory {
 
   createTableColumnFromConfig(
     columnConfig: SmartTableColumnConfig,
-    columnTypes: SmartTableColumnCustomType[], format?: string): TableColumn {
+    columnTypes: SmartTableColumnCustomType[], format?: string
+  ): TableColumn {
     const column: TableColumn = {
       value: columnConfig.key,
       label: columnConfig.label,
