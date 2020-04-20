@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- [BREAKING] Update to @acpaas-ui v.4
+- Use Observable sequences for data synchronizing
+
+### Fixed
+- Persist hide/show columns in storage of choice
+- Fixed translations not coming from configuration
+- Fixed order in which component configuration overrides api configuration
+
 ## [1.4.2] - 2020-04-06
 
 ### Fixed

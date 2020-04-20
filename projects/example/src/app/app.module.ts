@@ -13,11 +13,12 @@ import { AppRatingComponent } from './rating.component';
   imports: [
     BrowserModule,
     SmartTableModule.forRoot({
-      identifier: "aui-smarttable-ngx"
+      identifier: 'aui-smarttable-ngx',
+      storageType: 'sessionStorage'
     })
   ],
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [AppRatingComponent]
-}) 
+})
 export class AppModule { }

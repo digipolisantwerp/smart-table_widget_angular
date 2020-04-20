@@ -5,8 +5,8 @@
         <div class="a-input__wrapper">
           <button class="a-button-outline a-button-export has-icon"
                   (click)="exportToExcel()"
-                  [attr.aria-label]="options.translations?.export || 'Exporteer'"
-                  [title]="options.translations?.export || 'Exporteer'">
+                  [attr.aria-label]="(configuration$ | async)?.options.translations?.export || 'Exporteer'"
+                  [title]="(configuration$ | async)?.options.translations?.export || 'Exporteer'">
             <span class="fa fa-file-o"></span>
           </button>
         </div>
@@ -15,8 +15,9 @@
         <div class="a-input__wrapper">
           <div auiFlyout size="small" align="right">
             <button class="a-button-outline has-icon"
-                    [attr.aria-label]="options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
-                    [title]="options.translations?.openColumnSelector || 'Toon/verberg kolommen'" auiFlyoutAction>
+                    [attr.aria-label]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+                    [title]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+                    auiFlyoutAction>
               <span class="fa fa-columns"></span>
             </button>
 
@@ -24,17 +25,17 @@
               <div class="u-margin-xs">
                 <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs">
                   <li class="a-list__item"
-                      *ngFor="let column of selectableColumns; index as i">
+                      *ngFor="let column of (selectableColumns$ | async); index as i">
                     <div class="a-input__checkbox">
-                      <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.id }}"
-                             name="{{ 'checkbox--' + i + '--' + column.id }}" [checked]="!column.hidden"
+                      <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
+                             name="{{ 'checkbox--' + i + '--' + column.value }}" [checked]="!column.hidden"
                              (change)="toggleSelectedColumn(column.value)">
-                      <label for="{{ 'checkbox--' + i + '--' + column.id }}">{{ column.label }}</label>
+                      <label for="{{ 'checkbox--' + i + '--' + column.value }}">{{ column.label }}</label>
                     </div>
                   </li>
                 </ul>
                 <button class="a-button a-button--small a-button--block" (click)="onColumnsSelected()">
-                  {{ options.translations?.apply || 'Toepassen'}}
+                  {{ (configuration$ | async)?.options.translations?.apply || 'Toepassen'}}
                 </button>
               </div>
             </div>
@@ -45,10 +46,11 @@
 
     <div class="aui-smart-table__filters--left">
       <aui-table-input-filter class="aui-smart-table__filter"
-                              *ngIf="genericFilter" [filter]="genericFilter" (update)="onFilter($event)">
+                              *ngIf="genericFilter$ | async" [filter]="genericFilter$ | async"
+                              (update)="onFilter($event)">
       </aui-table-input-filter>
 
-      <ng-container *ngFor="let filter of visibleFilters" [ngSwitch]="filter.type">
+      <ng-container *ngFor="let filter of (visibleFilters$ | async)" [ngSwitch]="filter.type">
         <ng-container *ngSwitchCase="'select'">
           <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
           </aui-table-select-filter>
@@ -65,12 +67,13 @@
         </ng-container>
       </ng-container>
 
-      <div class="aui-smart-table__button a-input" *ngIf="optionalFilters.length">
+      <div class="aui-smart-table__button a-input" *ngIf="(optionalFilters$ | async).length">
         <div class="a-input__wrapper">
           <button class="a-button-outline has-icon-right a-toggle-filters" (click)="toggleOptionalFilters()"
                   [attr.aria-controls]="'toggle-' + instanceId" [attr.aria-expanded]="optionalFiltersVisible">
-            {{ options.translations?.moreFilters || 'Extra filters'}} <span class="fa fa-angle-down"
-                                                                            [ngClass]="{'is-toggled': optionalFiltersVisible }"></span>
+            {{ (configuration$ | async)?.options.translations?.moreFilters || 'Extra filters'}} <span
+            class="fa fa-angle-down"
+            [ngClass]="{'is-toggled': optionalFiltersVisible }"></span>
           </button>
         </div>
       </div>
@@ -80,7 +83,7 @@
   <div class="aui-smart-table__overflow">
     <div class="aui-smart-table__filters aui-smart-table__filters--toggle"
          [ngClass]="{'is-visible': optionalFiltersVisible}" id="toggle-{{ instanceId }}">
-      <ng-container *ngFor="let filter of optionalFilters" [ngSwitch]="filter.type">
+      <ng-container *ngFor="let filter of (optionalFilters$ | async)" [ngSwitch]="filter.type">
         <ng-container *ngSwitchCase="'select'">
           <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
                                    (update)="onFilter($event)"></aui-table-select-filter>
@@ -101,8 +104,10 @@
 
   <div class="aui-smart-table__wrapper">
     <div class="u-margin-top u-margin-bottom">
-      <aui-table [loadDataMessage]="options.loadDataMessage" [noDataMessage]="options.noDataMessage"
-                 [loading]="rowsLoading" [columns]="columns" [rows]="rows" [hasClickAction]="true"
+      <aui-table [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
+                 [noDataMessage]="(configuration$ | async)?.options.noDataMessage"
+                 [loading]="rowsLoading" [columns]="visibleColumns$ | async" [rows]="rows$ |  async"
+                 [hasClickAction]="true"
                  [activeSorting]="orderBy"
                  (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
     </div>
@@ -111,16 +116,16 @@
       <div class="aui-smart-table__actions--left">
         <aui-items-per-page
           class="aui-smart-table__items-per-page"
-          [selectOptions]="options.pageSizeOptions"
-          [amountPerPage]="pageSize"
+          [selectOptions]="(configuration$ | async)?.options.pageSizeOptions"
+          [amountPerPage]="pageSize$ | async"
           (returnAmount)="onPageSizeChanged($event)">
         </aui-items-per-page>
         <aui-item-counter
           *ngIf="totalResults > 0"
           class="aui-smart-table__item-counter u-margin-top-xs u-margin-bottom-xs"
-          [currentPage]="curPage"
+          [currentPage]="currentPage$ | async"
           [totalAmount]="totalResults"
-          [amountPerPage]="pageSize">
+          [amountPerPage]="pageSize$ | async">
         </aui-item-counter>
       </div>
 
@@ -128,9 +133,9 @@
         <aui-pagination
           class="u-hide-on-mobile-devices"
           display="numbers"
-          [itemsPerPage]="pageSize"
+          [itemsPerPage]="pageSize$ | async"
           [totalValues]="totalResults"
-          [currentPage]="curPage"
+          [currentPage]="currentPage$ | async"
           (update)="onPageChanged($event)">
         </aui-pagination>
         <aui-pagination
@@ -138,9 +143,9 @@
           display="text"
           aria-hidden="true"
           ariaNavigationLabel="Mobiele paginering"
-          [itemsPerPage]="pageSize"
+          [itemsPerPage]="pageSize$ | async"
           [totalValues]="totalResults"
-          [currentPage]="curPage"
+          [currentPage]="currentPage$ | async"
           (update)="onPageChanged($event)">
         </aui-pagination>
       </div>
