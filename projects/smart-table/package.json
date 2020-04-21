@@ -1,6 +1,6 @@
 {
   "name": "@acpaas-ui-widgets/ngx-smart-table",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "license": "MIT",
   "homepage": "https://github.com/digipolisantwerp/smart-table_widget_angular#readme",
   "peerDependencies": {
