@@ -4,14 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.5.0] - 2020-04-21
+
 ### Changed
-- [BREAKING] Update to @acpaas-ui v.4
+- Upgraded to ACPaaS UI v4
 - Use Observable sequences for data synchronizing
 
 ### Fixed
 - Persist hide/show columns in storage of choice
 - Fixed translations not coming from configuration
 - Fixed order in which component configuration overrides api configuration
+
 
 ## [1.4.2] - 2020-04-06
 
@@ -79,7 +83,9 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2019-07-19
 - Initial release.
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.2...HEAD
+
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.2...v1.5.0
 [1.4.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.3.0...v1.4.0
