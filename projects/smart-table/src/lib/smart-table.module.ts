@@ -50,6 +50,12 @@ const defaultConfiguration: IModuleConfig = {
 })
 export class SmartTableModule {
   static forRoot(localstorageConfig: IModuleConfig = defaultConfiguration): ModuleWithProviders {
+    if (!localstorageConfig.storageType) {
+      localstorageConfig.storageType = 'localStorage';
+    }
+    if (!localstorageConfig.identifier) {
+      localstorageConfig.identifier = 'aui-smart-table';
+    }
     return {
       ngModule: SmartTableModule,
       providers: [
