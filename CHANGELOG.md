@@ -4,14 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
-- Console error when storage identifier is not passed through when importing the module using forRoot()
-
 
 ## [1.5.1] - 2020-05-29
 
 ### Fixed
 - A select filter can now be reset
+- Console error when storage identifier is not passed through when importing the module using forRoot()
 
 
 ## [1.5.0] - 2020-04-21
