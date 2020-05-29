@@ -10,7 +10,7 @@ import {FlyoutModule} from '@acpaas-ui/ngx-flyout';
 import {components, services} from './index';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
 import {IModuleConfig} from './smart-table/smart-table.types';
-import {PROVIDE_CONFIG, PROVIDE_ID, provideIdentifier} from './indentifier.provider';
+import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
 
 const defaultConfiguration: IModuleConfig = {
@@ -59,14 +59,12 @@ export class SmartTableModule {
         },
         {
           provide: PROVIDE_ID,
-          useFactory: provideIdentifier,
-          deps: [PROVIDE_CONFIG]
+          useValue: localstorageConfig.identifier
         },
         {
           provide: LOCALSTORAGE_CONFIG,
-          useValue: {
-            storageType: localstorageConfig.storageType
-          }
+          useFactory: provideLocalstorageConfig,
+          deps: [PROVIDE_CONFIG]
         },
         DatePipe,
         ...services,
