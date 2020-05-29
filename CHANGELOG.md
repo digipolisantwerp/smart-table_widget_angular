@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.5.1] - 2020-05-29
+
 ### Fixed
+- A select filter can now be reset
 - Console error when storage identifier is not passed through when importing the module using forRoot()
 
 
@@ -87,7 +91,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.2...v1.5.0
 [1.4.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.0...v1.4.1
