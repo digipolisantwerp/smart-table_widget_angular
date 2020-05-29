@@ -8,6 +8,7 @@
     "file-saver",
     "lodash.unionby",
     "query-string",
-    "xlsx"
+    "xlsx",
+    "@acpaas-ui"
   ]
 }
