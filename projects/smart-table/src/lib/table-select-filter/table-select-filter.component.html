@@ -3,7 +3,7 @@
     <label class="a-input__label" [for]="id">{{ filter.label }}</label>
     <div class="a-input__wrapper a-input--filter">
       <select [id]="id" name="filter-{{ filter.id }}" [formControl]="formControl" ngDefaultControl>
-        <option value="null" disabled="disabled" [selected]="true"
+        <option value="" [selected]="true"
                 *ngIf="filter.placeholder && filter.placeholder.length">{{ filter.placeholder }}</option>
         <option *ngFor="let option of filter.options;" [value]="option.id">{{ option.label }}</option>
       </select>
