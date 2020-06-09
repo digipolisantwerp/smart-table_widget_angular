@@ -3,8 +3,7 @@
     <label class="a-input__label" [for]="id">{{ filter.label }}</label>
     <div class="a-input__wrapper a-input--filter">
       <select [id]="id" name="filter-{{ filter.id }}" [formControl]="formControl" ngDefaultControl>
-        <option value="" [selected]="true"
-                *ngIf="filter.placeholder && filter.placeholder.length">{{ filter.placeholder }}</option>
+        <option value="" [defaultSelected]="filter.placeholder" [hidden]="!filter.placeholder" [attr.aria-hidden]="!filter.placeholder">{{ filter.placeholder }}</option>
         <option *ngFor="let option of filter.options;" [value]="option.id">{{ option.label }}</option>
       </select>
       <span class="fa fa-angle-down"></span>
