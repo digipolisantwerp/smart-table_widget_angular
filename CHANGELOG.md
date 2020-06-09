@@ -5,10 +5,16 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
-## [1.5.2] - 2020-06-09
+## [1.5.3] - 2020-06-09
 
 ### Fixed
 - Fixed an issue where a select's placeholder would not get selected in Chrome
+
+
+## [1.5.2] - 2020-05-29
+
+### Fixed
+- Fixed an Angular compiling issue
 
 
 ## [1.5.1] - 2020-05-29

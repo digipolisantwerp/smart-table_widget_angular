@@ -5,9 +5,11 @@
     "entryFile": "src/public-api.ts"
   },
   "whitelistedNonPeerDependencies": [
+    "@acpaas-ui",
     "file-saver",
     "lodash.unionby",
     "query-string",
-    "xlsx"
+    "xlsx",
+    "@acpaas-ui"
   ]
 }
