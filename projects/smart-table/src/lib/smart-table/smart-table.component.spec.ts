@@ -115,7 +115,7 @@ describe('Smart Table Test', () => {
   describe('Sourcing Configuration', () => {
     it('should get configuration from api service', () => {
       sinon.stub(component, 'getConfiguration').returns(cold('--a|', {a: mockConfiguration}));
-      const spyOnGetColumns = sinon.stub(component, 'getLocalStorageColumns');
+      const spyOnGetColumns = sinon.stub(component, 'getLocalStorageObject');
       fixture.detectChanges();
       const result$ = component.configuration$;
       fixture.detectChanges();
@@ -141,7 +141,7 @@ describe('Smart Table Test', () => {
     });
 
     it('should get persisted configuration when option is set so', () => {
-      const spyOnGetColumns = sinon.stub(component, 'getLocalStorageColumns').callsFake((config) => {
+      const spyOnGetColumns = sinon.stub(component, 'getLocalStorageObject').callsFake((config) => {
         return {
           ...config,
           columns: ['a', 'b', 'c']
