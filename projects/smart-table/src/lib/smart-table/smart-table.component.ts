@@ -456,8 +456,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public onOrderBy(orderBy: OrderBy) {
     this.orderBy.next(orderBy);
-    // WIP: Let's make sure the demo works for now and fix this
-    this.addToLocalStorage('test-smart-table', 'order', orderBy);
+    this.configuration$.pipe(
+      take(1),
+      map(obj => obj.options.defaultSortOrder),
+      tap(order => this.addToLocalStorage(order, 'order', orderBy))
+    ).subscribe();
   }
 
   public toggleOptionalFilters() {
