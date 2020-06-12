@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.5.4] - 2020-06-10
+
+### Fixed
+- Fixed an issue where the table's sort order wasn't persisted in local storage
+
+
 ## [1.5.3] - 2020-06-09
 
 ### Fixed
@@ -103,7 +109,9 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.2...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.4...HEAD
+[1.5.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.3...v1.5.4
+[1.5.3]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.4.2...v1.5.0
