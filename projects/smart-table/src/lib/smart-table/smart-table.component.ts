@@ -387,8 +387,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         ...localStorageColumns,
         ...columnsNotInStorage
       ];
-      if ('order' in parsed) {
-        configuration.options.defaultSortOrder = parsed.order;
+      if ('defaultSortOrder' in parsed) {
+        configuration.options.defaultSortOrder = parsed.defaultSortOrder;
       }
       return {
         ...configuration,
@@ -459,7 +459,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.configuration$.pipe(
       take(1),
       map(obj => obj.options.defaultSortOrder),
-      tap(order => this.addToLocalStorage(order, 'order', orderBy))
+      tap(order => this.addToLocalStorage(order, 'defaultSortOrder', orderBy))
     ).subscribe();
   }
 

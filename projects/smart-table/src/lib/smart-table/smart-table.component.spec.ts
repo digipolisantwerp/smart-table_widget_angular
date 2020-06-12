@@ -144,13 +144,17 @@ describe('Smart Table Test', () => {
       const spyOnGetColumns = sinon.stub(component, 'getLocalStorageObject').callsFake((config) => {
         return {
           ...config,
-          columns: ['a', 'b', 'c']
+          columns: ['a', 'b', 'c'],
+          options: {
+            ...config.options,
+            defaultSortOrder: {key: 'k', order: 'asc'}
+          }
         };
       });
       sinon.stub(component, 'getConfiguration').returns(cold('--(a|)', {
         a: {
           ...mockConfiguration,
-          options: {...mockConfiguration.options, persistTableConfig: true}
+          options: {...mockConfiguration.options, defaultSortOrder: {key: 'k', order: 'asc'}, persistTableConfig: true}
         }
       }));
       fixture.detectChanges();
@@ -160,6 +164,7 @@ describe('Smart Table Test', () => {
           columns: ['a', 'b', 'c'],
           options: {
             ...mockConfiguration.options,
+            defaultSortOrder: {key: 'k', order: 'asc'},
             persistTableConfig: true
           }
         }
@@ -352,6 +357,13 @@ describe('Smart Table Test', () => {
       }));
       expect((storageService.storage.setItem as SinonStub).called).toBe(true);
     });
+
+    it('Should handle localstorage properties correctly when new ones are added', () => {
+      sinon.stub(component, 'getConfiguration').returns(cold('--a|', {a: mockConfiguration}));
+      (component as any).addToLocalStorage('n', 'k', 'v');
+      expect((storageService.storage.getItem as SinonStub).calledOnce).toBe(true);
+      expect((storageService.storage.setItem as SinonStub).calledOnce).toBe(true);
+    });
   });
 
   describe('Filters', () => {
@@ -375,6 +387,7 @@ describe('Smart Table Test', () => {
         }]
       }));
     });
+
     it('should create the optional filters', () => {
       sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
         a: {
@@ -414,6 +427,7 @@ describe('Smart Table Test', () => {
         c: [{id: 'a', value: 'new value'}]
       }));
     });
+
     it('should update the visible filter value when onFilter$', () => {
       sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
         a: {
