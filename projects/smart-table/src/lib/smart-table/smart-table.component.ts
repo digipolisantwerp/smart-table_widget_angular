@@ -458,8 +458,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.orderBy.next(orderBy);
     this.configuration$.pipe(
       take(1),
-      map(obj => obj.options.defaultSortOrder),
-      tap(order => this.addToLocalStorage(order, 'defaultSortOrder', orderBy))
+      map(obj => obj.options.storageIdentifier),
+      tap(storageID => {
+        console.log(storageID);
+        return this.addToLocalStorage(storageID, 'defaultSortOrder', orderBy);
+      })
     ).subscribe();
   }
 
@@ -499,7 +502,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     );
   }
 
-  private addToLocalStorage(name, key, value) {
+  private addToLocalStorage(name: string, key: string, value: any) {
     var storageObj: any = this.localstorageService.storage.getItem(name);
     storageObj = !storageObj ? {} : JSON.parse(storageObj);
     storageObj[key] = value;
