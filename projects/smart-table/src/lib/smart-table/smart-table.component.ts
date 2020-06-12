@@ -143,7 +143,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     ).pipe(
       // Every time configuration changes, get the columns from the storage again
       // (because storage identifier will most likely have changed)
-      map(config => config.options.persistTableConfig ? this.getLocalStorageColumns(config) : config),
+      map(config => config.options.persistTableConfig ? this.getLocalStorageObject(config) : config),
       shareReplay(1)
     );
 
@@ -174,7 +174,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         return configuration;
       }),
       tap((config: SmartTableConfig) =>
-        this.localstorageService.storage.setItem(config.options.storageIdentifier, JSON.stringify(config.columns))),
+        this.addToLocalStorage(config.options.storageIdentifier, 'columns', config.columns)),
       map(config => config.columns)
     );
 
@@ -376,16 +376,20 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       );
   }
 
-  public getLocalStorageColumns(configuration: SmartTableConfig) {
+  public getLocalStorageObject(configuration: SmartTableConfig) {
     const json = this.localstorageService.storage.getItem(configuration.options.storageIdentifier);
     try {
-      const localStorageColumns = (JSON.parse(json) || [])
+      const parsed = JSON.parse(json);
+      const localStorageColumns = (parsed.columns || {})
         .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
       const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
       configuration.columns = [
         ...localStorageColumns,
         ...columnsNotInStorage
       ];
+      if ('order' in parsed) {
+        configuration.options.defaultSortOrder = parsed.order;
+      }
       return {
         ...configuration,
         columns: [
@@ -452,6 +456,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public onOrderBy(orderBy: OrderBy) {
     this.orderBy.next(orderBy);
+    // WIP: Let's make sure the demo works for now and fix this
+    this.addToLocalStorage('test-smart-table', 'order', orderBy);
   }
 
   public toggleOptionalFilters() {
@@ -489,6 +495,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  private addToLocalStorage(name, key, value) {
+    var storageObj: any = this.localstorageService.storage.getItem(name);
+    storageObj = !storageObj ? {} : JSON.parse(storageObj);
+    storageObj[key] = value;
+    this.localstorageService.storage.setItem(name, JSON.stringify(storageObj));
+  };
 
   ngOnDestroy(): void {
     this.destroy$.next();
