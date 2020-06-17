@@ -34,6 +34,7 @@ export interface SmartTableOptions {
   defaultSortOrder?: OrderBy;
   loadDataMessage?: string;
   noDataMessage?: string;
+  errorMessage?: string;
   pageSize?: number;
   /** options for the pagesize dropdown */
   pageSizeOptions?: number[];

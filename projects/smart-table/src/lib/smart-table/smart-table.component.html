@@ -105,8 +105,9 @@
   <div class="aui-smart-table__wrapper">
     <div class="u-margin-top u-margin-bottom">
       <aui-table [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
-                 [noDataMessage]="(configuration$ | async)?.options.noDataMessage"
-                 [loading]="rowsLoading" [columns]="visibleColumns$ | async" [rows]="rows$ |  async"
+                 [noDataMessage]="(error$ | async) ? (configuration$ | async)?.options.errorMessage : (configuration$ | async)?.options.noDataMessage"
+                 [loading]="rowsLoading && !(error$ | async)" [columns]="visibleColumns$ | async"
+                 [rows]="rows$ |  async"
                  [hasClickAction]="true"
                  [activeSorting]="orderBy"
                  (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
