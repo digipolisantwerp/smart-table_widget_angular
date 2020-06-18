@@ -378,27 +378,36 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public getLocalStorageObject(configuration: SmartTableConfig) {
     const json = this.localstorageService.storage.getItem(configuration.options.storageIdentifier);
+
     try {
       const parsed = JSON.parse(json);
-      const localStorageColumns = (parsed.columns || {})
-        .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
-      const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
-      configuration.columns = [
-        ...localStorageColumns,
-        ...columnsNotInStorage
-      ];
-      if ('defaultSortOrder' in parsed) {
-        configuration.options.defaultSortOrder = parsed.defaultSortOrder;
-      }
-      return {
-        ...configuration,
-        columns: [
+
+      // Columns
+      try {
+        const localStorageColumns = (parsed.columns || {})
+          .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
+        const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
+        configuration.columns = [
           ...localStorageColumns,
           ...columnsNotInStorage
-        ]
-      };
+        ];
+      } catch (error) {
+        console.warn('Warning: could not parse smart table columns from storage!');
+      }
+
+      // Sort order
+      try {
+        if ('defaultSortOrder' in parsed) {
+          configuration.options.defaultSortOrder = parsed.defaultSortOrder;
+        }
+      } catch (error) {
+        console.warn('Warning: could not parse smart table sort order from storage!');
+      }
+
+      // Return updated config
+      return configuration;
     } catch (error) {
-      console.warn('Warning: could not parse smart table columns from storage!');
+      console.warn('Warning: could not parse from storage!');
       return configuration;
     }
   }
@@ -460,7 +469,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       take(1),
       map(obj => obj.options.storageIdentifier),
       tap(storageID => {
-        console.log(storageID);
         return this.addToLocalStorage(storageID, 'defaultSortOrder', orderBy);
       })
     ).subscribe();
