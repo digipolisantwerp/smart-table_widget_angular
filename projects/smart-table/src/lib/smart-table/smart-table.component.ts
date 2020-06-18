@@ -120,7 +120,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   ) {
     this.rowsLoading = true;
     this.pageChanging = false;
-    this.orderBy.subscribe((v) => console.log(v));
   }
 
   ngOnInit(): void {
