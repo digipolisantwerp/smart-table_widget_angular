@@ -3,7 +3,7 @@ import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {DatePipe} from '@angular/common';
 import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {HttpHeaders} from '@angular/common/http';
+import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {SmartTableService} from './smart-table.service';
 import {
@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, debounceTime} from 'rxjs/operators';
+import {catchError, filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, debounceTime} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -89,6 +89,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   public rows$: Observable<Array<any>>;
+  public error$: Observable<HttpErrorResponse>;
 
   /** @internal */
   orderBy: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
@@ -327,6 +328,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
         this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),
+      take(1),
       filter(data => !!data),
       map((data) => {
         this.rowsLoading = false;
@@ -336,7 +338,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }
         return data._embedded ? data._embedded.resourceList : [];
       }),
-      startWith([])
+      startWith([]),
+      shareReplay(1)
+    );
+
+    this.error$ = this.rows$.pipe(
+      catchError(err => of(err)),
+      filter(err => err instanceof HttpErrorResponse)
     );
 
     // Start the show!

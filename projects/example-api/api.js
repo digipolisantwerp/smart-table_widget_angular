@@ -108,7 +108,8 @@ app.get('/api/movies/config', (req, res) => {
       pageSizeOptions: [5, 10, 15],
       pageSize: 10,
       loadDataMessage: 'De films worden geladen...',
-      noDataMessage: 'Er zijn geen films die voldoen aan de criteria'
+      noDataMessage: 'Er zijn geen films die voldoen aan de criteria',
+      errorMessage: 'The data could not be fetched at the moment'
     }
   });
 });
@@ -145,7 +146,7 @@ function getDataFromRequest(req) {
     response.sort((a, b) => {
       const aval = a[sortField];
       const bval = b[sortField];
-      let res = 0;
+      let res;
       if (typeof aval === 'string') {
         res = aval.localeCompare(bval)
       } else {
