@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, debounceTime} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -120,9 +120,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   ) {
     this.rowsLoading = true;
     this.pageChanging = false;
+    this.orderBy.subscribe((v) => console.log(v));
   }
 
   ngOnInit(): void {
+
     this.configuration$ = concat(
       this.getConfiguration(),  // First get the default configuration
       this.customConfiguration$.pipe( // And then override with configuration we get from the user
@@ -149,11 +151,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
     // Columns are extracted from configuration
     this.allColumns$ = this.configuration$.pipe(
+      tap((config) => this.resetOrderBy(config && config.options && config.options.defaultSortOrder)),
       map((config: SmartTableConfig) =>
         config.columns.map(c =>
           this.factory.createTableColumnFromConfig(c, this.columnTypes, SMARTTABLE_DEFAULT_OPTIONS.columnDateFormat))),
       startWith([]),
-      tap(() => this.resetOrderBy()),
       shareReplay(1)
     );
 
@@ -321,6 +323,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.pageSize$,
       this.currentPage$
     ).pipe(
+      // during initial configuration several values get pushed
+      debounceTime(50),
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
         this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),
@@ -384,7 +388,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
       // Columns
       try {
-        const localStorageColumns = (parsed.columns || {})
+        const localStorageColumns = (parsed.columns || [])
           .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
         const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
         configuration.columns = [
@@ -393,6 +397,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         ];
       } catch (error) {
         console.warn('Warning: could not parse smart table columns from storage!');
+        console.warn(error);
       }
 
       // Sort order
@@ -416,9 +421,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     return filters.filter(f => f.display === type).map(filterConfig => this.factory.createSmartFilterFromConfig(filterConfig));
   }
 
-  protected resetOrderBy() {
-    if (SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder) {
-      this.orderBy.next(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
+  protected resetOrderBy(defaultSortOrder?) {
+    const sortOrder = defaultSortOrder || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
+    if (sortOrder) {
+      this.orderBy.next(sortOrder);
     }
   }
 
@@ -511,11 +517,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   private addToLocalStorage(name: string, key: string, value: any) {
-    var storageObj: any = this.localstorageService.storage.getItem(name);
+    let storageObj: any = this.localstorageService.storage.getItem(name);
     storageObj = !storageObj ? {} : JSON.parse(storageObj);
     storageObj[key] = value;
     this.localstorageService.storage.setItem(name, JSON.stringify(storageObj));
-  };
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
