@@ -396,7 +396,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         ];
       } catch (error) {
         console.warn('Warning: could not parse smart table columns from storage!');
-        console.warn(error);
       }
 
       // Sort order
