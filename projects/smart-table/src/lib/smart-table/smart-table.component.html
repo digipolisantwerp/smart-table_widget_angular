@@ -109,7 +109,7 @@
                  [loading]="rowsLoading && !(error$ | async)" [columns]="visibleColumns$ | async"
                  [rows]="rows$ |  async"
                  [hasClickAction]="true"
-                 [activeSorting]="orderBy"
+                 [activeSorting]="orderBy$ | async"
                  (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
     </div>
 

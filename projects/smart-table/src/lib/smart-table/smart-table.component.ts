@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {catchError, filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {catchError, filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, skip} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -92,7 +92,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public error$: Observable<HttpErrorResponse>;
 
   /** @internal */
-  orderBy: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
+  orderBy$: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
   /** @internal */
   currentPage$ = new BehaviorSubject<number>(1);
   /** @internal */
@@ -124,6 +124,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.configuration$ = concat(
       this.getConfiguration(),  // First get the default configuration
       this.customConfiguration$.pipe( // And then override with configuration we get from the user
@@ -150,11 +151,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
     // Columns are extracted from configuration
     this.allColumns$ = this.configuration$.pipe(
+      tap((config) => this.resetOrderBy(config && config.options && config.options.defaultSortOrder)),
       map((config: SmartTableConfig) =>
         config.columns.map(c =>
           this.factory.createTableColumnFromConfig(c, this.columnTypes, SMARTTABLE_DEFAULT_OPTIONS.columnDateFormat))),
       startWith([]),
-      tap(() => this.resetOrderBy()),
       shareReplay(1)
     );
 
@@ -284,7 +285,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.optionalFilters$,
       this.genericFilter$,
       this.configuration$,
-      this.orderBy
+      this.orderBy$
     ).pipe(
       map(([visibleFilters, optionalFilters, genericFilter, configuration, orderBy]:
              [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig, OrderBy]) => {
@@ -322,10 +323,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.pageSize$,
       this.currentPage$
     ).pipe(
+      // during initial configuration several values get pushed
+      skip(7),
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
         this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),
-      take(1),
       filter(data => !!data),
       map((data) => {
         this.rowsLoading = false;
@@ -386,27 +388,36 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public getLocalStorageObject(configuration: SmartTableConfig) {
     const json = this.localstorageService.storage.getItem(configuration.options.storageIdentifier);
+
     try {
       const parsed = JSON.parse(json);
-      const localStorageColumns = (parsed.columns || {})
-        .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
-      const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
-      configuration.columns = [
-        ...localStorageColumns,
-        ...columnsNotInStorage
-      ];
-      if ('defaultSortOrder' in parsed) {
-        configuration.options.defaultSortOrder = parsed.defaultSortOrder;
-      }
-      return {
-        ...configuration,
-        columns: [
+
+      // Columns
+      try {
+        const localStorageColumns = (parsed.columns || [])
+          .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
+        const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
+        configuration.columns = [
           ...localStorageColumns,
           ...columnsNotInStorage
-        ]
-      };
+        ];
+      } catch (error) {
+        console.warn('Warning: could not parse smart table columns from storage!');
+      }
+
+      // Sort order
+      try {
+        if ('defaultSortOrder' in parsed) {
+          configuration.options.defaultSortOrder = parsed.defaultSortOrder;
+        }
+      } catch (error) {
+        console.warn('Warning: could not parse smart table sort order from storage!');
+      }
+
+      // Return updated config
+      return configuration;
     } catch (error) {
-      console.warn('Warning: could not parse smart table columns from storage!');
+      console.warn('Warning: could not parse from storage!');
       return configuration;
     }
   }
@@ -415,9 +426,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     return filters.filter(f => f.display === type).map(filterConfig => this.factory.createSmartFilterFromConfig(filterConfig));
   }
 
-  protected resetOrderBy() {
-    if (SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder) {
-      this.orderBy.next(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
+  protected resetOrderBy(defaultSortOrder?) {
+    const sortOrder = defaultSortOrder || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
+    if (sortOrder) {
+      this.orderBy$.next(sortOrder);
     }
   }
 
@@ -463,12 +475,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   public onOrderBy(orderBy: OrderBy) {
-    this.orderBy.next(orderBy);
+    this.orderBy$.next(orderBy);
     this.configuration$.pipe(
       take(1),
       map(obj => obj.options.storageIdentifier),
       tap(storageID => {
-        console.log(storageID);
         return this.addToLocalStorage(storageID, 'defaultSortOrder', orderBy);
       })
     ).subscribe();

@@ -141,10 +141,9 @@ describe('Smart Table Test', () => {
     });
 
     it('should get persisted configuration when option is set so', () => {
-      const spyOnGetColumns = sinon.stub(component, 'getLocalStorageObject').callsFake((config) => {
+      const spyOnGetLocalStorage = sinon.stub(component, 'getLocalStorageObject').callsFake(config => {
         return {
           ...config,
-          columns: ['a', 'b', 'c'],
           options: {
             ...config.options,
             defaultSortOrder: {key: 'k', order: 'asc'}
@@ -161,7 +160,6 @@ describe('Smart Table Test', () => {
       expect(component.configuration$).toBeObservable(cold('--a', {
         a: {
           ...mockConfiguration,
-          columns: ['a', 'b', 'c'],
           options: {
             ...mockConfiguration.options,
             defaultSortOrder: {key: 'k', order: 'asc'},
@@ -169,7 +167,7 @@ describe('Smart Table Test', () => {
           }
         }
       }));
-      expect(spyOnGetColumns.calledOnce).toBe(true);
+      expect(spyOnGetLocalStorage.calledOnce).toBe(true);
     });
   });
 

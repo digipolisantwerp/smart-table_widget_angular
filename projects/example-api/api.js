@@ -119,7 +119,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 function getDataFromRequest(req) {
   const body = req.body || {};
 
-  let response = movies;
+  let response = movies.slice();
 
   // apply filtering
   if (body.filters && body.filters.length) {
