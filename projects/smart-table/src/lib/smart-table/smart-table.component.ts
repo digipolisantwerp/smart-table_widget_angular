@@ -92,7 +92,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public error$: Observable<HttpErrorResponse>;
 
   /** @internal */
-  orderBy: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
+  orderBy$: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
   /** @internal */
   currentPage$ = new BehaviorSubject<number>(1);
   /** @internal */
@@ -285,7 +285,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.optionalFilters$,
       this.genericFilter$,
       this.configuration$,
-      this.orderBy
+      this.orderBy$
     ).pipe(
       map(([visibleFilters, optionalFilters, genericFilter, configuration, orderBy]:
              [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig, OrderBy]) => {
@@ -429,7 +429,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   protected resetOrderBy(defaultSortOrder?) {
     const sortOrder = defaultSortOrder || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
     if (sortOrder) {
-      this.orderBy.next(sortOrder);
+      this.orderBy$.next(sortOrder);
     }
   }
 
@@ -475,7 +475,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   public onOrderBy(orderBy: OrderBy) {
-    this.orderBy.next(orderBy);
+    this.orderBy$.next(orderBy);
     this.configuration$.pipe(
       take(1),
       map(obj => obj.options.storageIdentifier),
