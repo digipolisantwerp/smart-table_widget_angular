@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {catchError, filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, skip} from 'rxjs/operators';
+import {catchError, filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, skip, debounceTime} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -324,7 +324,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.currentPage$
     ).pipe(
       // during initial configuration several values get pushed
-      skip(7),
+      // cannot skip because the number of skips varies depending on config
+      debounceTime(10),
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
         this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),
