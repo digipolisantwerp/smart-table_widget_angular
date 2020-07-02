@@ -325,7 +325,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.pageSize$,
       this.currentPage$
     ).pipe(
-      skip(1),  // Skip initial value since configuration will come in
       auditTime(100),  // Skip initial time based values, don't reset the timer after new values come in
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
