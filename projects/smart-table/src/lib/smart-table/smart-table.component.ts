@@ -19,7 +19,7 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {catchError, filter, first, map, shareReplay, startWith, switchMap, take, takeUntil, tap, skip} from 'rxjs/operators';
+import {auditTime, catchError, filter, first, map, shareReplay, skip, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -200,6 +200,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       )
     ).pipe(
       map((columns: Array<TableColumn>) => columns.filter(c => !!c && !c.hidden)),
+      shareReplay(1)
     );
 
     /**
@@ -287,6 +288,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.configuration$,
       this.orderBy$
     ).pipe(
+      skip(5),  // The values are shared replayed, so skip the 5 initial emits of the observables
       map(([visibleFilters, optionalFilters, genericFilter, configuration, orderBy]:
              [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig, OrderBy]) => {
         const filters = [
@@ -323,8 +325,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.pageSize$,
       this.currentPage$
     ).pipe(
-      // during initial configuration several values get pushed
-      skip(7),
+      auditTime(100),  // Skip initial time based values, don't reset the timer after new values come in
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>
         this.dataService.getData(this.apiUrl, this.httpHeaders, dataQuery, page, pageSize)),

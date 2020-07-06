@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Fixed error where rows would never be loaded if no custom config was set
 
 ## [1.5.5] - 2020-06-18
 
