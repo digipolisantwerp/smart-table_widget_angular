@@ -288,7 +288,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.configuration$,
       this.orderBy$
     ).pipe(
-      skip(5),  // The values are shared replayed, so skip the 5 initial emits of the observables
+      skip(3),  // The values are shared replayed, so skip the 3 initial emits of the observables
       map(([visibleFilters, optionalFilters, genericFilter, configuration, orderBy]:
              [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig, OrderBy]) => {
         const filters = [
