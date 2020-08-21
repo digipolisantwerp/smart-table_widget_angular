@@ -5,10 +5,18 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.5.7] - 2020-08-21
+
+### Fixed
+
+- Fixed issue with baseFilters not being loaded from initial configuration
+
+
 ## [1.5.6] - 2020-07-06
 
 ### Fixed
 - Fixed error where rows would never be loaded if no custom config was set
+
 
 ## [1.5.5] - 2020-06-18
 
@@ -120,7 +128,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.6...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.7...HEAD
+[1.5.7]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.6...v1.5.7
 [1.5.6]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.5...v1.5.6
 [1.5.5]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.4...v1.5.5
 [1.5.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.3...v1.5.4

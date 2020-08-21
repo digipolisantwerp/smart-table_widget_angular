@@ -78,6 +78,7 @@ You must be a member of the @acpaas-ui-widgets organization on GitHub.
 3. Publish the package
 
     ```sh
+    > npm run build
     > npm publish dist/smart-table
     ```
 
