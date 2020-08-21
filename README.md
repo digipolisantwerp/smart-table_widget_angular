@@ -71,6 +71,21 @@ Check the example application for how these are used.
 
 - **rowClicked**: triggers when the user clicks on a row
 
+### Column state persistence
+
+By default the column visibility is automatically saved in localStorage under the aui-smart-table prefix.
+This may cause conflicts with other apps running on the same URL, especially on localhost.
+To configure column visibility to use a different storage prefix, include the module in this way:
+
+```ts
+SmartTableModule.forRoot({
+  identifier: 'your-unique-identifier',
+  storageType: 'localStorage'
+})
+```
+
+Use an identifier unique for your application.
+
 ### Protocol
 
 The back-end service implements the following protocol:
