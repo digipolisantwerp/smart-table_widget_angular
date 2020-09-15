@@ -99,7 +99,7 @@ This back-end service must implement the following protocol:
 
 The `POST` endpoints accept the following JSON body:
 
-```ts
+```js
 { 
   "filters": [{
     "fields": string[], /* field id's */
@@ -115,7 +115,7 @@ The `POST` endpoints accept the following JSON body:
 
 And they return the following response:
 
-```ts
+```js
 {
   "_embedded": {
     "resourceList": [{
@@ -204,7 +204,7 @@ An explanation of the properties of the configuration object:
   - `columnDateFormat`: string, default format for date columns, see https://angular.io/api/common/DatePipe
   - `storageIdentifier`: string, unique key for persisting column state
   - `persistTableConfig`: boolean, true to persist column state
-  - `translations`: object, translation strings to replace default (dutch) text in UI (see `smart-table.types.ts`)
+  - `translations`: object, translation strings to replace default (Dutch) text in UI (see `smart-table.types.ts`)
 
 ### Custom Columns
 
