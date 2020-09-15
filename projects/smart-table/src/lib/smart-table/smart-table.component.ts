@@ -125,6 +125,35 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    /*
+      Observables data flow:
+
+            +----+ 1. GET config (getConfiguration)
+            |
+            +----+ 2. customConfiguration (@Input)
+            |
+            +----+ 3. localStorage config
+            |
+            v
+      configuration$
+            +
+            |
+            +-> allColumns$ +------+
+            |                      |
+            +-> orderBy$ +---------+
+            |                      |
+            |   genericFilter$     |
+            +-> visibleFilters$ +--+
+                optionalFilters$   |
+                                   v
+                              dataQuery$
+                                   +
+                                   |
+      pageSize$                    v
+      currentPage$ +-----------> rows$ <-+ GET rows (getData)
+
+     */
+
     this.configuration$ = concat(
       this.getConfiguration(),  // First get the default configuration
       this.customConfiguration$.pipe( // And then override with configuration we get from the user
