@@ -81,6 +81,7 @@ export enum SmartTableFilterType {
   Select = 'select',
   Input = 'input',
   Datepicker = 'datepicker',
+  SearchFilter = 'search-filter'
 }
 
 export enum SmartTableFilterDisplay {
@@ -91,7 +92,8 @@ export enum SmartTableFilterDisplay {
 
 export enum SmartTableFilterOperator {
   Equal = '=',
-  ILike = 'ILIKE'
+  ILike = 'ILIKE',
+  In = 'in'
 }
 
 export interface SmartTableFilterConfig {
