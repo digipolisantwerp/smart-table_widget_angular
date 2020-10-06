@@ -308,6 +308,20 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
 
+    /**
+     * Whenever a filter changes value,
+     * go back to page 1
+     */
+    merge(
+      this.visibleFilters$,
+      this.optionalFilters$,
+      this.genericFilter$
+    ).pipe(
+      takeUntil(this.destroy$),
+      skip(3),
+      tap(() => this.currentPage$.next(1))
+    ).subscribe();
+
     // Build up the data query based on the different filters
     // A new data query will be created every time that new filters come in
     this.dataQuery$ = combineLatest(

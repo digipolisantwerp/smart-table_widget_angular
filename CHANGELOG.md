@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- When applying a filter, the pagination will go back to page 1
 
 ## [1.5.7] - 2020-08-21
 
