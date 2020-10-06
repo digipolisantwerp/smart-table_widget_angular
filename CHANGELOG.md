@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - When applying a filter, the pagination will go back to page 1
 
+### Added
+- Option in forRoot() module method to configure custom filters
+
 ## [1.5.7] - 2020-08-21
 
 ### Fixed
