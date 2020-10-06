@@ -52,6 +52,24 @@ import { SmartTableModule } from '@acpaas-ui-widgets/ngx-smart-table';
 </aui-smart-table>
 ```
 
+#### Importing Using Custom Labels
+```ts
+SmartTableModule.withLabels({
+    itemCounterLabel: {
+      singular: '%{currentFrom} - %{currentTo} van %{totalAmount} film',
+      plural: '%{currentFrom} - %{currentTo} van %{totalAmount} films',
+    },
+    itemsPerPageLabel: {
+      singular: 'film per pagina',
+      plural: 'films per pagina',
+    }
+  })
+  .forRoot({
+    identifier: 'aui-smarttable-ngx',
+    storageType: 'sessionStorage'
+  })
+```
+
 The `apiUrl` points to the corresponding back-end service (see below).
 
 In the component code:
