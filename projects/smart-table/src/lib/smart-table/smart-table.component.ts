@@ -478,11 +478,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   createDataQueryFilters(filters: SmartTableFilter[]): SmartTableDataQueryFilter[] {
-    return filters.filter(f => f && f.value).map(this.createDataQueryFilter);
+    return filters.filter(f => f && f.value && f.value.length).map(this.createDataQueryFilter);
   }
 
   createDataQueryFilter(f: SmartTableFilter): SmartTableDataQueryFilter {
-    if (f && f.value) {
+    if (f && f.value && f.value.length) {
       return {
         fields: f.fields,
         operator: f.operator,

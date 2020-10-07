@@ -6,7 +6,7 @@ import {TableDatepickerFilterComponent} from '../table-datepicker-filter/table-d
 import {ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from '@acpaas-ui/ngx-table';
 import {ItemCounterModule, PaginationModule} from '@acpaas-ui/ngx-pagination';
-import {DatepickerModule} from '@acpaas-ui/ngx-forms';
+import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
 import {SmartTableService} from './smart-table.service';
 import * as sinon from 'sinon';
 import {SinonSandbox, SinonStub} from 'sinon';
@@ -16,6 +16,7 @@ import {PROVIDE_ID} from '../indentifier.provider';
 import {TableFactory} from '../services/table.factory';
 import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from './smart-table.types';
 import {cold} from 'jasmine-marbles';
+import {TableSearchFilterComponent} from '../table-search-filter/table-search-filter.component';
 
 describe('Smart Table Test', () => {
   let component: SmartTableComponent;
@@ -34,14 +35,16 @@ describe('Smart Table Test', () => {
         SmartTableComponent,
         TableInputFilterComponent,
         TableSelectFilterComponent,
-        TableDatepickerFilterComponent
+        TableDatepickerFilterComponent,
+        TableSearchFilterComponent
       ],
       imports: [
         ReactiveFormsModule,
         TableModule,
         ItemCounterModule,
         PaginationModule,
-        DatepickerModule
+        DatepickerModule,
+        SearchFilterModule
       ],
       providers: [
         {
@@ -443,6 +446,12 @@ describe('Smart Table Test', () => {
         b: [{id: 'b', value: 'new value'}],
         c: [{id: 'b', value: 'new value'}]
       }));
+    });
+
+    it('should hide an array filter with on values', () => {
+      const filters = [{value: []}];
+      const result = component.createDataQueryFilters(filters as any);
+      expect(result.length).toBe(0);
     });
   });
 });
