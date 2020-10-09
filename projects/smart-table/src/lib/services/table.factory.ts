@@ -16,7 +16,7 @@ export class TableFactory {
 
   createTableColumnFromConfig(
     columnConfig: SmartTableColumnConfig,
-    columnTypes: SmartTableColumnCustomType[], format?: string
+    columnTypes: SmartTableColumnCustomType[]
   ): TableColumn {
     const column: TableColumn = {
       value: columnConfig.key,
@@ -36,13 +36,11 @@ export class TableFactory {
       } else {
         switch (columnConfig.type) {
           case SmartTableColumnType.DateTime: {
-            column.format = value => this.datePipe.transform(value,
-              format || 'dd/MM/yyyy - hh:mm');
+            column.format = value => this.datePipe.transform(value, 'dd/MM/yyyy - hh:mm');
             break;
           }
           case SmartTableColumnType.Date: {
-            column.format = value => this.datePipe.transform(value,
-              format || 'dd/MM/yyyy');
+            column.format = value => this.datePipe.transform(value, 'dd/MM/yyyy');
             break;
           }
         }
