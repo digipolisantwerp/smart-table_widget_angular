@@ -43,5 +43,17 @@ describe('Table Factory Test', () => {
       const d = new Date(2019, 8, 10, 6, 23);
       expect(column.format(d as any)).toBe('10/09/2019 - 06:23');
     });
+    it('should create a date column and take into account optinos, default component', () => {
+      const column = factory.createTableColumnFromConfig({
+        visible: true,
+        label: 'test-column',
+        key: 'test-key',
+        type: SmartTableColumnType.Date,
+        sortPath: 'none'
+      }, [], {columnDateFormat: 'yyyy/MM'});
+      // Now let's format a date
+      const d = new Date(2019, 8, 10, 6, 23);
+      expect(column.format(d as any)).toBe('2019/09');
+    });
   });
 });
