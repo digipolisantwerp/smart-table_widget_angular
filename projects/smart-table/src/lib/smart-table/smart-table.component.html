@@ -65,6 +65,11 @@
           <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
           </aui-table-datepicker-filter>
         </ng-container>
+
+        <ng-container *ngSwitchCase="'search-filter'">
+          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
+          </aui-table-search-filter>
+        </ng-container>
       </ng-container>
 
       <div class="aui-smart-table__button a-input" *ngIf="(optionalFilters$ | async).length">
@@ -97,6 +102,11 @@
         <ng-container *ngSwitchCase="'datepicker'">
           <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
                                        (update)="onFilter($event)"></aui-table-datepicker-filter>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'search-filter'">
+          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
+                                   (update)="onFilter($event)"></aui-table-search-filter>
         </ng-container>
       </ng-container>
     </div>

@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Option in forRoot() module method to configure custom filters
+- The search filter component as optional filter. (type: 'search-filter')
 
 ### Fixed
 - Display time for DateTime type columns
