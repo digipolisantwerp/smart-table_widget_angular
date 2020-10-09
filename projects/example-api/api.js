@@ -47,6 +47,14 @@ const GENRES = "Action|Animation|Adventure|Comedy|Drama|Family|Fantasy|Horror|Mu
 
 app.get('/api/movies/config', (req, res) => {
   // see src\lib\smart-table\smart-table.types.ts - SmartTableConfig
+  const dates = [];
+  for (let i = 1900; i <= new Date().getFullYear(); i++) {
+    dates.push({
+      label: i.toString(),
+      value: i.toString()
+    });
+  }
+
   res.send({
     url: "/api/movies",
     baseFilters: [],
@@ -99,6 +107,15 @@ app.get('/api/movies/config', (req, res) => {
       "label": "Genre",
       "field": "genres",
       "placeholder": "All Genres"
+    }, {
+      "id": "years",
+      "display": "optional",
+      "type": "search-filter",
+      "options": dates,
+      "operator": "in",
+      "label": "Jaren",
+      "field": "title_year",
+      "placeholder": "Zoek jaartallen"
     }],
     options: {
       defaultSortOrder: {
@@ -124,18 +141,33 @@ function getDataFromRequest(req) {
   // apply filtering
   if (body.filters && body.filters.length) {
     body.filters.forEach((filter) => {
-      const matchOn = (filter.value && filter.value.id) ?
-        filter.value.id :
-        filter.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/[%*]/g, '.*')
-      const pattern = new RegExp(matchOn, 'i');
-      response = response.filter((value) => {
-        let include = false;
-        filter.fields.forEach((field) => {
-          const str = ('' + value[field]);
-          if (str.match(pattern)) include = true;
-        });
-        return include;
-      });
+
+      // check operator type
+      switch (filter.operator) {
+        case 'in':
+          response = response.filter(m => {
+            let include = false;
+            filter.fields.forEach((field) => {
+              include = filter.value.includes(m[field].toString());
+            });
+            return include;
+          });
+          break;
+        default:
+          const matchOn = (filter.value && filter.value.id) ?
+            filter.value.id :
+            filter.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/[%*]/g, '.*')
+          const pattern = new RegExp(matchOn, 'i');
+          response = response.filter((value) => {
+            let include = false;
+            filter.fields.forEach((field) => {
+              const str = ('' + value[field]);
+              if (str.match(pattern)) include = true;
+            });
+            return include;
+          });
+      }
+
     });
   }
 
