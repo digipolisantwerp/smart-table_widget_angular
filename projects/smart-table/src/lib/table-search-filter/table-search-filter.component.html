@@ -1,8 +1,8 @@
 <ng-container *ngIf="filter && filter.options && filter.id">
-  <div class="a-input" [ngClass]="{'a-input--small optional': optional}">
+  <div class="a-input">
     <label class="a-input__label" [for]="id">{{ filter.label }}</label>
     <div class="a-input__wrapper">
-      <aui-search-filter [formControl]="formControl" [id]="id" name="filter-{{ filter.id }}"
+      <aui-search-filter size="small" [formControl]="formControl" [id]="id" name="filter-{{ filter.id }}"
                          [placeholder]="filter.placeholder" [choices]="filter.options"
                          [showAllByDefault]="true"></aui-search-filter>
     </div>
