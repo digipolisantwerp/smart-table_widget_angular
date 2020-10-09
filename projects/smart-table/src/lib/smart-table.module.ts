@@ -1,15 +1,15 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule, ValueProvider} from '@angular/core';
 import {SmartTableComponent} from './smart-table/smart-table.component';
 import {CommonModule, DatePipe} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from '@acpaas-ui/ngx-table';
-import {ItemCounterModule, PaginationModule} from '@acpaas-ui/ngx-pagination';
+import {ITEM_COUNTER_LABEL, ItemCounterModule, ITEMS_PER_PAGE_LABEL, PaginationModule} from '@acpaas-ui/ngx-pagination';
 import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
 import {FlyoutModule} from '@acpaas-ui/ngx-flyout';
 import {components, services} from './index';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
-import {IModuleConfig} from './smart-table/smart-table.types';
+import {ILabels, IModuleConfig} from './smart-table/smart-table.types';
 import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
 
@@ -32,7 +32,8 @@ const defaultConfiguration: IModuleConfig = {
     HttpClientModule,
     FlyoutModule,
     SearchFilterModule,
-    LocalstorageModule.forRoot(defaultConfiguration)
+    LocalstorageModule.forRoot(defaultConfiguration),
+    ItemCounterModule
   ],
   providers: [
     DatePipe,
@@ -49,17 +50,36 @@ const defaultConfiguration: IModuleConfig = {
   ]
 })
 export class SmartTableModule {
-  static forRoot(localstorageConfig: IModuleConfig = defaultConfiguration): ModuleWithProviders {
+  private static labelProviders: Array<ValueProvider> = [];
+
+  static withLabels(labels: ILabels) {
+    if (labels && labels.itemsPerPageLabel) {
+      this.labelProviders.push({
+        provide: ITEMS_PER_PAGE_LABEL,
+        useValue: labels.itemsPerPageLabel
+      });
+    }
+    if (labels && labels.itemCounterLabel) {
+      this.labelProviders.push({
+        provide: ITEM_COUNTER_LABEL,
+        useValue: labels.itemCounterLabel
+      });
+    }
+
+    return this;
+  }
+
+  static forRoot(moduleConfiguration: IModuleConfig = defaultConfiguration): ModuleWithProviders {
     return {
       ngModule: SmartTableModule,
       providers: [
         {
           provide: PROVIDE_CONFIG,
-          useValue: localstorageConfig
+          useValue: moduleConfiguration
         },
         {
           provide: PROVIDE_ID,
-          useValue: localstorageConfig.identifier
+          useValue: moduleConfiguration.identifier
         },
         {
           provide: LOCALSTORAGE_CONFIG,
@@ -68,7 +88,8 @@ export class SmartTableModule {
         },
         DatePipe,
         ...services,
-        TableFactory
+        TableFactory,
+        ...this.labelProviders
       ],
     };
   }

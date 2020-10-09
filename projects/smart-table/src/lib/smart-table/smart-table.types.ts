@@ -8,6 +8,11 @@ export interface IModuleConfig {
   identifier?: string;
 }
 
+export interface ILabels {
+  itemCounterLabel?: { singular: string, plural: string };
+  itemsPerPageLabel?: { singular: string, plural: string };
+}
+
 /**
  * The smart table's configuration,
  * as returned by the /config endpoint
