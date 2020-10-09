@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Option in forRoot() module method to configure custom filters
 
+### Fixed
+- Display time for DateTime type columns
+
 ## [1.5.7] - 2020-08-21
 
 ### Fixed
