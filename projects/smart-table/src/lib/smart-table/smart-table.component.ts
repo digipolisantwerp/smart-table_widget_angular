@@ -183,7 +183,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       tap((config) => this.resetOrderBy(config && config.options && config.options.defaultSortOrder)),
       map((config: SmartTableConfig) =>
         config.columns.map(c =>
-          this.factory.createTableColumnFromConfig(c, this.columnTypes))),
+          this.factory.createTableColumnFromConfig(c, this.columnTypes, SMARTTABLE_DEFAULT_OPTIONS))),
       startWith([]),
       shareReplay(1)
     );
