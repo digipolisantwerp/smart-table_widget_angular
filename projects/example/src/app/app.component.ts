@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AppRatingComponent} from './rating.component';
-import {SmartTableConfig} from 'projects/smart-table/src/lib/smart-table/smart-table.types';
+import {SmartTableColumnCustomType, SmartTableConfig} from 'projects/smart-table/src/lib/smart-table/smart-table.types';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +10,12 @@ import {SmartTableConfig} from 'projects/smart-table/src/lib/smart-table/smart-t
 export class AppComponent {
   title = 'example';
 
-  moviesCustomColumns = [{
+  moviesCustomColumns: SmartTableColumnCustomType[] = [{
     name: 'rating',
-    component: AppRatingComponent
+    component: {
+      instance: AppRatingComponent,
+      metadata: {ratingType: 'stars'}
+    }
   }];
 
   customConfiguration: SmartTableConfig = {

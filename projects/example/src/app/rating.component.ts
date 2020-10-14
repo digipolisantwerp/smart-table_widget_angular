@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Cell} from '@acpaas-ui/ngx-table';
 
 @Component({
@@ -12,9 +12,15 @@ import {Cell} from '@acpaas-ui/ngx-table';
     </div>
   `,
 })
-export class AppRatingComponent implements Cell {
+export class AppRatingComponent implements OnInit, Cell {
   // score from 0 to 10
   public data: any;
+  public metadata: any;
+
+  ngOnInit() {
+    // This is only for showing off the use of metadata
+    console.log('Using rating type:', this.metadata.ratingType);
+  }
 
   public starRating(): number {
     if (this.data >= 9) {
