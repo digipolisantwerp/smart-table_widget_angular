@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - When applying a filter, the pagination will go back to page 1
+- Upgraded @acpaas-ui/ngx-table version to 4.5, adding metadata functionality to custom cells.
 
 ### Added
 - Option in forRoot() module method to configure custom filters
