@@ -4,16 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Changed
-- When applying a filter, the pagination will go back to page 1
-- Upgraded @acpaas-ui/ngx-table version to 4.5, adding metadata functionality to custom cells.
+
+## [1.6.0] - 2020-10-15
 
 ### Added
-- Option in forRoot() module method to configure custom filters
-- The search filter component as optional filter. (type: 'search-filter')
+- Upgraded @acpaas-ui/ngx-table version to 4.5, adding metadata functionality to custom cells
+- Added ption in forRoot() module method to configure custom filters
+- Added search filter component as optional filter (type: 'search-filter')
 
 ### Fixed
-- Display time for DateTime type columns
+- When applying a filter, the pagination will go back to page 1
+- Fixed display time for DateTime type columns
+
 
 ## [1.5.7] - 2020-08-21
 
@@ -138,7 +140,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.7...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.7...v1.6.0
 [1.5.7]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.6...v1.5.7
 [1.5.6]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.5...v1.5.6
 [1.5.5]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.4...v1.5.5

@@ -17,7 +17,7 @@ const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
   identifier: 'aui-smart-table'
 };
-// Do not remove following line as this line prevents build errors for the smart table module
+// Do not remove following line as this line prevents build errors for the smart table module, see https://github.com/angular/angular/issues/26874
 // @dynamic
 @NgModule({
   declarations: [
