@@ -4,7 +4,8 @@ import {
   SmartTableColumnCustomType,
   SmartTableColumnType,
   SmartTableFilter,
-  SmartTableFilterConfig
+  SmartTableFilterConfig,
+  SmartTableOptions
 } from '../smart-table/smart-table.types';
 import {TableColumn} from '@acpaas-ui/ngx-table';
 import {DatePipe} from '@angular/common';
@@ -16,7 +17,8 @@ export class TableFactory {
 
   createTableColumnFromConfig(
     columnConfig: SmartTableColumnConfig,
-    columnTypes: SmartTableColumnCustomType[], format?: string
+    columnTypes: SmartTableColumnCustomType[],
+    options?: SmartTableOptions
   ): TableColumn {
     const column: TableColumn = {
       value: columnConfig.key,
@@ -36,13 +38,11 @@ export class TableFactory {
       } else {
         switch (columnConfig.type) {
           case SmartTableColumnType.DateTime: {
-            column.format = value => this.datePipe.transform(value,
-              format || 'dd/MM/yyyy - hh:mm');
+            column.format = value => this.datePipe.transform(value, (options && options.columnDateTimeFormat) || 'dd/MM/yyyy - hh:mm');
             break;
           }
           case SmartTableColumnType.Date: {
-            column.format = value => this.datePipe.transform(value,
-              format || 'dd/MM/yyyy');
+            column.format = value => this.datePipe.transform(value, (options && options.columnDateFormat) || 'dd/MM/yyyy');
             break;
           }
         }

@@ -66,7 +66,7 @@ export interface SmartTableColumnConfig {
   type: SmartTableColumnType;
   classList?: string[];
   sortPath: string;
-  canHide: boolean;
+  canHide?: boolean;
 }
 
 export enum SmartTableColumnType {
