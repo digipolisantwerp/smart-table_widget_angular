@@ -37,4 +37,8 @@ export class AppComponent {
   onRowClicked(row) {
     console.log('clicked row', row);
   }
+
+  filterChanged(event) {
+    console.log('Filter changed:', event);
+  }
 }

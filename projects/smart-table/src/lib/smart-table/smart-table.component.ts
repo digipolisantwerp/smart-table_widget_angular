@@ -7,12 +7,12 @@ import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {SmartTableService} from './smart-table.service';
 import {
+  Filters,
   SmartTableColumnConfig,
   SmartTableColumnCustomType,
   SmartTableConfig,
   SmartTableDataQuery,
   SmartTableDataQueryFilter,
-  SmartTableFilter,
   SmartTableFilterConfig,
   SmartTableFilterDisplay,
   SmartTableFilterOperator,
@@ -23,6 +23,7 @@ import {auditTime, catchError, filter, first, map, shareReplay, skip, startWith,
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
+import {SmartTableFilter} from '../filter/smart-table.filter';
 
 @Component({
   selector: 'aui-smart-table',
@@ -40,7 +41,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   /** fires when the user selects a row */
-  @Output() rowClicked = new EventEmitter<any>();
+  @Output()
+  rowClicked = new EventEmitter<any>();
+  @Output()
+  filter = new EventEmitter<Filters>();
 
   /** @internal */
   genericFilter$: Observable<SmartTableFilter>;
@@ -263,6 +267,14 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1),
     );
 
+    this.onFilter$ = of([]).pipe(
+      tap(() => {
+        if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
+          this.resetOrderBy();
+        }
+      })
+    );
+
     // Helper so not to have duplicate code
     const onFilter = (filters: Observable<SmartTableFilter[]>) => this.onFilter$.pipe(
       switchMap((event: UpdateFilterArgs) => filters.pipe(take(1), map((list: Array<SmartTableFilter>) => {
@@ -294,33 +306,28 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.genericFilter$ = this.configuration$.pipe(
       map((config: SmartTableConfig) => config.filters.find(f => f.display === SmartTableFilterDisplay.Generic)),
       filter(f => !!f),
-      map(genericFilter => {
-        const f = new SmartTableFilter();
-        f.id = 'generic';
-        f.type = SmartTableFilterType.Input;
-        f.fields = [...genericFilter.fields];
-        f.operator = SmartTableFilterOperator.ILike;
-        f.label = genericFilter.label || '';
-        f.placeholder = genericFilter.placeholder || '';
-        return f;
-      }),
+      map(genericFilter => this.factory.createSmartFilterFromConfig({
+        id: 'generic',
+        type: SmartTableFilterType.Input,
+        fields: [...genericFilter.fields],
+        operator: SmartTableFilterOperator.ILike,
+        label: genericFilter.label || '',
+        placeholder: genericFilter.placeholder || ''
+      })),
       startWith(null),
       shareReplay(1)
     );
 
     /**
      * Whenever a filter changes value,
-     * go back to page 1
+     * go back to page 1 and publish the event to the outer world
      */
-    merge(
-      this.visibleFilters$,
-      this.optionalFilters$,
-      this.genericFilter$
-    ).pipe(
-      takeUntil(this.destroy$),
-      skip(3),
-      tap(() => this.currentPage$.next(1))
+    this.genericFilter$.pipe(
+      filter(f => !!f),
+      switchMap(a => a.valueChanges$),
+      tap(console.log)
     ).subscribe();
+
 
     // Build up the data query based on the different filters
     // A new data query will be created every time that new filters come in
@@ -509,13 +516,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public onClickRow(row) {
     this.rowClicked.emit(row);
-  }
-
-  public onFilter(value: UpdateFilterArgs) {
-    if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
-      this.resetOrderBy();
-    }
-    this.onFilter$.next(value);
   }
 
   public onOrderBy(orderBy: OrderBy) {
