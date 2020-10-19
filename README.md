@@ -54,19 +54,20 @@ import { SmartTableModule } from '@acpaas-ui-widgets/ngx-smart-table';
 
 #### Importing Using Custom Labels
 ```ts
-SmartTableModule.withLabels({
-    itemCounterLabel: {
-      singular: '%{currentFrom} - %{currentTo} van %{totalAmount} film',
-      plural: '%{currentFrom} - %{currentTo} van %{totalAmount} films',
-    },
-    itemsPerPageLabel: {
-      singular: 'film per pagina',
-      plural: 'films per pagina',
-    }
-  })
+SmartTableModule.withLabels
   .forRoot({
     identifier: 'aui-smarttable-ngx',
-    storageType: 'sessionStorage'
+    storageType: 'sessionStorage',
+    labels: {
+       itemCounterLabel: {
+             singular: '%{currentFrom} - %{currentTo} van %{totalAmount} film',
+             plural: '%{currentFrom} - %{currentTo} van %{totalAmount} films',
+       },
+       itemsPerPageLabel: {
+         singular: 'film per pagina',
+         plural: 'films per pagina',
+       }
+    }
   })
 ```
 
