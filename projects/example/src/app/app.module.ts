@@ -13,19 +13,19 @@ import {AppRatingComponent} from './rating.component';
   imports: [
     BrowserModule,
     SmartTableModule
-      .withLabels({
-        itemCounterLabel: {
-          singular: '%{currentFrom} - %{currentTo} van %{totalAmount} film',
-          plural: '%{currentFrom} - %{currentTo} van %{totalAmount} films',
-        },
-        itemsPerPageLabel: {
-          singular: 'film per pagina',
-          plural: 'films per pagina',
-        }
-      })
       .forRoot({
         identifier: 'aui-smarttable-ngx',
-        storageType: 'sessionStorage'
+        storageType: 'sessionStorage',
+        labels: {
+          itemCounterLabel: {
+            singular: '%{currentFrom} - %{currentTo} van %{totalAmount} film',
+            plural: '%{currentFrom} - %{currentTo} van %{totalAmount} films',
+          },
+          itemsPerPageLabel: {
+            singular: 'film per pagina',
+            plural: 'films per pagina',
+          }
+        }
       })
   ],
   providers: [],
