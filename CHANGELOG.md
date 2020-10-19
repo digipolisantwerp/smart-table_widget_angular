@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+### Fixed
+- AOT build errors due to incorrect use of static builder methods when importing the module
 
 ## [1.6.0] - 2020-10-15
 

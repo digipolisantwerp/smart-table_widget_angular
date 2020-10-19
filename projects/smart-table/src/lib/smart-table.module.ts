@@ -1,4 +1,4 @@
-import {ModuleWithProviders, NgModule, ValueProvider} from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {SmartTableComponent} from './smart-table/smart-table.component';
 import {CommonModule, DatePipe} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
@@ -9,16 +9,16 @@ import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
 import {FlyoutModule} from '@acpaas-ui/ngx-flyout';
 import {components, services} from './index';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
-import {ILabels, IModuleConfig} from './smart-table/smart-table.types';
+import {IModuleConfig} from './smart-table/smart-table.types';
 import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
-  identifier: 'aui-smart-table'
+  identifier: 'aui-smart-table',
 };
-// Do not remove following line as this line prevents build errors for the smart table module, see https://github.com/angular/angular/issues/26874
-// @dynamic
+
+
 @NgModule({
   declarations: [
     ...components
@@ -51,25 +51,6 @@ const defaultConfiguration: IModuleConfig = {
   ]
 })
 export class SmartTableModule {
-  private static labelProviders: Array<ValueProvider> = [];
-
-  static withLabels(labels: ILabels) {
-    if (labels && labels.itemsPerPageLabel) {
-      this.labelProviders.push({
-        provide: ITEMS_PER_PAGE_LABEL,
-        useValue: labels.itemsPerPageLabel
-      });
-    }
-    if (labels && labels.itemCounterLabel) {
-      this.labelProviders.push({
-        provide: ITEM_COUNTER_LABEL,
-        useValue: labels.itemCounterLabel
-      });
-    }
-
-    return this;
-  }
-
   static forRoot(moduleConfiguration: IModuleConfig = defaultConfiguration): ModuleWithProviders {
     return {
       ngModule: SmartTableModule,
@@ -87,10 +68,17 @@ export class SmartTableModule {
           useFactory: provideLocalstorageConfig,
           deps: [PROVIDE_CONFIG]
         },
+        {
+          provide: ITEMS_PER_PAGE_LABEL,
+          useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemsPerPageLabel
+        },
+        {
+          provide: ITEM_COUNTER_LABEL,
+          useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemCounterLabel
+        },
         DatePipe,
         ...services,
         TableFactory,
-        ...this.labelProviders
       ],
     };
   }

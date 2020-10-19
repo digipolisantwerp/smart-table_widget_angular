@@ -5,6 +5,7 @@ import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
 export interface IModuleConfig {
   storageType?: LocalStorageType;
   identifier?: string;
+  labels?: ILabels;
 }
 
 export interface ILabels {
