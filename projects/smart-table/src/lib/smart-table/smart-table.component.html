@@ -46,28 +46,27 @@
 
     <div class="aui-smart-table__filters--left">
       <aui-table-input-filter class="aui-smart-table__filter"
-                              *ngIf="genericFilter$ | async" [filter]="genericFilter$ | async"
-                              (update)="onFilter($event)">
+                              *ngIf="genericFilter$ | async" [filter]="genericFilter$ | async">
       </aui-table-input-filter>
 
       <ng-container *ngFor="let filter of (visibleFilters$ | async)" [ngSwitch]="filter.type">
         <ng-container *ngSwitchCase="'select'">
-          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
+          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter">
           </aui-table-select-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'input'">
-          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
+          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter">
           </aui-table-input-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'datepicker'">
-          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
+          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter">
           </aui-table-datepicker-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'search-filter'">
-          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter" (update)="onFilter($event)">
+          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter">
           </aui-table-search-filter>
         </ng-container>
       </ng-container>
@@ -90,23 +89,19 @@
          [ngClass]="{'is-visible': optionalFiltersVisible}" id="toggle-{{ instanceId }}">
       <ng-container *ngFor="let filter of (optionalFilters$ | async)" [ngSwitch]="filter.type">
         <ng-container *ngSwitchCase="'select'">
-          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                   (update)="onFilter($event)"></aui-table-select-filter>
+          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-select-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'input'">
-          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                  (update)="onFilter($event)"></aui-table-input-filter>
+          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-input-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'datepicker'">
-          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                       (update)="onFilter($event)"></aui-table-datepicker-filter>
+          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-datepicker-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'search-filter'">
-          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"
-                                   (update)="onFilter($event)"></aui-table-search-filter>
+          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-search-filter>
         </ng-container>
       </ng-container>
     </div>

@@ -7,7 +7,6 @@ import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {SmartTableService} from './smart-table.service';
 import {
-  Filters,
   SmartTableColumnConfig,
   SmartTableColumnCustomType,
   SmartTableConfig,
@@ -19,7 +18,21 @@ import {
   SmartTableFilterType,
   UpdateFilterArgs,
 } from './smart-table.types';
-import {auditTime, catchError, filter, first, map, shareReplay, skip, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {
+  auditTime,
+  catchError,
+  filter,
+  first,
+  map,
+  scan,
+  shareReplay,
+  skip,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
@@ -44,7 +57,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   @Output()
   rowClicked = new EventEmitter<any>();
   @Output()
-  filter = new EventEmitter<Filters>();
+  filter = new EventEmitter<SmartTableFilter[]>();
 
   /** @internal */
   genericFilter$: Observable<SmartTableFilter>;
@@ -88,7 +101,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public persistInStorage$: Observable<SmartTableColumnConfig[]>;
 
-  public onFilter$ = new Subject<UpdateFilterArgs>();
+  public onFilterChanged$: Observable<UpdateFilterArgs>;
+  public activeFilters$: Observable<Array<SmartTableFilter>>;
 
   private destroy$ = new Subject();
 
@@ -267,25 +281,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       shareReplay(1),
     );
 
-    this.onFilter$ = of([]).pipe(
-      tap(() => {
-        if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
-          this.resetOrderBy();
-        }
-      })
-    );
-
-    // Helper so not to have duplicate code
-    const onFilter = (filters: Observable<SmartTableFilter[]>) => this.onFilter$.pipe(
-      switchMap((event: UpdateFilterArgs) => filters.pipe(take(1), map((list: Array<SmartTableFilter>) => {
-        const found = list.find(f => f.id === event.filter.id);
-        if (found) {
-          found.value = event.value;
-        }
-        return list;
-      })))
-    );
-
     // Filters are based on the configuration coming in
     this.optionalFilters$ = this.configuration$.pipe(
       filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
@@ -293,16 +288,12 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       startWith([]),
       shareReplay(1)
     );
-    this.optionalFilters$ = merge(this.optionalFilters$, onFilter(this.optionalFilters$));
-
     this.visibleFilters$ = this.configuration$.pipe(
       filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
       map((config: SmartTableConfig) => this.setupFilter(config.filters, SmartTableFilterDisplay.Visible)),
       startWith([]),
       shareReplay(1)
     );
-    this.visibleFilters$ = merge(this.visibleFilters$, onFilter(this.visibleFilters$));
-
     this.genericFilter$ = this.configuration$.pipe(
       map((config: SmartTableConfig) => config.filters.find(f => f.display === SmartTableFilterDisplay.Generic)),
       filter(f => !!f),
@@ -312,7 +303,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         fields: [...genericFilter.fields],
         operator: SmartTableFilterOperator.ILike,
         label: genericFilter.label || '',
-        placeholder: genericFilter.placeholder || ''
+        placeholder: genericFilter.placeholder || '',
+        value: genericFilter.value
       })),
       startWith(null),
       shareReplay(1)
@@ -322,34 +314,52 @@ export class SmartTableComponent implements OnInit, OnDestroy {
      * Whenever a filter changes value,
      * go back to page 1 and publish the event to the outer world
      */
-    this.genericFilter$.pipe(
-      filter(f => !!f),
-      switchMap(a => a.valueChanges$),
-      tap(console.log)
-    ).subscribe();
+    this.onFilterChanged$ = combineLatest([
+      this.genericFilter$,
+      this.optionalFilters$,
+      this.visibleFilters$
+    ]).pipe(
+      takeUntil(this.destroy$),
+      filter(([a, b, c]) => !!a && !!b && !!c),
+      switchMap(([genericFilter, optionalFilter, visibleFilter]: [SmartTableFilter | any, SmartTableFilter[], SmartTableFilter[]]) =>
+        merge(...[genericFilter, ...optionalFilter, ...visibleFilter].map(f => f.valueChanges$))),
+      takeUntil(merge(this.genericFilter$, this.optionalFilters$, this.visibleFilters$).pipe(skip(9))), // TODO why 9?
+      takeUntil(this.destroy$),
+      tap(() => {
+        if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
+          this.resetOrderBy();
+        }
+      }),
+      shareReplay(1),
+    );
 
-
+    this.activeFilters$ = this.onFilterChanged$.pipe(
+      takeUntil(this.destroy$),
+      scan((accumulator: SmartTableFilter[], update: UpdateFilterArgs) => {
+        const index = accumulator.findIndex(f => f.id === update.filter.id);
+        if (index < 0 && !!update.value) {
+          accumulator.push(update.filter);
+        } else if (index >= 0 && !update.value) {
+          accumulator.splice(index, 1);
+        }
+        return accumulator;
+      }, []),
+      tap(filters => this.filter.next(filters)),
+      shareReplay(1)
+    );
     // Build up the data query based on the different filters
     // A new data query will be created every time that new filters come in
-    this.dataQuery$ = combineLatest(
-      this.visibleFilters$,
-      this.optionalFilters$,
-      this.genericFilter$,
+    this.dataQuery$ = combineLatest([
+      this.activeFilters$,
       this.configuration$,
       this.orderBy$
-    ).pipe(
-      skip(3),  // The values are shared replayed, so skip the 3 initial emits of the observables
-      map(([visibleFilters, optionalFilters, genericFilter, configuration, orderBy]:
-             [SmartTableFilter[], SmartTableFilter[], SmartTableFilter, SmartTableConfig, OrderBy]) => {
+    ]).pipe(
+      map(([activeFilters, configuration, orderBy]:
+             [any, SmartTableConfig, OrderBy]) => {
         const filters = [
           ...configuration.baseFilters,
-          ...this.createDataQueryFilters(visibleFilters),
-          ...this.createDataQueryFilters(optionalFilters)
+          ...this.createDataQueryFilters(activeFilters),
         ];
-        const createdFilter = this.createDataQueryFilter(genericFilter);
-        if (createdFilter) {
-          filters.push(createdFilter);
-        }
         return [filters, configuration, orderBy];
       }),
       map(([filters, configuration, orderBy]: [any[], SmartTableConfig, OrderBy]) => {
@@ -365,9 +375,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
           sort: {path: sortColumn.sortPath, ascending: orderBy.order === 'asc'}
         };
       }),
-      startWith({filters: [], sort: {path: '', ascending: false}})
+      startWith({filters: [], sort: {path: '', ascending: false}}),
     );
-
     // Get the data on the bases of the data query
     // or when we change the pagination
     this.rows$ = combineLatest(

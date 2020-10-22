@@ -15,7 +15,7 @@ export class SmartTableFilter extends Filter {
     super();
     this.id = _config.id;
     this.type = _config.type;
-    this.fields = _config.fields;
+    this.fields = _config.fields ? [..._config.fields] : [_config.field];
     this.operator = _config.operator;
     this.label = _config.label;
     this.placeholder = _config.placeholder;
