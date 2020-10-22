@@ -337,9 +337,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       scan((accumulator: SmartTableFilter[], update: UpdateFilterArgs) => {
         const index = accumulator.findIndex(f => f.id === update.filter.id);
-        if (index < 0 && !!update.value) {
+        if (index < 0 && !!update.value && !!update.value.length) {
           accumulator.push(update.filter);
-        } else if (index >= 0 && !update.value) {
+        } else if (index >= 0 && !!update.value && !!update.value.length) {
+          accumulator[index] = update.filter;
+        } else {
           accumulator.splice(index, 1);
         }
         return accumulator;
