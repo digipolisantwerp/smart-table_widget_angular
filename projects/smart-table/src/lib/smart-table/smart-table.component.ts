@@ -37,6 +37,7 @@ import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
 import {SmartTableFilter} from '../filter/smart-table.filter';
+import {selectFilters} from '../selectors/smart-table.selectors';
 
 @Component({
   selector: 'aui-smart-table',
@@ -282,32 +283,15 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     );
 
     // Filters are based on the configuration coming in
-    this.optionalFilters$ = this.configuration$.pipe(
-      filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
-      map((config: SmartTableConfig) => this.setupFilter(config.filters, SmartTableFilterDisplay.Optional)),
-      startWith([]),
-      shareReplay(1)
-    );
-    this.visibleFilters$ = this.configuration$.pipe(
-      filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
-      map((config: SmartTableConfig) => this.setupFilter(config.filters, SmartTableFilterDisplay.Visible)),
-      startWith([]),
-      shareReplay(1)
-    );
-    this.genericFilter$ = this.configuration$.pipe(
-      map((config: SmartTableConfig) => config.filters.find(f => f.display === SmartTableFilterDisplay.Generic)),
-      filter(f => !!f),
-      map(genericFilter => this.factory.createSmartFilterFromConfig({
+    this.optionalFilters$ = this.configuration$.pipe(selectFilters(this.factory, SmartTableFilterDisplay.Optional));
+    this.visibleFilters$ = this.configuration$.pipe(selectFilters(this.factory, SmartTableFilterDisplay.Visible));
+    this.genericFilter$ = this.configuration$.pipe(selectFilters(this.factory, SmartTableFilterDisplay.Generic, genericFilter => ({
+        ...genericFilter,
         id: 'generic',
         type: SmartTableFilterType.Input,
-        fields: [...genericFilter.fields],
         operator: SmartTableFilterOperator.ILike,
-        label: genericFilter.label || '',
-        placeholder: genericFilter.placeholder || '',
-        value: genericFilter.value
       })),
-      startWith(null),
-      shareReplay(1)
+      map(filters => (filters && filters[0]) || null)
     );
 
     /**
