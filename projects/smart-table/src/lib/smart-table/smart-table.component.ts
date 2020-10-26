@@ -31,7 +31,7 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap
+  tap, withLatestFrom
 } from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
@@ -302,18 +302,20 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.onFilterChanged$ = combineLatest([
       this.genericFilter$,
       this.optionalFilters$,
-      this.visibleFilters$
+      this.visibleFilters$,
     ]).pipe(
       takeUntil(this.destroy$),
       filter(([a, b, c]) => !!a && !!b && !!c),
       switchMap(([genericFilter, optionalFilter, visibleFilter]: [SmartTableFilter | any, SmartTableFilter[], SmartTableFilter[]]) =>
         merge(...[genericFilter, ...optionalFilter, ...visibleFilter].map(f => f.valueChanges$))),
       takeUntil(this.destroy$),
-      tap(() => {
+      withLatestFrom(this.configuration$),
+      map(([value, configuration]: [UpdateFilterArgs, SmartTableConfig]) => {
         this.currentPage$.next(1);
-        if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
+        if (configuration.options && configuration.options.resetSortOrderOnFilter) {
           this.resetOrderBy();
         }
+        return value;
       }),
       share(),
     );
