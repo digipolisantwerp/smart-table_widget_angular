@@ -310,6 +310,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         merge(...[genericFilter, ...optionalFilter, ...visibleFilter].map(f => f.valueChanges$))),
       takeUntil(this.destroy$),
       tap(() => {
+        this.currentPage$.next(1);
         if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
           this.resetOrderBy();
         }
