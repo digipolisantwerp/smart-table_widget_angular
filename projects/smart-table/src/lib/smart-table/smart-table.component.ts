@@ -25,8 +25,8 @@ import {
   first,
   map,
   scan,
+  share,
   shareReplay,
-  skip,
   startWith,
   switchMap,
   take,
@@ -291,12 +291,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         type: SmartTableFilterType.Input,
         operator: SmartTableFilterOperator.ILike,
       })),
-      map(filters => (filters && filters[0]) || null)
+      map(filters => (filters && filters[0]) || null),
+      shareReplay(1)
     );
 
     /**
      * Whenever a filter changes value,
-     * go back to page 1 and publish the event to the outer world
+     * merge all valueChanges$ of all filters
      */
     this.onFilterChanged$ = combineLatest([
       this.genericFilter$,
@@ -307,16 +308,20 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       filter(([a, b, c]) => !!a && !!b && !!c),
       switchMap(([genericFilter, optionalFilter, visibleFilter]: [SmartTableFilter | any, SmartTableFilter[], SmartTableFilter[]]) =>
         merge(...[genericFilter, ...optionalFilter, ...visibleFilter].map(f => f.valueChanges$))),
-      takeUntil(merge(this.genericFilter$, this.optionalFilters$, this.visibleFilters$).pipe(skip(9))), // TODO why 9?
       takeUntil(this.destroy$),
       tap(() => {
         if (SMARTTABLE_DEFAULT_OPTIONS.resetSortOrderOnFilter) {
           this.resetOrderBy();
         }
       }),
-      shareReplay(1),
+      share(),
     );
 
+    /**
+     * Active filters is an array of all the filters (with their values)
+     * that are applied on the table at the moment. The array will be empty
+     * if no filters are applied at the moment.
+     */
     this.activeFilters$ = this.onFilterChanged$.pipe(
       takeUntil(this.destroy$),
       scan((accumulator: SmartTableFilter[], update: UpdateFilterArgs) => {
@@ -330,8 +335,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }
         return accumulator;
       }, []),
-      tap(filters => this.filter.next(filters)),
-      shareReplay(1)
+      tap(filters => this.filter.next(filters))
     );
     // Build up the data query based on the different filters
     // A new data query will be created every time that new filters come in
@@ -384,7 +388,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         return data._embedded ? data._embedded.resourceList : [];
       }),
       startWith([]),
-      shareReplay(1)
+      share()
     );
 
     this.error$ = this.rows$.pipe(

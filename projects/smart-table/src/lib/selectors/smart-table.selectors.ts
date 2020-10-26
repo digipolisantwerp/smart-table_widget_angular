@@ -1,7 +1,7 @@
 import {Observable, OperatorFunction} from 'rxjs';
 import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from '../smart-table/smart-table.types';
 import {SmartTableFilter} from '../filter/smart-table.filter';
-import {filter, map, shareReplay, startWith} from 'rxjs/operators';
+import {filter, map, share, startWith} from 'rxjs/operators';
 import {TableFactory} from '../services/table.factory';
 
 export const selectFilters: (factory: TableFactory, type: SmartTableFilterDisplay, mapFilterToConfig?: (filter: SmartTableFilterConfig)
@@ -14,6 +14,6 @@ export const selectFilters: (factory: TableFactory, type: SmartTableFilterDispla
       .map(filterConfig => factory.createSmartFilterFromConfig(mapFilterToConfig ? mapFilterToConfig(filterConfig) : filterConfig))
     ),
     startWith([]),
-    shareReplay(1)
+    share()
   );
 };

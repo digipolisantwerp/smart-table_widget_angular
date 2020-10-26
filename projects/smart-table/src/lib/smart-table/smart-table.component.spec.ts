@@ -410,44 +410,6 @@ describe('Smart Table Test', () => {
       }));
     });
 
-    it('should update the optional filter value when onFilter$', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          filters: [...mockFilters]
-        }
-      }));
-      (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
-        return {id: config.id};
-      });
-      component.onFilter$ = cold('------a', {a: {filter: {id: 'a'}, value: 'new value'}}) as any;
-      fixture.detectChanges();
-      expect(component.visibleFilters$).toBeObservable(cold('a--b--c', {
-        a: [],
-        b: [{id: 'a', value: 'new value'}],
-        c: [{id: 'a', value: 'new value'}]
-      }));
-    });
-
-    it('should update the visible filter value when onFilter$', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          filters: [...mockFilters]
-        }
-      }));
-      (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
-        return {id: config.id};
-      });
-      component.onFilter$ = cold('------a', {a: {filter: {id: 'b'}, value: 'new value'}}) as any;
-      fixture.detectChanges();
-      expect(component.optionalFilters$).toBeObservable(cold('a--b--c', {
-        a: [],
-        b: [{id: 'b', value: 'new value'}],
-        c: [{id: 'b', value: 'new value'}]
-      }));
-    });
-
     it('should hide an array filter with on values', () => {
       const filters = [{value: []}];
       const result = component.createDataQueryFilters(filters as any);
