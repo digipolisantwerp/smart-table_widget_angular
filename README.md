@@ -98,6 +98,7 @@ Check the example application for how these are used.
 ### Events
 
 - **rowClicked**: triggers when the user clicks on a row
+- **filter**: Emits the array of filters active on the table (with their current value)
 
 ### Back-end protocol
 
