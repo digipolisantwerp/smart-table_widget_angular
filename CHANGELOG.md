@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Fixed
 - AOT build errors due to incorrect use of static builder methods when importing the module
+- Unpredictable rxjs skip() operators for filters
+
+### Added
+- (filter) output that emits the active filters of the smart table
 
 ## [1.6.0] - 2020-10-15
 
