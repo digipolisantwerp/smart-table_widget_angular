@@ -3,12 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+
+## [1.7.0] - 2020-10-27
+
 ### Fixed
 - AOT build errors due to incorrect use of static builder methods when importing the module
 - Unpredictable rxjs skip() operators for filters
 
 ### Added
 - (filter) output that emits the active filters of the smart table
+
 
 ## [1.6.0] - 2020-10-15
 
@@ -145,7 +150,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.7...v1.6.0
 [1.5.7]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.6...v1.5.7
 [1.5.6]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.5...v1.5.6
