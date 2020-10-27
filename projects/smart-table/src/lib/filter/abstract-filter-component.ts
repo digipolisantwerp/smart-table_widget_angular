@@ -1,11 +1,12 @@
-import {EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {SmartTableFilter, UpdateFilterArgs} from '../smart-table/smart-table.types';
+import {EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {UpdateFilterArgs} from '../smart-table/smart-table.types';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil, tap} from 'rxjs/operators';
 import * as _ from 'lodash';
+import {SmartTableFilter} from './smart-table.filter';
 
-export abstract class AbstractFilter implements OnDestroy {
+export abstract class AbstractFilterComponent implements OnDestroy, OnChanges {
   @Input() filter: SmartTableFilter;
   @Input() optional = false;
   @Output() update = new EventEmitter<UpdateFilterArgs>();
@@ -23,6 +24,15 @@ export abstract class AbstractFilter implements OnDestroy {
       debounceTime(200),
       tap((newValue: string) => this.onFilter(newValue)),
     ).subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (!!changes.filter.currentValue) {
+      this.update.pipe(
+        takeUntil(this.destroy$),
+        tap(value => (this.filter.valueChanges$ as Subject<UpdateFilterArgs>).next(value)),
+      ).subscribe();
+    }
   }
 
   public onFilter(value) {

@@ -5,7 +5,8 @@
       apiUrl="/api/movies"
       [columnTypes]="moviesCustomColumns"
       [configuration]="customConfiguration"
-      (rowClicked)="onRowClicked($event)">
+      (rowClicked)="onRowClicked($event)"
+      (filter)="filterChanged($event)">
     </aui-smart-table>
   </div>
 </main>

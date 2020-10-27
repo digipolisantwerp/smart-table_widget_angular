@@ -1,13 +1,13 @@
 import {FilterComponent} from '@acpaas-ui/ngx-utils';
 import {Component, OnInit} from '@angular/core';
-import {AbstractFilter} from '../filter/abstract-filter';
+import {AbstractFilterComponent} from '../filter/abstract-filter-component';
 
 @Component({
   selector: 'aui-table-select-filter',
   templateUrl: './table-select-filter.component.html',
   styleUrls: ['../filter/filter.component.scss']
 })
-export class TableSelectFilterComponent extends AbstractFilter implements OnInit, FilterComponent {
+export class TableSelectFilterComponent extends AbstractFilterComponent implements OnInit, FilterComponent {
 
   public ngOnInit() {
     try {

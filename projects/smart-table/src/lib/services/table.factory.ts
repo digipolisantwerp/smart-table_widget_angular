@@ -3,12 +3,12 @@ import {
   SmartTableColumnConfig,
   SmartTableColumnCustomType,
   SmartTableColumnType,
-  SmartTableFilter,
   SmartTableFilterConfig,
   SmartTableOptions
 } from '../smart-table/smart-table.types';
 import {TableColumn} from '@acpaas-ui/ngx-table';
 import {DatePipe} from '@angular/common';
+import {SmartTableFilter} from '../filter/smart-table.filter';
 
 @Injectable()
 export class TableFactory {
@@ -52,15 +52,6 @@ export class TableFactory {
   }
 
   createSmartFilterFromConfig(filterConfig: SmartTableFilterConfig): SmartTableFilter {
-    const _filter = new SmartTableFilter();
-    _filter.id = filterConfig.id;
-    _filter.type = filterConfig.type;
-    _filter.fields = [filterConfig.field];
-    _filter.operator = filterConfig.operator;
-    _filter.label = filterConfig.label;
-    _filter.placeholder = filterConfig.placeholder;
-    _filter.options = filterConfig.options;
-    _filter.value = filterConfig.value;
-    return _filter;
+    return new SmartTableFilter(filterConfig);
   }
 }

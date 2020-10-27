@@ -86,7 +86,7 @@ app.get('/api/movies/config', (req, res) => {
       "type": "input",
       "label": "Zoek een film",
       "placeholder": "Zoek op titel, jaar, ...",
-      "fields": ["movie_title", "director_name", "title_year"]
+      "fields": ["movie_title", "director_name", "title_year"],
     }, {
       "id": "title",
       "display": "optional",

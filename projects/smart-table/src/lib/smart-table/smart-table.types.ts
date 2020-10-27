@@ -1,6 +1,7 @@
-import {Filter} from '@acpaas-ui/ngx-utils';
 import {ConstructableCell, OrderBy, TableColumnFormat} from '@acpaas-ui/ngx-table';
 import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
+import {Observable} from 'rxjs';
+import {SmartTableFilter} from '../filter/smart-table.filter';
 
 export interface IModuleConfig {
   storageType?: LocalStorageType;
@@ -104,23 +105,20 @@ export enum SmartTableFilterOperator {
 export interface SmartTableFilterConfig {
   id: string;
   type: SmartTableFilterType;
-  field: string;
+  field?: string;
   fields?: string[];
   operator?: SmartTableFilterOperator;
-  display: SmartTableFilterDisplay;
+  display?: SmartTableFilterDisplay;
   label: string;
   options?: any[];            // Currently applies only to filters of type 'Select'
   placeholder?: string;
-  value: string | any[];      // See ACPaaS Filter class
+  value?: string | any[];      // See ACPaaS Filter class
 }
 
-export class SmartTableFilter extends Filter {
-  type: SmartTableFilterType;
-  fields: string[];
-  operator?: SmartTableFilterOperator;
-  label: string;
-  placeholder?: string;
-  disabled: boolean;
+export interface Filters {
+  genericFilters: SmartTableFilter;
+  optionalFilters: Array<SmartTableFilter>;
+  visibleFilters: Array<SmartTableFilter>;
 }
 
 export interface UpdateFilterArgs {
