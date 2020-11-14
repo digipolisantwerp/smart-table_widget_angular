@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Cannot sort the table until a filter is applied
 
 ## [1.7.0] - 2020-10-27
 
