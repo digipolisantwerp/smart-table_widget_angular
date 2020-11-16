@@ -338,7 +338,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }
         return accumulator;
       }, []),
-      tap(filters => this.filter.next(filters))
+      tap(filters => this.filter.next(filters)),
+      startWith([])
     );
     // Build up the data query based on the different filters
     // A new data query will be created every time that new filters come in
