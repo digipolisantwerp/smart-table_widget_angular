@@ -9,6 +9,8 @@ export interface ISmartTableState {
   [smartTableIdentifier: string]: {
     id: string;
     configuration: SmartTableConfig;
+    customConfiguration?: SmartTableConfig;
+    configurationFromStorage?: SmartTableConfig;
     columns: TableColumn[]
   };
 }

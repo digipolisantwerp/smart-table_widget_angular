@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {select, Store} from '@ngrx/store';
 import {IAppState} from '../store';
-import {Observable, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {selectConfiguration} from '../store/smart-table.selectors';
 import {SmartTableColumnConfig, SmartTableConfig} from '../smart-table/smart-table.types';
 import {catchError, first, map, mapTo, tap} from 'rxjs/operators';
@@ -24,6 +24,24 @@ export class StorageService {
     return this.addToLocalStorage(id, 'columns', columns);
   }
 
+  getStoredConfiguration(id: string): Observable<SmartTableConfig> {
+    return combineLatest([
+      this.getColumns(id),
+      this.getSortOrder(id)
+    ]).pipe(
+      map(([columns, defaultSortOrder]) => {
+        const configuration = {
+          columns,
+          options: {}
+        };
+        if (defaultSortOrder) {
+          configuration.options = {defaultSortOrder};
+        }
+        return configuration;
+      })
+    );
+  }
+
   getColumns(id: string): Observable<SmartTableColumnConfig[]> {
     return this.getItem(id).pipe(
       map((object: any) => object.columns || []),
@@ -33,7 +51,7 @@ export class StorageService {
 
   getSortOrder(id: string): Observable<OrderBy> {
     return this.getItem(id).pipe(
-      map((item: any) => (item && item.defaultSortOrder) || {})
+      map((item: any) => (item && item.defaultSortOrder) || null)
     );
   }
 

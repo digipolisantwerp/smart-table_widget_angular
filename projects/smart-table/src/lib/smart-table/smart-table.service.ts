@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +6,10 @@ import * as queryString from 'query-string';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 
-import { SmartTableDataQuery } from './smart-table.types';
+import {SmartTableConfig, SmartTableDataQuery} from './smart-table.types';
+import {first, map} from 'rxjs/operators';
+import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
+import {PROVIDE_ID} from '../indentifier.provider';
 
 const EXCEL_EXTENSION = '.xlsx';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -14,14 +17,42 @@ const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.
 @Injectable()
 export class SmartTableService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, @Inject(PROVIDE_ID) private storageIdentifier: string) {
   }
 
   public getConfiguration(apiUrl: string, headers?: HttpHeaders): Observable<any> {
     if (!headers) {
       headers = new HttpHeaders();
     }
-    return this.http.get(`${apiUrl}/config`, { headers });
+    return this.http.get(`${apiUrl}/config`, { headers }).pipe(
+      first(),
+      map((configuration: SmartTableConfig) => {
+        // Start of with default options and override
+        // those with whatever options we get from the configuration
+        return {
+          ...configuration,
+          baseFilters: configuration.baseFilters || [],
+          options: {
+            ...SMARTTABLE_DEFAULT_OPTIONS,
+            ...configuration.options
+          }
+        };
+      }),
+      map(config => {
+        // Override the storage identifier is we configured it in the module
+        if (this.storageIdentifier) {
+          return {
+            ...config,
+            options: {
+              ...config.options,
+              storageIdentifier: this.storageIdentifier
+            }
+          };
+        } else {
+          return config;
+        }
+      })
+    );
   }
 
   public getData(

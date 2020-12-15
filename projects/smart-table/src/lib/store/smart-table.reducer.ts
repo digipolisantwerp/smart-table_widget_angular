@@ -1,14 +1,14 @@
 import {ISmartTableState} from './index';
 import {
+  GetConfigurationSuccess,
   InitFromStorageSuccess,
   SetColumns,
-  SetConfiguration,
+  SetCustomConfiguration,
   SetId,
   SmartTableActions,
   ToggleColumnVisibility
 } from './smart-table.actions';
 import {TableColumn} from '@acpaas-ui/ngx-table';
-import {SmartTableConfig} from '../smart-table/smart-table.types';
 
 export function smartTableReducer(state: ISmartTableState, action) {
   switch (action.type) {
@@ -16,11 +16,13 @@ export function smartTableReducer(state: ISmartTableState, action) {
       return {
         ...state,
         [(action as SetId).id]: {
-          configuration: null
+          ...state[(action as SetId).id],
+          configuration: null,
+          configurationFromStorage: null
         }
       };
-    case SmartTableActions.SET_CONFIGURATION: {
-      const update = (action as SetConfiguration);
+    case SmartTableActions.GET_CONFIGURATION_SUCCESS: {
+      const update = (action as GetConfigurationSuccess);
       return {
         ...state,
         [update.id]: {
@@ -29,28 +31,38 @@ export function smartTableReducer(state: ISmartTableState, action) {
         }
       };
     }
+    case SmartTableActions.SET_CUSTOM_CONFIGURATION: {
+      const update = (action as SetCustomConfiguration);
+      const s = state && state[update.id] ? {
+        ...state[update.id],
+        customConfiguration: update.configuration
+      } : {customConfiguration: update.configuration};
+      return {
+        ...state,
+        [update.id]: {...s}
+      };
+    }
     case SmartTableActions.INIT_FROM_STORAGE_SUCCESS: {
       const update = (action as InitFromStorageSuccess);
-      let columns: TableColumn[] = [...state[update.id].columns];
-      const configuration: SmartTableConfig = update.configuration;
-      if (columns && columns.length) {
-        columns = columns.map(column => {
-          return {
-            ...column,
-            hidden: !configuration.columns.find(c => c.key === column.value).visible
-          };
-        });
-      }
+      /*  let columns: TableColumn[] = [...(state[update.id] && state[update.id].columns)];
+        const configuration: SmartTableConfig = update.configuration;
+        if (columns && columns.length) {
+          columns = columns.map(column => {
+            return {
+              ...column,
+              hidden: !configuration.columns.find(c => c.key === column.value).visible
+            };
+          });
+        }*/
       return {
         ...state,
         [update.id]: {
           ...state[update.id],
-          configuration: update.configuration,
-          columns
+          configurationFromStorage: {...update.configuration}
         }
       };
     }
-    case SmartTableActions.SET_COLUMNS: {
+    case SmartTableActions.CONSTRUCT_COLUMNS_SUCCESS: {
       const update = (action as SetColumns);
       return {
         ...state,

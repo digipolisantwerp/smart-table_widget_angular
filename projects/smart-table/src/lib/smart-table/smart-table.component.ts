@@ -33,13 +33,13 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
-import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
 import {SmartTableFilter} from '../filter/smart-table.filter';
 import {selectFilters} from '../selectors/smart-table.selectors';
 import {Store} from '@ngrx/store';
 import {IAppState} from '../store';
-import {InitFromStorage, SetConfiguration, SetId} from '../store/smart-table.actions';
+import {ConstructColumns, GetConfiguration, SetCustomConfiguration, SetId} from '../store/smart-table.actions';
 import {selectColumns, selectConfiguration} from '../store/smart-table.selectors';
 
 @Component({
@@ -54,7 +54,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   @Input()
   set configuration(value: SmartTableConfig) {
-    this.customConfiguration$.next(value);
+    this.store.dispatch(new SetCustomConfiguration(value, this.instanceId));
   }
 
   /** fires when the user selects a row */
@@ -81,10 +81,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
    *  - manual @input() configuration that may override api configuration
    */
   configuration$: Observable<SmartTableConfig>;
-  /**
-   * Custom configuration that comes in with setting the @input() configuration
-   */
-  public customConfiguration$ = new BehaviorSubject<SmartTableConfig>(null);
 
   // All columns known to the table
   columns$: Observable<TableColumn[]>;
@@ -133,17 +129,14 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Initialize our state with a table-unique identifier that
+    // we will use to select portions of the state with
     this.store.dispatch(new SetId(this.instanceId));
     /*
       Observables data flow:
 
-            +----+ 1. GET config (getConfiguration)
-            |
-            +----+ 2. customConfiguration (@Input)
-            |
-            +----+ 3. localStorage config
-            |
-            v
+      Dispatch get configuration to the store:
+      STORE ---> GET_CONFIGURATION
       configuration$
             +
             |
@@ -163,32 +156,12 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
      */
 
-    // Get the configuration necessary and persist it in the store
-    concat(
-      this.getConfiguration(),  // First get the default configuration
-      this.customConfiguration$.pipe( // And then override with configuration we get from the user
-        filter(config => !!config),
-        switchMap((customConfig) => combineLatest(of(customConfig), this.configuration$).pipe(first())),
-        map(([customConfig, configuration]) => {
-          // Whenever we have custom configuration coming in, override existing configuration
-          return {
-            ...configuration,
-            ...customConfig,
-            options: {
-              ...configuration.options,
-              ...customConfig.options
-            }
-          };
-        })
-      )
-    ).pipe(
-      takeUntil(this.destroy$),
-      tap(config => this.store.dispatch(new SetConfiguration(config, this.instanceId, this.columnTypes))),
-      tap(() => this.store.dispatch(new InitFromStorage(this.instanceId)))
-    ).subscribe();
-
     this.configuration$ = this.store.pipe(selectConfiguration(this.instanceId));
-
+    // Rebuild columns whenever a new configuration comes in
+    this.configuration$.pipe(
+      takeUntil(this.destroy$),
+      tap((config) => this.store.dispatch(new ConstructColumns(config, this.instanceId, this.columnTypes)))
+    ).subscribe();
     // Columns are extracted from configuration
     this.columns$ = this.store.pipe(selectColumns(this.instanceId));
     // Visible columns are a subset from all columns
@@ -313,39 +286,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       catchError(err => of(err)),
       filter(err => err instanceof HttpErrorResponse)
     );
-  }
 
-  public getConfiguration(): Observable<SmartTableConfig> {
-    return this.dataService.getConfiguration(this.apiUrl, this.httpHeaders)
-      .pipe(
-        first(),
-        map((configuration: SmartTableConfig) => {
-          // Start of with default options and override
-          // those with whatever options we get from the configuration
-          return {
-            ...configuration,
-            baseFilters: configuration.baseFilters || [],
-            options: {
-              ...SMARTTABLE_DEFAULT_OPTIONS,
-              ...configuration.options
-            }
-          };
-        }),
-        map(config => {
-          // Override the storage identifier is we configured it in the module
-          if (this.storageIdentifier) {
-            return {
-              ...config,
-              options: {
-                ...config.options,
-                storageIdentifier: this.storageIdentifier
-              }
-            };
-          } else {
-            return config;
-          }
-        })
-      );
+    // Start the show!!
+    this.store.dispatch(new GetConfiguration(this.instanceId, this.apiUrl, this.httpHeaders, this.columnTypes));
   }
 
   protected resetOrderBy(defaultSortOrder?) {
