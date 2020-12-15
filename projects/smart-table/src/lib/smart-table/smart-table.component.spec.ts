@@ -184,7 +184,7 @@ describe('Smart Table Test', () => {
       }));
       (factory.createTableColumnFromConfig as SinonStub).returns('column');
       fixture.detectChanges();
-      expect(component.allColumns$).toBeObservable(cold('a--b', {
+      expect(component.columns$).toBeObservable(cold('a--b', {
         a: [],
         b: ['column', 'column']
       }));

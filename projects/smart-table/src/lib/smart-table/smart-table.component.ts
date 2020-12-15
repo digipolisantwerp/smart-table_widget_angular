@@ -7,12 +7,10 @@ import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {SmartTableService} from './smart-table.service';
 import {
-  SmartTableColumnConfig,
   SmartTableColumnCustomType,
   SmartTableConfig,
   SmartTableDataQuery,
   SmartTableDataQueryFilter,
-  SmartTableFilterConfig,
   SmartTableFilterDisplay,
   SmartTableFilterOperator,
   SmartTableFilterType,
@@ -31,13 +29,18 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap, withLatestFrom
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
 import {PROVIDE_ID} from '../indentifier.provider';
 import {BehaviorSubject, combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../services/table.factory';
 import {SmartTableFilter} from '../filter/smart-table.filter';
 import {selectFilters} from '../selectors/smart-table.selectors';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../store';
+import {InitFromStorage, SetConfiguration, SetId} from '../store/smart-table.actions';
+import {selectColumns, selectConfiguration} from '../store/smart-table.selectors';
 
 @Component({
   selector: 'aui-smart-table',
@@ -68,8 +71,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   optionalFilters$: Observable<SmartTableFilter[]>;
   /** @internal Whether the optional filters are currently visible (if any exist) */
   optionalFiltersVisible = false;
-  /** @internal */
-  selectableColumns$: Observable<TableColumn[]>;
 
   private dataQuery$: Observable<SmartTableDataQuery>;
 
@@ -84,23 +85,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
    * Custom configuration that comes in with setting the @input() configuration
    */
   public customConfiguration$ = new BehaviorSubject<SmartTableConfig>(null);
-  /**
-   * Represents all the columns that the table may contain
-   */
-  allColumns$: Observable<TableColumn[]>;
-  /**
-   * Represent the columns that are visible at the moment,
-   * this array is a subset from the allColumns$ observable
-   */
+
+  // All columns known to the table
+  columns$: Observable<TableColumn[]>;
+  // A subset of columns$, the ones that are made (in)visible by the user
   visibleColumns$: Observable<TableColumn[]>;
-
-  // Fires when the user wants to hide columns
-  public toggleHideColumn$: Subject<void> = new Subject();
-  // Fires when the user toggles a checkbox to hide a column.
-  // This doesn't actually hide the columns but changes data
-  public toggleSelectedColumn$: Subject<{ key: string }> = new Subject();
-
-  public persistInStorage$: Observable<SmartTableColumnConfig[]>;
 
   public onFilterChanged$: Observable<UpdateFilterArgs>;
   public activeFilters$: Observable<Array<SmartTableFilter>>;
@@ -136,14 +125,15 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     private flyOutService: FlyoutService,
     private localstorageService: LocalstorageService,
     @Inject(PROVIDE_ID) private storageIdentifier: string,
-    private factory: TableFactory
+    private factory: TableFactory,
+    private store: Store<IAppState>
   ) {
     this.rowsLoading = true;
     this.pageChanging = false;
   }
 
   ngOnInit(): void {
-
+    this.store.dispatch(new SetId(this.instanceId));
     /*
       Observables data flow:
 
@@ -157,7 +147,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       configuration$
             +
             |
-            +-> allColumns$ +------+
+            +-> columns$ +------+
             |                      |
             +-> orderBy$ +---------+
             |                      |
@@ -173,7 +163,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
      */
 
-    this.configuration$ = concat(
+    // Get the configuration necessary and persist it in the store
+    concat(
       this.getConfiguration(),  // First get the default configuration
       this.customConfiguration$.pipe( // And then override with configuration we get from the user
         filter(config => !!config),
@@ -191,95 +182,18 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         })
       )
     ).pipe(
-      // Every time configuration changes, get the columns from the storage again
-      // (because storage identifier will most likely have changed)
-      map(config => config.options.persistTableConfig ? this.getLocalStorageObject(config) : config),
-      shareReplay(1)
-    );
+      takeUntil(this.destroy$),
+      tap(config => this.store.dispatch(new SetConfiguration(config, this.instanceId, this.columnTypes))),
+      tap(() => this.store.dispatch(new InitFromStorage(this.instanceId)))
+    ).subscribe();
+
+    this.configuration$ = this.store.pipe(selectConfiguration(this.instanceId));
 
     // Columns are extracted from configuration
-    this.allColumns$ = this.configuration$.pipe(
-      tap((config) => this.resetOrderBy(config && config.options && config.options.defaultSortOrder)),
-      map((config: SmartTableConfig) =>
-        config.columns.map(c =>
-          this.factory.createTableColumnFromConfig(c, this.columnTypes, SMARTTABLE_DEFAULT_OPTIONS))),
-      startWith([]),
-      shareReplay(1)
-    );
-
-    // Persist columns configuration in storage whenever we show/hide columns
-    this.persistInStorage$ = this.toggleHideColumn$.pipe(
-      tap(() => this.flyOutService.close()),
-      switchMap(() => combineLatest(this.configuration$, this.selectableColumns$)),
-      filter(([config, selectableColumns]: [SmartTableConfig, TableColumn[]]) =>
-        config.options.persistTableConfig === true && !!config.options.storageIdentifier && !!selectableColumns),
-      map(([configuration, selectableColumns]) => {
-        configuration.columns.map(column => {
-          const found = (selectableColumns as Array<TableColumn>).find(c => c.value === column.key);
-          if (found) {
-            column.visible = !found.hidden;
-          }
-          return column;
-        });
-        return configuration;
-      }),
-      tap((config: SmartTableConfig) =>
-        this.addToLocalStorage(config.options.storageIdentifier, 'columns', config.columns)),
-      map(config => config.columns)
-    );
-
-    /**
-     * Visible columns start of with all columns and then
-     * will be a subset of all columns whenever the user hides/shows columns
-     */
-    this.visibleColumns$ = merge(
-      this.allColumns$,
-      this.toggleHideColumn$.pipe(
-        switchMap(() => combineLatest(this.allColumns$, this.selectableColumns$).pipe((take(1)))),
-        map(([columns, selectableColumns]) => {
-          return columns.map(column => {
-            const found = selectableColumns.find(c => c.value === column.value);
-            if (found) {
-              column.hidden = found.hidden;
-            }
-            return column;
-          });
-        })
-      )
-    ).pipe(
-      map((columns: Array<TableColumn>) => columns.filter(c => !!c && !c.hidden)),
-      shareReplay(1)
-    );
-
-    /**
-     * Selectable Columns are all columns that are
-     * set in configuration to be hideable
-     */
-    this.selectableColumns$ = merge(
-      combineLatest(
-        this.allColumns$,
-        this.configuration$,
-      ).pipe(
-        map(([allColumns, configuration]) => {
-          return (allColumns as TableColumn[]).filter(column => {
-            const config = configuration.columns.find(c => c.key === column.value);
-            return config.canHide !== false;
-          });
-        }),
-      ),
-      this.toggleSelectedColumn$.pipe(
-        switchMap((v) => this.selectableColumns$.pipe(take(1), map((selectableColumns) => {
-            const i = (selectableColumns as TableColumn[]).findIndex(c => c.value === v.key);
-            if (i > -1) {
-              selectableColumns[i].hidden = !selectableColumns[i].hidden;
-            }
-            return selectableColumns;
-          })
-        ))
-      )
-    ).pipe(
-      startWith([]),
-      shareReplay(1),
+    this.columns$ = this.store.pipe(selectColumns(this.instanceId));
+    // Visible columns are a subset from all columns
+    this.visibleColumns$ = this.columns$.pipe(
+      map(columns => columns.filter(c => c.hidden === false))
     );
 
     // Filters are based on the configuration coming in
@@ -399,12 +313,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       catchError(err => of(err)),
       filter(err => err instanceof HttpErrorResponse)
     );
-
-    // Start the show!
-    // the html template subscribes to the configuration, so we don't have to do that manually
-    this.persistInStorage$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();
   }
 
   public getConfiguration(): Observable<SmartTableConfig> {
@@ -440,46 +348,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       );
   }
 
-  public getLocalStorageObject(configuration: SmartTableConfig) {
-    const json = this.localstorageService.storage.getItem(configuration.options.storageIdentifier);
-
-    try {
-      const parsed = JSON.parse(json);
-
-      // Columns
-      try {
-        const localStorageColumns = (parsed.columns || [])
-          .filter((column) => !!configuration.columns.find((c) => c.key === column.key));
-        const columnsNotInStorage = configuration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
-        configuration.columns = [
-          ...localStorageColumns,
-          ...columnsNotInStorage
-        ];
-      } catch (error) {
-        console.warn('Warning: could not parse smart table columns from storage!');
-      }
-
-      // Sort order
-      try {
-        if ('defaultSortOrder' in parsed) {
-          configuration.options.defaultSortOrder = parsed.defaultSortOrder;
-        }
-      } catch (error) {
-        console.warn('Warning: could not parse smart table sort order from storage!');
-      }
-
-      // Return updated config
-      return configuration;
-    } catch (error) {
-      console.warn('Warning: could not parse from storage!');
-      return configuration;
-    }
-  }
-
-  public setupFilter(filters: SmartTableFilterConfig[], type: SmartTableFilterDisplay): Array<SmartTableFilter> {
-    return filters.filter(f => f.display === type).map(filterConfig => this.factory.createSmartFilterFromConfig(filterConfig));
-  }
-
   protected resetOrderBy(defaultSortOrder?) {
     const sortOrder = defaultSortOrder || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
     if (sortOrder) {
@@ -513,10 +381,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onColumnsSelected() {
-    this.toggleHideColumn$.next();
-  }
-
   public onClickRow(row) {
     this.rowClicked.emit(row);
   }
@@ -548,12 +412,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  public toggleSelectedColumn(value) {
-    this.toggleSelectedColumn$.next({key: value});
-  }
-
   private filterOutColumns(data): Observable<Array<TableColumn>> {
-    return this.allColumns$.pipe(
+    return this.columns$.pipe(
       map(cols => cols.map(c => c.value)),
       map(columnKeys => {
         return data.map(d => {

@@ -4,6 +4,9 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {SmartTableModule} from 'projects/smart-table/src/public-api';
 import {AppRatingComponent} from './rating.component';
+import {StoreModule} from '@ngrx/store';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {EffectsModule} from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import {AppRatingComponent} from './rating.component';
             plural: 'films per pagina',
           }
         }
-      })
+      }),
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument(),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent],

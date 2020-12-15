@@ -1,0 +1,26 @@
+<div class="a-input__wrapper">
+  <div auiFlyout size="small" align="right">
+    <button class="a-button-outline has-icon"
+            [attr.aria-label]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+            [title]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+            auiFlyoutAction>
+      <span class="fa fa-columns"></span>
+    </button>
+
+    <div auiFlyoutZone>
+      <div class="u-margin-xs">
+        <ul class="a-list a-list--reset u-text-left u-margin-bottom-xs">
+          <li class="a-list__item"
+              *ngFor="let column of (selectableColumns$ | async); index as i">
+            <div class="a-input__checkbox">
+              <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
+                     name="{{ 'checkbox--' + i + '--' + column.value }}" [checked]="!column.hidden"
+                     (change)="toggleSelectedColumn(column.value)">
+              <label for="{{ 'checkbox--' + i + '--' + column.value }}">{{ column.label }}</label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

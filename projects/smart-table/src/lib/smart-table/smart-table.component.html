@@ -12,35 +12,7 @@
         </div>
       </div>
       <div class="aui-smart-table__button u-margin-left-xs a-input" *ngIf="totalResults > 0">
-        <div class="a-input__wrapper">
-          <div auiFlyout size="small" align="right">
-            <button class="a-button-outline has-icon"
-                    [attr.aria-label]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
-                    [title]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
-                    auiFlyoutAction>
-              <span class="fa fa-columns"></span>
-            </button>
-
-            <div auiFlyoutZone>
-              <div class="u-margin-xs">
-                <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs">
-                  <li class="a-list__item"
-                      *ngFor="let column of (selectableColumns$ | async); index as i">
-                    <div class="a-input__checkbox">
-                      <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
-                             name="{{ 'checkbox--' + i + '--' + column.value }}" [checked]="!column.hidden"
-                             (change)="toggleSelectedColumn(column.value)">
-                      <label for="{{ 'checkbox--' + i + '--' + column.value }}">{{ column.label }}</label>
-                    </div>
-                  </li>
-                </ul>
-                <button class="a-button a-button--small a-button--block" (click)="onColumnsSelected()">
-                  {{ (configuration$ | async)?.options.translations?.apply || 'Toepassen'}}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <aui--table-column-selector [uniqueIdentifier]="instanceId"></aui--table-column-selector>
       </div>
     </div>
 
@@ -89,19 +61,23 @@
          [ngClass]="{'is-visible': optionalFiltersVisible}" id="toggle-{{ instanceId }}">
       <ng-container *ngFor="let filter of (optionalFilters$ | async)" [ngSwitch]="filter.type">
         <ng-container *ngSwitchCase="'select'">
-          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-select-filter>
+          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter"
+                                   [optional]="true"></aui-table-select-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'input'">
-          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-input-filter>
+          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter"
+                                  [optional]="true"></aui-table-input-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'datepicker'">
-          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-datepicker-filter>
+          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter"
+                                       [optional]="true"></aui-table-datepicker-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'search-filter'">
-          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter" [optional]="true"></aui-table-search-filter>
+          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter"
+                                   [optional]="true"></aui-table-search-filter>
         </ng-container>
       </ng-container>
     </div>
@@ -109,9 +85,11 @@
 
   <div class="aui-smart-table__wrapper">
     <div class="u-margin-top u-margin-bottom">
-      <aui-table [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
+      <aui-table *ngIf="(visibleColumns$ | async)?.length"
+                 [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
                  [noDataMessage]="(error$ | async) ? (configuration$ | async)?.options.errorMessage : (configuration$ | async)?.options.noDataMessage"
-                 [loading]="rowsLoading && !(error$ | async)" [columns]="visibleColumns$ | async"
+                 [loading]="rowsLoading && !(error$ | async)"
+                 [columns]="visibleColumns$ | async"
                  [rows]="rows$ |  async"
                  [hasClickAction]="true"
                  [activeSorting]="orderBy$ | async"

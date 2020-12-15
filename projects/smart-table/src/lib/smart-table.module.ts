@@ -12,6 +12,12 @@ import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstora
 import {IModuleConfig} from './smart-table/smart-table.types';
 import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
+import {StoreModule} from '@ngrx/store';
+import {smartTableReducer} from './store/smart-table.reducer';
+import {ColumnSelectorComponent} from './components/column-selector/column-selector.component';
+import {EffectsModule} from '@ngrx/effects';
+import {SmartTableEpics} from './store/smart-table.epics';
+import {StorageModule} from './storage/storage.module';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -21,7 +27,8 @@ const defaultConfiguration: IModuleConfig = {
 
 @NgModule({
   declarations: [
-    ...components
+    ...components,
+    ColumnSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +41,10 @@ const defaultConfiguration: IModuleConfig = {
     FlyoutModule,
     SearchFilterModule,
     LocalstorageModule.forRoot(defaultConfiguration),
-    ItemCounterModule
+    ItemCounterModule,
+    StoreModule.forFeature('aui-smart-table', smartTableReducer),
+    EffectsModule.forFeature([SmartTableEpics]),
+    StorageModule
   ],
   providers: [
     DatePipe,
