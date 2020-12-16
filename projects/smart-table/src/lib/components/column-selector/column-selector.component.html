@@ -8,9 +8,9 @@
 
   <div auiFlyoutZone>
     <div class="u-margin-xs">
-      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs u-text-left">
-        <li class="a-list__item"
-            *ngFor="let column of (configuration$ | async)?.columns; index as i">
+      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs u-text-left" cdkDropList (cdkDropListDropped)="updateColumnsSortIndex($event)">
+        <li cdkDrag class="a-list__item"
+            *ngFor="let column of (pendingColumnOperation$ | async); index as i">
           <div class="a-input__checkbox">
             <input type="checkbox" [disabled]="!(column.canHide !== false)" id="{{ 'checkbox--' + i + '--' + column.key }}"
                    name="{{ 'checkbox--' + i + '--' + column.key }}" [checked]="column.visible !== false"

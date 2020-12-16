@@ -15,6 +15,7 @@ import {TableFactory} from './services/table.factory';
 import {TableColumnSelectorComponent} from './components/column-selector/column-selector.component';
 import {ConfigurationService} from './services/configuration.service';
 import {StorageService} from './services/storage.service';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -38,7 +39,8 @@ const defaultConfiguration: IModuleConfig = {
     FlyoutModule,
     SearchFilterModule,
     LocalstorageModule.forRoot(defaultConfiguration),
-    ItemCounterModule
+    ItemCounterModule,
+    DragDropModule
   ],
   providers: [
     DatePipe,

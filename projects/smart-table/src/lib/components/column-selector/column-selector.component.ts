@@ -1,24 +1,24 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
 import {combineLatest, merge, Observable, Subject} from 'rxjs';
 import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table/smart-table.types';
-import {first, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'aui-table-column-selector',
   templateUrl: './column-selector.component.html',
   styleUrls: ['./column-selector.component.scss']
 })
-export class TableColumnSelectorComponent implements OnInit, OnDestroy {
+export class TableColumnSelectorComponent implements OnInit {
   @Input()
   instanceId: string;
   configuration$: Observable<SmartTableConfig>;
 
   pendingColumnOperation$: Observable<SmartTableColumnConfig[]>;
   toggleSelectedColumnByKey$ = new Subject<string>();
-
-  private destroy$ = new Subject();
+  updateSortIndexByKey$ = new Subject<{ oldIndex: number, newIndex: number }>();
 
   constructor(
     private configurationService: ConfigurationService,
@@ -41,12 +41,21 @@ export class TableColumnSelectorComponent implements OnInit, OnDestroy {
             return newColumns;
           })
         ))
+      ),
+      this.updateSortIndexByKey$.pipe(
+        switchMap((payload) => this.pendingColumnOperation$.pipe(
+          first(),
+          map(c => {
+            const columns = [...c];
+            moveItemInArray(columns, payload.oldIndex, payload.newIndex);
+            return columns.map((item, sortIndex) => ({...item, sortIndex}));
+          })
+        ))
       )
+    ).pipe(
+      map(columns => columns.sort(a => a.sortIndex)),
+      shareReplay(1)
     );
-
-    this.pendingColumnOperation$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();
   }
 
   applyChanges(): void {
@@ -61,13 +70,17 @@ export class TableColumnSelectorComponent implements OnInit, OnDestroy {
           columns: (columns as SmartTableColumnConfig[])
         };
       }),
+      tap(console.log),
       tap((config: SmartTableConfig) => this.configurationService.setConfiguration$.next(config)),
       tap(() => this.flyoutService.close())
     ).subscribe();
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+  updateColumnsSortIndex(event: CdkDragDrop<SmartTableColumnConfig[]>) {
+    console.log(event);
+    this.updateSortIndexByKey$.next({
+      oldIndex: event.previousIndex,
+      newIndex: event.currentIndex
+    });
   }
 }

@@ -7,7 +7,6 @@ import {SmartTableConfig} from '../smart-table/smart-table.types';
 
 @Injectable()
 export class StorageService {
-  private storageIsEnabled = filter((config: SmartTableConfig) => config && config.options && config.options.persistTableConfig);
 
   constructor(private configurationService: ConfigurationService, private localstorageService: LocalstorageService) {
   }
@@ -43,7 +42,7 @@ export class StorageService {
     return this.configurationService.getConfiguration(id).pipe(
       distinctUntilChanged(),
       skip(2),  // Skip initial values, only start persisting with new values
-      this.storageIsEnabled,
+      filter((config: SmartTableConfig) => config && config.options && config.options.persistTableConfig),
       tap((config) => {
         // tslint:disable-next-line:no-console
         console.info('Info: persisting table configuration to storage.');
