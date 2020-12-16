@@ -1,6 +1,5 @@
 import {ConstructableCell, OrderBy, TableColumnFormat} from '@acpaas-ui/ngx-table';
 import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
-import {Observable} from 'rxjs';
 import {SmartTableFilter} from '../filter/smart-table.filter';
 
 export interface IModuleConfig {
@@ -68,6 +67,7 @@ export interface SmartTableColumnConfig {
   classList?: string[];
   sortPath: string;
   canHide?: boolean;
+  sortIndex?: number;
 }
 
 export enum SmartTableColumnType {

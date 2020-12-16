@@ -170,7 +170,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       id: this.instanceId,
       backendCallback: () => this.getConfiguration(),
       customConfiguration$: this.customConfiguration$,
-      storageCallback: (config) => this.storageService.getConfiguration(config),
+      storageCallback: (config) => of(this.storageService.getConfiguration(config)),
     });
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
 

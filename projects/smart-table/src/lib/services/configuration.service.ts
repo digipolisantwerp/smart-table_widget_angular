@@ -17,7 +17,7 @@ export class ConfigurationService {
   initConfiguration(param: {
     id: string,
     backendCallback: () => Observable<SmartTableConfig>,
-    storageCallback: (config: SmartTableConfig) => SmartTableConfig,
+    storageCallback: (config: SmartTableConfig) => Observable<SmartTableConfig>,
     customConfiguration$: Observable<SmartTableConfig>
   }): void {
     if (!this._config$) {
@@ -42,7 +42,7 @@ export class ConfigurationService {
             };
           }),
           // Only override with stored configuration on custom configuration coming in
-          map(storageCallback)
+          switchMap(config => config && config.options.persistTableConfig ? storageCallback(config) : of(config))
         ),
         this.setConfiguration$
       )
@@ -58,7 +58,9 @@ export class ConfigurationService {
   getColumns(id: string, columnTypes: SmartTableColumnCustomType[]): Observable<Array<TableColumn>> {
     return this.getConfiguration(id).pipe(
       map((config: SmartTableConfig) =>
-        config.columns.sort(c => c.sortIndex).map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes)))
+        config.columns
+          .sort((a, b) => a.sortIndex > b.sortIndex ? 1 : a.sortIndex < b.sortIndex ? -1 : 0)
+          .map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes)))
     );
   }
 }

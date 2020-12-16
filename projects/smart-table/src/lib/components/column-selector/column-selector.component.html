@@ -14,7 +14,7 @@
           <div class="a-input__checkbox">
             <input type="checkbox" [disabled]="!(column.canHide !== false)" id="{{ 'checkbox--' + i + '--' + column.key }}"
                    name="{{ 'checkbox--' + i + '--' + column.key }}" [checked]="column.visible !== false"
-                   (change)="toggleSelectedColumnByKey$.next(column.key)">
+                   (change)="toggleColumnsVisibility$.next(column.key)">
             <label for="{{ 'checkbox--' + i + '--' + column.key }}">{{ column.label }}</label>
           </div>
         </li>

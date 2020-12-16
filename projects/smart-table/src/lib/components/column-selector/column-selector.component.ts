@@ -17,7 +17,7 @@ export class TableColumnSelectorComponent implements OnInit {
   configuration$: Observable<SmartTableConfig>;
 
   pendingColumnOperation$: Observable<SmartTableColumnConfig[]>;
-  toggleSelectedColumnByKey$ = new Subject<string>();
+  toggleColumnsVisibility$ = new Subject<string>();
   updateSortIndexByKey$ = new Subject<{ oldIndex: number, newIndex: number }>();
 
   constructor(
@@ -25,11 +25,15 @@ export class TableColumnSelectorComponent implements OnInit {
     private flyoutService: FlyoutService) {
   }
 
+  private static sortColumn(a, b) {
+    return a.sortIndex > b.sortIndex ? 1 : a.sortIndex < b.sortIndex ? -1 : 0;
+  }
+
   ngOnInit() {
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
     this.pendingColumnOperation$ = merge(
-      this.configuration$.pipe(map(config => [...config.columns])),
-      this.toggleSelectedColumnByKey$.pipe(
+      this.configuration$.pipe(map(config => [...config.columns.sort(TableColumnSelectorComponent.sortColumn)])),
+      this.toggleColumnsVisibility$.pipe(
         switchMap((key: string) => this.pendingColumnOperation$.pipe(
           first(),
           map(columns => {
@@ -53,7 +57,7 @@ export class TableColumnSelectorComponent implements OnInit {
         ))
       )
     ).pipe(
-      map(columns => columns.sort(a => a.sortIndex)),
+      map(columns => columns.sort((a, b) => a.sortIndex > b.sortIndex ? 1 : a.sortIndex < b.sortIndex ? -1 : 0)),
       shareReplay(1)
     );
   }
@@ -71,6 +75,8 @@ export class TableColumnSelectorComponent implements OnInit {
         };
       }),
       tap(console.log),
+      // This operation will trigger a new configuration to be loaded, thus our pendingColumnOperations will be reset
+      // to the new configuration coming in. That's why we don't have to manually reset the observable.
       tap((config: SmartTableConfig) => this.configurationService.setConfiguration$.next(config)),
       tap(() => this.flyoutService.close())
     ).subscribe();

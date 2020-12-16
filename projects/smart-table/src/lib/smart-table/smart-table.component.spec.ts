@@ -17,6 +17,9 @@ import {TableFactory} from '../services/table.factory';
 import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from './smart-table.types';
 import {cold} from 'jasmine-marbles';
 import {TableSearchFilterComponent} from '../table-search-filter/table-search-filter.component';
+import {TableColumnSelectorComponent} from '../components/column-selector/column-selector.component';
+import {ConfigurationService} from '../services/configuration.service';
+import {StorageService} from '../services/storage.service';
 
 describe('Smart Table Test', () => {
   let component: SmartTableComponent;
@@ -27,6 +30,7 @@ describe('Smart Table Test', () => {
   let factory: TableFactory;
   let service: SmartTableService;
   let mockFilters: SmartTableFilterConfig[];
+  let configurationService: ConfigurationService;
 
   beforeEach(async () => {
     sandbox = sinon.createSandbox();
@@ -36,7 +40,8 @@ describe('Smart Table Test', () => {
         TableInputFilterComponent,
         TableSelectFilterComponent,
         TableDatepickerFilterComponent,
-        TableSearchFilterComponent
+        TableSearchFilterComponent,
+        TableColumnSelectorComponent
       ],
       imports: [
         ReactiveFormsModule,
@@ -66,6 +71,14 @@ describe('Smart Table Test', () => {
         {
           provide: PROVIDE_ID,
           useValue: 'test-smart-table'
+        },
+        {
+          provide: ConfigurationService,
+          useValue: sinon.createStubInstance(ConfigurationService)
+        },
+        {
+          provide: StorageService,
+          useValue: sinon.createStubInstance(StorageService)
         }
       ]
     }).compileComponents();
@@ -102,6 +115,9 @@ describe('Smart Table Test', () => {
     });
     service = TestBed.get(SmartTableService);
     (service.getData as SinonStub).returns(cold('a'));
+    const storage: StorageService = TestBed.get(StorageService);
+    (storage.persistConfiguration as SinonStub).returns(cold('--a', {a: undefined}));
+    configurationService = TestBed.get(ConfigurationService);
   });
 
   afterEach(() => {
@@ -115,261 +131,9 @@ describe('Smart Table Test', () => {
     });
   });
 
-  describe('Sourcing Configuration', () => {
-    it('should get configuration from api service', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('--a|', {a: mockConfiguration}));
-      const spyOnGetColumns = sinon.stub(component, 'getLocalStorageObject');
-      fixture.detectChanges();
-      const result$ = component.configuration$;
-      fixture.detectChanges();
-      expect(result$).toBeObservable(cold('--a', {a: mockConfiguration}));
-      expect(spyOnGetColumns.calledOnce).toBe(false);
-    });
-
-    it('should override the configuration by having custom configuration coming in', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {a: mockConfiguration}));
-      component.configuration = {options: {pageSizeOptions: [10, 11, 12]}};
-      fixture.detectChanges();
-      const result$ = component.configuration$;
-      expect(result$).toBeObservable(cold('---(ab)', {
-        a: {...mockConfiguration},
-        b: {
-          ...mockConfiguration,
-          options: {
-            ...mockConfiguration.options,
-            pageSizeOptions: [10, 11, 12]
-          }
-        },
-      }));
-    });
-
-    it('should get persisted configuration when option is set so', () => {
-      const spyOnGetLocalStorage = sinon.stub(component, 'getLocalStorageObject').callsFake(config => {
-        return {
-          ...config,
-          options: {
-            ...config.options,
-            defaultSortOrder: {key: 'k', order: 'asc'}
-          }
-        };
-      });
-      sinon.stub(component, 'getConfiguration').returns(cold('--(a|)', {
-        a: {
-          ...mockConfiguration,
-          options: {...mockConfiguration.options, defaultSortOrder: {key: 'k', order: 'asc'}, persistTableConfig: true}
-        }
-      }));
-      fixture.detectChanges();
-      expect(component.configuration$).toBeObservable(cold('--a', {
-        a: {
-          ...mockConfiguration,
-          options: {
-            ...mockConfiguration.options,
-            defaultSortOrder: {key: 'k', order: 'asc'},
-            persistTableConfig: true
-          }
-        }
-      }));
-      expect(spyOnGetLocalStorage.calledOnce).toBe(true);
-    });
-  });
-
-  describe('Creating Columns', () => {
-    it('should create columns when configuration comes in', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---a', {
-        a: {
-          ...mockConfiguration,
-          columns: ['a', 'b']
-        }
-      }));
-      (factory.createTableColumnFromConfig as SinonStub).returns('column');
-      fixture.detectChanges();
-      expect(component.allColumns$).toBeObservable(cold('a--b', {
-        a: [],
-        b: ['column', 'column']
-      }));
-    });
-  });
-
-  describe('Visible Columns', () => {
-    it('should display all columns that are visible by default', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          columns: [
-            {
-              key: 'a'
-            },
-            {
-              key: 'b'
-            }
-          ]
-        }
-      }));
-      (factory.createTableColumnFromConfig as SinonStub).callsFake((config) => {
-        return {value: config.key, hidden: config.key === 'a'};
-      });
-      fixture.detectChanges();
-      expect(component.visibleColumns$).toBeObservable(cold('a--b', {
-        a: [],
-        b: [
-          {
-            value: 'b',
-            hidden: false
-          }
-        ]
-      }));
-    });
-    it('should toggle visible columns', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          columns: [
-            {
-              key: 'a',
-              visible: true,
-            },
-            {
-              key: 'b',
-              visible: true
-            }
-          ]
-        }
-      }));
-      (factory.createTableColumnFromConfig as SinonStub).callsFake((config) => {
-        return {value: config.key, hidden: false};
-      });
-      component.toggleSelectedColumn$ = cold('-----a', {a: {key: 'a'}}) as any;
-      component.toggleHideColumn$ = cold('--------a') as any;
-      fixture.detectChanges();
-      expect(component.visibleColumns$).toBeObservable(cold('a--b----c', {
-        a: [],
-        b: [
-          {
-            value: 'a',
-            hidden: true
-          },
-          {
-            value: 'b',
-            hidden: false
-          }
-        ],
-        c: [
-          {
-            value: 'a',
-            hidden: true
-          },
-          {
-            value: 'b',
-            hidden: false
-          }
-        ]
-      }));
-    });
-  });
-
-  describe('Selectable Columns', () => {
-    it('should get selectable columns from configuration', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          columns: [{
-            key: 'a',
-            canHide: false
-          }, {
-            key: 'b'
-          }]
-        }
-      }));
-      (factory.createTableColumnFromConfig as SinonStub).callsFake((config) => {
-        return {value: config.key, hidden: false};
-      });
-      fixture.detectChanges();
-      expect(component.selectableColumns$).toBeObservable(cold('a--b', {
-        a: [],
-        b: [{value: 'b', hidden: false}]
-      }));
-    });
-
-    it('should toggle hidden status of selectable column', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          columns: [{
-            key: 'a',
-            canHide: false
-          }, {
-            key: 'b'
-          }]
-        }
-      }));
-      (factory.createTableColumnFromConfig as SinonStub).callsFake((config) => {
-        return {value: config.key, hidden: false};
-      });
-      component.toggleSelectedColumn$ = cold('-------a', {a: {key: 'b'}}) as any;
-      fixture.detectChanges();
-      expect(component.selectableColumns$).toBeObservable(cold('a--b---c', {
-        a: [],
-        b: [{
-          value: 'b',
-          hidden: true
-        }],
-        c: [{
-          value: 'b',
-          hidden: true
-        }],
-      }));
-    });
-  });
-
-  describe('Persisting Columns in configuration', () => {
-    it('should persist columns if set so in configuration', () => {
-
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
-        a: {
-          ...mockConfiguration,
-          columns: [{
-            key: 'a',
-            visible: true
-          }, {
-            key: 'b',
-            visible: false
-          }],
-          options: {
-            ...mockConfiguration,
-            persistTableConfig: true,
-            storageIdentifier: 'test'
-          }
-        }
-      }));
-      (factory.createTableColumnFromConfig as SinonStub).callsFake((column) => {
-        return {value: column.key, hidden: !column.visible};
-      });
-      component.toggleHideColumn$ = cold('-----a') as any;
-      fixture.detectChanges();
-      expect(component.persistInStorage$).toBeObservable(cold('-----a', {
-        a: [{
-          key: 'a',
-          visible: true
-        }, {
-          key: 'b',
-          visible: false
-        }]
-      }));
-      expect((storageService.storage.setItem as SinonStub).called).toBe(true);
-    });
-
-    it('Should handle localstorage properties correctly when new ones are added', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('--a|', {a: mockConfiguration}));
-      (component as any).addToLocalStorage('n', 'k', 'v');
-      expect((storageService.storage.getItem as SinonStub).calledOnce).toBe(true);
-      expect((storageService.storage.setItem as SinonStub).calledOnce).toBe(true);
-    });
-  });
-
   describe('Filters', () => {
     it('should create the visible filters', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+      (configurationService.getConfiguration as SinonStub).returns(cold('---a', {
         a: {
           ...mockConfiguration,
           filters: [...mockFilters]
@@ -390,7 +154,7 @@ describe('Smart Table Test', () => {
     });
 
     it('should create the optional filters', () => {
-      sinon.stub(component, 'getConfiguration').returns(cold('---(a|)', {
+      (configurationService.getConfiguration as SinonStub).returns(cold('---a', {
         a: {
           ...mockConfiguration,
           filters: [...mockFilters]
