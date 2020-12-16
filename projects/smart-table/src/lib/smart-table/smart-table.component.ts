@@ -39,7 +39,7 @@ import {SmartTableFilter} from '../filter/smart-table.filter';
 import {selectFilters} from '../selectors/smart-table.selectors';
 import {Store} from '@ngrx/store';
 import {IAppState} from '../store';
-import {ConstructColumns, GetConfiguration, SetCustomConfiguration, SetId} from '../store/smart-table.actions';
+import {ConstructColumns, GetConfiguration, PersistColumns, SetCustomConfiguration, SetId} from '../store/smart-table.actions';
 import {selectColumns, selectConfiguration} from '../store/smart-table.selectors';
 
 @Component({
@@ -164,6 +164,15 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     ).subscribe();
     // Columns are extracted from configuration
     this.columns$ = this.store.pipe(selectColumns(this.instanceId));
+    // Persist columns if some columns come in
+    combineLatest([
+      this.configuration$,
+      this.columns$
+    ]).pipe(
+      filter(([config, columns]) => config && config.options && config.options.persistTableConfig),
+      tap(() => this.store.dispatch(new PersistColumns(this.instanceId))),
+      takeUntil(this.destroy$)
+    ).subscribe();
     // Visible columns are a subset from all columns
     this.visibleColumns$ = this.columns$.pipe(
       map(columns => columns.filter(c => c.hidden === false))

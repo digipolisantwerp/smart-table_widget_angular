@@ -1,5 +1,6 @@
 import {ISmartTableState} from './index';
 import {
+  ChangeColumnSortIndex,
   GetConfigurationSuccess,
   InitFromStorageSuccess,
   SetColumns,
@@ -9,6 +10,7 @@ import {
   ToggleColumnVisibility
 } from './smart-table.actions';
 import {TableColumn} from '@acpaas-ui/ngx-table';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 export function smartTableReducer(state: ISmartTableState, action) {
   switch (action.type) {
@@ -79,6 +81,22 @@ export function smartTableReducer(state: ISmartTableState, action) {
       if (i > -1) {
         columns[i].hidden = !columns[i].hidden;
       }
+      return {
+        ...state,
+        [update.id]: {
+          ...state[update.id],
+          columns
+        }
+      };
+    }
+    case SmartTableActions.CHANGE_COLUMN_SORT_INDEX : {
+      const update = action as ChangeColumnSortIndex;
+      let columns = [...state[update.id].columns];
+      if (!columns) {
+        return state;
+      }
+      moveItemInArray(columns, update.previousIndex, update.newIndex);
+      columns = columns.map((c, i) => ({...c, sortIndex: i}));
       return {
         ...state,
         [update.id]: {

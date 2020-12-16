@@ -15,7 +15,8 @@ export enum SmartTableActions {
   SET_CUSTOM_CONFIGURATION = 'SET_CUSTOM_CONFIGURATION',
   CONSTRUCT_COLUMNS_SUCCESS = 'SMART_TABLE_CONSTRUCT_COLUMNS_SUCCESS',
   TOGGLE_COLUMN_VISIBILITY = 'SMART_TABLE_TOGGLE_COLUMN_VISIBILITY',
-  PERSIST_COLUMNS = 'SMART_TABLE_PERSIST_COLUMNS'
+  PERSIST_COLUMNS = 'SMART_TABLE_PERSIST_COLUMNS',
+  CHANGE_COLUMN_SORT_INDEX = 'SMART_TABLE_CHANGE_COLUMN_SORT_INDEX',
 }
 
 export interface AddressedAtId {
@@ -97,5 +98,12 @@ export class PersistColumns implements Action, AddressedAtId {
   type = SmartTableActions.PERSIST_COLUMNS;
 
   constructor(public id) {
+  }
+}
+
+export class ChangeColumnSortIndex implements Action, AddressedAtId {
+  type = SmartTableActions.CHANGE_COLUMN_SORT_INDEX;
+
+  constructor(public previousIndex: number, public newIndex: number, public id) {
   }
 }

@@ -18,6 +18,7 @@ import {ColumnSelectorComponent} from './components/column-selector/column-selec
 import {EffectsModule} from '@ngrx/effects';
 import {SmartTableEpics} from './store/smart-table.epics';
 import {StorageModule} from './storage/storage.module';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -44,7 +45,8 @@ const defaultConfiguration: IModuleConfig = {
     ItemCounterModule,
     StoreModule.forFeature('aui-smart-table', smartTableReducer),
     EffectsModule.forFeature([SmartTableEpics]),
-    StorageModule
+    StorageModule,
+    DragDropModule
   ],
   providers: [
     DatePipe,

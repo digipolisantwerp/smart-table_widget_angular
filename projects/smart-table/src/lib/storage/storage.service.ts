@@ -21,7 +21,8 @@ export class StorageService {
   }
 
   persistColumnsToLocalStorage(id: string, columns: SmartTableColumnConfig[]): Observable<void> {
-    return this.addToLocalStorage(id, 'columns', columns);
+   // return this.addToLocalStorage(id, 'columns', columns);
+    return of((undefined));
   }
 
   getStoredConfiguration(id: string): Observable<SmartTableConfig> {
@@ -31,7 +32,7 @@ export class StorageService {
     ]).pipe(
       map(([columns, defaultSortOrder]) => {
         const configuration = {
-          columns,
+          columns: (columns as SmartTableColumnConfig[]),
           options: {}
         };
         if (defaultSortOrder) {
@@ -44,7 +45,9 @@ export class StorageService {
 
   getColumns(id: string): Observable<SmartTableColumnConfig[]> {
     return this.getItem(id).pipe(
-      map((object: any) => object.columns || []),
+      tap(console.log),
+      map((object: any) => (object.columns && object.columns.sort((a,b) => a.sortIndex)) || []),
+      tap(console.log),
       catchError(() => of([]))
     );
   }

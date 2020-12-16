@@ -77,6 +77,7 @@ export class SmartTableEpics {
         const found = columns.find(c => c.value === column.key);
         if (found) {
           column.visible = !found.hidden;
+          column.sortIndex = (found as any).sortIndex;
         }
         return column;
       });

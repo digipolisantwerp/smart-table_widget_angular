@@ -9,11 +9,11 @@
 
     <div auiFlyoutZone>
       <div class="u-margin-xs">
-        <ul class="a-list a-list--reset u-text-left u-margin-bottom-xs">
-          <li class="a-list__item"
-              *ngFor="let column of (selectableColumns$ | async); index as i">
+        <ul class="a-list a-list--reset u-text-left u-margin-bottom-xs" cdkDropList (cdkDropListDropped)="changeSortIndex($event)">
+          <li cdkDrag class="a-list__item"
+              *ngFor="let column of (columns$ | async); index as i">
             <div class="a-input__checkbox">
-              <input type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
+              <input [disabled]="!(columnMayHide(column.value) | async)" type="checkbox" id="{{ 'checkbox--' + i + '--' + column.value }}"
                      name="{{ 'checkbox--' + i + '--' + column.value }}" [checked]="!column.hidden"
                      (change)="toggleSelectedColumn(column.value)">
               <label for="{{ 'checkbox--' + i + '--' + column.value }}">{{ column.label }}</label>
