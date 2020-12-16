@@ -1,0 +1,27 @@
+<div auiFlyout size="small" align="right">
+  <button class="a-button-outline has-icon"
+          [attr.aria-label]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+          [title]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
+          auiFlyoutAction>
+    <span class="fa fa-columns"></span>
+  </button>
+
+  <div auiFlyoutZone>
+    <div class="u-margin-xs">
+      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs u-text-left">
+        <li class="a-list__item"
+            *ngFor="let column of (configuration$ | async)?.columns; index as i">
+          <div class="a-input__checkbox">
+            <input type="checkbox" [disabled]="!(column.canHide !== false)" id="{{ 'checkbox--' + i + '--' + column.key }}"
+                   name="{{ 'checkbox--' + i + '--' + column.key }}" [checked]="column.visible !== false"
+                   (change)="toggleSelectedColumnByKey$.next(column.key)">
+            <label for="{{ 'checkbox--' + i + '--' + column.key }}">{{ column.label }}</label>
+          </div>
+        </li>
+      </ul>
+      <button class="a-button a-button--small a-button--block" (click)="applyChanges()">
+        {{ (configuration$ | async)?.options.translations?.apply || 'Toepassen'}}
+      </button>
+    </div>
+  </div>
+</div>

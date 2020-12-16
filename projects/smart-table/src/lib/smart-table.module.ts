@@ -12,6 +12,9 @@ import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstora
 import {IModuleConfig} from './smart-table/smart-table.types';
 import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
+import {TableColumnSelectorComponent} from './components/column-selector/column-selector.component';
+import {ConfigurationService} from './services/configuration.service';
+import {StorageService} from './services/storage.service';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -21,7 +24,8 @@ const defaultConfiguration: IModuleConfig = {
 
 @NgModule({
   declarations: [
-    ...components
+    ...components,
+    TableColumnSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +47,9 @@ const defaultConfiguration: IModuleConfig = {
     {
       provide: PROVIDE_ID,
       useValue: null
-    }
+    },
+    ConfigurationService,
+    StorageService
   ],
   exports: [
     SmartTableComponent,
