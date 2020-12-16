@@ -58,7 +58,6 @@ export class SmartTableEpics {
   populateConfigurationFromStorage$: Observable<Action> = this.actions$.pipe(
     ofType(SmartTableActions.INIT_FROM_STORAGE),
     switchMap((action: InitFromStorage) => this.storage.getStoredConfiguration(action.id).pipe(
-      tap(console.log),
       map(res => new InitFromStorageSuccess(res, action.id)),
     ))
   );
