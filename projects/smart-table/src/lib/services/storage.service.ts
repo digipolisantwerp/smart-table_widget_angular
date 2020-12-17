@@ -1,14 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ConfigurationService} from './configuration.service';
-import {Observable} from 'rxjs';
-import {distinctUntilChanged, filter, mapTo, skip, tap} from 'rxjs/operators';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {SmartTableConfig} from '../smart-table/smart-table.types';
 
 @Injectable()
 export class StorageService {
 
-  constructor(private configurationService: ConfigurationService, private localstorageService: LocalstorageService) {
+  constructor(private localstorageService: LocalstorageService) {
   }
 
   getConfiguration(defaultConfiguration: SmartTableConfig): SmartTableConfig {
@@ -22,7 +19,15 @@ export class StorageService {
     const config = {...defaultConfiguration};
     if (obj && obj.columns && Array.isArray(obj.columns)) {
       const localStorageColumns = (obj.columns || [])
-        .filter((column) => !!defaultConfiguration.columns.find((c) => c.key === column.key));
+        .filter((column) => !!defaultConfiguration.columns.find((c) => c.key === column.key))
+        .map((column) => {
+          const found = defaultConfiguration.columns.find(c => c.key === column.key);
+          // Do not replace existing columns, but override properties
+          return {
+            ...found,
+            ...column
+          };
+        });
       const columnsNotInStorage = defaultConfiguration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
       config.columns = [
         ...localStorageColumns,
@@ -38,21 +43,20 @@ export class StorageService {
     return config;
   }
 
-  persistConfiguration(id: string): Observable<void> {
-    return this.configurationService.getConfiguration(id).pipe(
-      distinctUntilChanged(),
-      skip(2),  // Skip initial values, only start persisting with new values
-      filter((config: SmartTableConfig) => config && config.options && config.options.persistTableConfig),
-      tap((config) => {
-        // tslint:disable-next-line:no-console
-        console.info('Info: persisting table configuration to storage.');
-        const name = config.options.storageIdentifier;
-        const obj = this.getStoredItem(name);
-        obj.columns = [...config.columns];
-        this.setItemToStorage(name, obj);
-      }),
-      mapTo(undefined)
-    );
+  persistConfiguration(id: string, configuration: SmartTableConfig): void {
+    if (!(configuration && configuration.options && configuration.options.persistTableConfig)) {
+      return;
+    }
+    // tslint:disable-next-line:no-console
+    console.info('Info: persisting table configuration to storage.');
+    const name = configuration.options.storageIdentifier;
+    const obj = this.getStoredItem(name);
+    obj.columns = [...configuration.columns];
+    obj.options = {
+      ...obj.options,
+      defaultSortOrder: configuration.options.defaultSortOrder
+    };
+    this.setItemToStorage(name, obj);
   }
 
   private setItemToStorage(name: string, object: any): void {

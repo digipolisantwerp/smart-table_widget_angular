@@ -18,13 +18,13 @@ import {
 } from './smart-table.types';
 import {
   auditTime,
-  catchError,
+  catchError, distinctUntilChanged,
   filter,
   first,
   map,
   scan,
   share,
-  shareReplay,
+  shareReplay, skip,
   startWith,
   switchMap,
   take,
@@ -176,10 +176,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
 
     // Set up persistence hook
-    // this hook will automatically check if persistence should
-    // be enabled based on configuration
-    this.storageService.persistConfiguration(this.instanceId).pipe(
-      takeUntil(this.destroy$)
+    this.configuration$.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      skip(2),
+      tap(config => this.storageService.persistConfiguration(this.instanceId, config))
     ).subscribe();
 
     // Columns are extracted from configuration
