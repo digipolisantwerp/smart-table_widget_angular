@@ -44,7 +44,7 @@ export class StorageService {
   }
 
   persistConfiguration(id: string, configuration: SmartTableConfig): void {
-    if (!(configuration && configuration.options && configuration.options.persistTableConfig)) {
+    if (!(configuration && configuration.options && configuration.options.storageIdentifier && configuration.options.persistTableConfig)) {
       return;
     }
     // tslint:disable-next-line:no-console
