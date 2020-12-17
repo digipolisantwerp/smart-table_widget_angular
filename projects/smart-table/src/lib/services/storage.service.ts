@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
-import {SmartTableConfig} from '../components/smart-table/smart-table.types';
+import {SmartTableConfig} from '../smart-table.types';
 
 @Injectable()
 export class StorageService {

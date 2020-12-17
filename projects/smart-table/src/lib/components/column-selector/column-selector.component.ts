@@ -1,10 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
 import {combineLatest, merge, Observable, Subject} from 'rxjs';
-import {SmartTableColumnConfig, SmartTableConfig} from '../smart-table/smart-table.types';
+import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
 import {first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {sortColumn} from '../../helper/helpers';
 
 @Component({
   selector: 'aui-table-column-selector',
@@ -25,14 +26,10 @@ export class TableColumnSelectorComponent implements OnInit {
     private flyoutService: FlyoutService) {
   }
 
-  private static sortColumn(a, b) {
-    return a.sortIndex > b.sortIndex ? 1 : a.sortIndex < b.sortIndex ? -1 : 0;
-  }
-
   ngOnInit() {
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
     this.pendingColumnOperation$ = merge(
-      this.configuration$.pipe(map(config => [...config.columns.sort(TableColumnSelectorComponent.sortColumn)])),
+      this.configuration$.pipe(map(config => [...config.columns.sort(sortColumn)])),
       this.toggleColumnsVisibility$.pipe(
         switchMap((key: string) => this.pendingColumnOperation$.pipe(
           first(),
@@ -74,7 +71,6 @@ export class TableColumnSelectorComponent implements OnInit {
           columns: (columns as SmartTableColumnConfig[])
         };
       }),
-      tap(console.log),
       // This operation will trigger a new configuration to be loaded, thus our pendingColumnOperations will be reset
       // to the new configuration coming in. That's why we don't have to manually reset the observable.
       tap((config: SmartTableConfig) => this.configurationService.setConfiguration$.next(config)),
@@ -83,7 +79,6 @@ export class TableColumnSelectorComponent implements OnInit {
   }
 
   updateColumnsSortIndex(event: CdkDragDrop<SmartTableColumnConfig[]>) {
-    console.log(event);
     this.updateSortIndexByKey$.next({
       oldIndex: event.previousIndex,
       newIndex: event.currentIndex

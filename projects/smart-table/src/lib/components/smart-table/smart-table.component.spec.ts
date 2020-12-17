@@ -7,14 +7,14 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from '@acpaas-ui/ngx-table';
 import {ItemCounterModule, PaginationModule} from '@acpaas-ui/ngx-pagination';
 import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
-import {SmartTableService} from './smart-table.service';
+import {ApiService} from '../../services/api.service';
 import * as sinon from 'sinon';
 import {SinonSandbox, SinonStub} from 'sinon';
 import {DatePipe} from '@angular/common';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {PROVIDE_ID} from '../../indentifier.provider';
 import {TableFactory} from '../../services/table.factory';
-import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from './smart-table.types';
+import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from '../../smart-table.types';
 import {cold} from 'jasmine-marbles';
 import {TableSearchFilterComponent} from '../table-search-filter/table-search-filter.component';
 import {TableColumnSelectorComponent} from '../column-selector/column-selector.component';
@@ -28,7 +28,7 @@ describe('Smart Table Test', () => {
   let mockConfiguration: SmartTableConfig;
   let sandbox: SinonSandbox;
   let factory: TableFactory;
-  let service: SmartTableService;
+  let service: ApiService;
   let mockFilters: SmartTableFilterConfig[];
   let configurationService: ConfigurationService;
 
@@ -57,8 +57,8 @@ describe('Smart Table Test', () => {
           useValue: sinon.createStubInstance(TableFactory)
         },
         {
-          provide: SmartTableService,
-          useValue: sinon.createStubInstance(SmartTableService)
+          provide: ApiService,
+          useValue: sinon.createStubInstance(ApiService)
         },
         {
           provide: DatePipe,
@@ -113,7 +113,7 @@ describe('Smart Table Test', () => {
       getItem: sinon.stub(),
       setItem: sinon.stub()
     });
-    service = TestBed.get(SmartTableService);
+    service = TestBed.get(ApiService);
     (service.getData as SinonStub).returns(cold('a'));
     const storage: StorageService = TestBed.get(StorageService);
     (storage.persistConfiguration as SinonStub).returns(cold('--a', {a: undefined}));

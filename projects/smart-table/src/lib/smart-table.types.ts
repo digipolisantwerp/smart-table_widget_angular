@@ -1,6 +1,6 @@
 import {ConstructableCell, OrderBy, TableColumnFormat} from '@acpaas-ui/ngx-table';
 import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
-import {SmartTableFilter} from '../filter/smart-table.filter';
+import {SmartTableFilter} from './components/filter/smart-table.filter';
 
 export interface IModuleConfig {
   storageType?: LocalStorageType;

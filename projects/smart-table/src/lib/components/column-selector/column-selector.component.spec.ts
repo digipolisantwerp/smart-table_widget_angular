@@ -4,7 +4,7 @@ import {ConfigurationService} from '../../services/configuration.service';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
-import {SmartTableColumnConfig, SmartTableConfig} from '../smart-table/smart-table.types';
+import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
 import {cold} from 'jasmine-marbles';
 
 describe('TableColumnSelectorComponent', () => {

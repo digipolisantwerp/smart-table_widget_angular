@@ -5,7 +5,7 @@ import {
   SmartTableColumnType,
   SmartTableFilterConfig,
   SmartTableOptions
-} from '../components/smart-table/smart-table.types';
+} from '../smart-table.types';
 import {TableColumn} from '@acpaas-ui/ngx-table';
 import {DatePipe} from '@angular/common';
 import {SmartTableFilter} from '../components/filter/smart-table.filter';

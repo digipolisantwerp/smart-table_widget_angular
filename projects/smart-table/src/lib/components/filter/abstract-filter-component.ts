@@ -1,5 +1,5 @@
 import {EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
-import {UpdateFilterArgs} from '../smart-table/smart-table.types';
+import {UpdateFilterArgs} from '../../smart-table.types';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil, tap} from 'rxjs/operators';

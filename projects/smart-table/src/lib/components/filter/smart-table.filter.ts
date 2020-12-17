@@ -1,5 +1,5 @@
 import {Filter} from '@acpaas-ui/ngx-utils';
-import {SmartTableFilterConfig, SmartTableFilterOperator, SmartTableFilterType, UpdateFilterArgs} from '../smart-table/smart-table.types';
+import {SmartTableFilterConfig, SmartTableFilterOperator, SmartTableFilterType, UpdateFilterArgs} from '../../smart-table.types';
 import {Observable, Subject} from 'rxjs';
 
 export class SmartTableFilter extends Filter {

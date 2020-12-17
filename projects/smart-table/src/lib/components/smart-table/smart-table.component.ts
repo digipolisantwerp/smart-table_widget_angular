@@ -2,10 +2,9 @@ import {OrderBy, TableColumn} from '@acpaas-ui/ngx-table';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {DatePipe} from '@angular/common';
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
-import {SmartTableService} from './smart-table.service';
 import {
   SmartTableColumnCustomType,
   SmartTableConfig,
@@ -15,16 +14,18 @@ import {
   SmartTableFilterOperator,
   SmartTableFilterType,
   UpdateFilterArgs,
-} from './smart-table.types';
+} from '../../smart-table.types';
 import {
   auditTime,
-  catchError, distinctUntilChanged,
+  catchError,
+  distinctUntilChanged,
   filter,
   first,
   map,
   scan,
   share,
-  shareReplay, skip,
+  shareReplay,
+  skip,
   startWith,
   switchMap,
   take,
@@ -32,13 +33,13 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import {PROVIDE_ID} from '../../indentifier.provider';
 import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../../services/table.factory';
 import {SmartTableFilter} from '../filter/smart-table.filter';
 import {selectFilters} from '../../selectors/smart-table.selectors';
 import {ConfigurationService} from '../../services/configuration.service';
 import {StorageService} from '../../services/storage.service';
+import {ApiService} from '../../services/api.service';
 
 @Component({
   selector: 'aui-smart-table',
@@ -69,8 +70,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   optionalFilters$: Observable<SmartTableFilter[]>;
   /** @internal Whether the optional filters are currently visible (if any exist) */
   optionalFiltersVisible = false;
-  /** @internal */
-  selectableColumns$: Observable<TableColumn[]>;
 
   private dataQuery$: Observable<SmartTableDataQuery>;
 
@@ -125,11 +124,10 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public instanceId: string = Math.random().toString(36).substr(2, 9);
 
   constructor(
-    private dataService: SmartTableService,
+    private dataService: ApiService,
     private datePipe: DatePipe,
     private flyOutService: FlyoutService,
     private localstorageService: LocalstorageService,
-    @Inject(PROVIDE_ID) private storageIdentifier: string,
     private factory: TableFactory,
     private configurationService: ConfigurationService,
     private storageService: StorageService
@@ -168,7 +166,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     // backend, custom configuration via @input and stored configuration
     this.configurationService.initConfiguration({
       id: this.instanceId,
-      backendCallback: () => this.getConfiguration(),
+      backendCallback: () => this.dataService.getConfiguration(this.apiUrl, this.httpHeaders),
       customConfiguration$: this.customConfiguration$,
       storageCallback: (config) => of(this.storageService.getConfiguration(config)),
     });
@@ -316,45 +314,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       catchError(err => of(err)),
       filter(err => err instanceof HttpErrorResponse)
     );
-
-    // Start the show!
-    // the html template subscribes to the configuration, so we don't have to do that manually
-    /*this.persistInStorage$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();*/
-  }
-
-  public getConfiguration(): Observable<SmartTableConfig> {
-    return this.dataService.getConfiguration(this.apiUrl, this.httpHeaders)
-      .pipe(
-        first(),
-        map((configuration: SmartTableConfig) => {
-          // Start of with default options and override
-          // those with whatever options we get from the configuration
-          return {
-            ...configuration,
-            baseFilters: configuration.baseFilters || [],
-            options: {
-              ...SMARTTABLE_DEFAULT_OPTIONS,
-              ...configuration.options
-            }
-          };
-        }),
-        map(config => {
-          // Override the storage identifier is we configured it in the module
-          if (this.storageIdentifier) {
-            return {
-              ...config,
-              options: {
-                ...config.options,
-                storageIdentifier: this.storageIdentifier
-              }
-            };
-          } else {
-            return config;
-          }
-        })
-      );
   }
 
   protected resetOrderBy(defaultSortOrder?) {

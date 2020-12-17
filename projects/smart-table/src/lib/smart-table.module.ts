@@ -7,9 +7,8 @@ import {TableModule} from '@acpaas-ui/ngx-table';
 import {ITEM_COUNTER_LABEL, ItemCounterModule, ITEMS_PER_PAGE_LABEL, PaginationModule} from '@acpaas-ui/ngx-pagination';
 import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
 import {FlyoutModule} from '@acpaas-ui/ngx-flyout';
-import {components, services} from './index';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
-import {IModuleConfig} from './components/smart-table/smart-table.types';
+import {IModuleConfig} from './smart-table.types';
 import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
 import {TableColumnSelectorComponent} from './components/column-selector/column-selector.component';
@@ -20,7 +19,7 @@ import {TableInputFilterComponent} from './components/table-input-filter/table-i
 import {TableSelectFilterComponent} from './components/table-select-filter/table-select-filter.component';
 import {TableDatepickerFilterComponent} from './components/table-datepicker-filter/table-datepicker-filter.component';
 import {TableSearchFilterComponent} from './components/table-search-filter/table-search-filter.component';
-import {SmartTableService} from './components/smart-table/smart-table.service';
+import {ApiService} from './services/api.service';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -53,7 +52,7 @@ const defaultConfiguration: IModuleConfig = {
   ],
   providers: [
     DatePipe,
-    SmartTableService,
+    ApiService,
     TableFactory,
     {
       provide: PROVIDE_ID,
@@ -63,8 +62,7 @@ const defaultConfiguration: IModuleConfig = {
     StorageService
   ],
   exports: [
-    SmartTableComponent,
-    ...components
+    SmartTableComponent
   ]
 })
 export class SmartTableModule {
@@ -92,10 +90,7 @@ export class SmartTableModule {
         {
           provide: ITEM_COUNTER_LABEL,
           useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemCounterLabel
-        },
-        DatePipe,
-        ...services,
-        TableFactory,
+        }
       ],
     };
   }

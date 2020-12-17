@@ -1,5 +1,5 @@
 import {InjectionToken} from '@angular/core';
-import {IModuleConfig} from './components/smart-table/smart-table.types';
+import {IModuleConfig} from './smart-table.types';
 import {ILocalStorageConfig} from '@acpaas-ui/ngx-localstorage/lib/types/localstorage.types';
 
 export const PROVIDE_ID = new InjectionToken('Provide-Identifier');

@@ -1,5 +1,5 @@
 import {Observable, OperatorFunction} from 'rxjs';
-import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from '../components/smart-table/smart-table.types';
+import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from '../smart-table.types';
 import {SmartTableFilter} from '../components/filter/smart-table.filter';
 import {filter, map, shareReplay, startWith} from 'rxjs/operators';
 import {TableFactory} from '../services/table.factory';

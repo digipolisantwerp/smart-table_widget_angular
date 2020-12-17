@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
-import {SmartTableColumnCustomType, SmartTableConfig} from '../components/smart-table/smart-table.types';
+import {SmartTableColumnCustomType, SmartTableConfig} from '../smart-table.types';
 import {TableColumn} from '@acpaas-ui/ngx-table';
 import {filter, first, map, shareReplay, switchMap} from 'rxjs/operators';
 import {TableFactory} from './table.factory';
+import {sortColumn} from '../helper/helpers';
 
 @Injectable()
 export class ConfigurationService {
@@ -59,7 +60,7 @@ export class ConfigurationService {
     return this.getConfiguration(id).pipe(
       map((config: SmartTableConfig) =>
         config.columns
-          .sort((a, b) => a.sortIndex > b.sortIndex ? 1 : a.sortIndex < b.sortIndex ? -1 : 0)
+          .sort(sortColumn)
           .map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes)))
     );
   }
