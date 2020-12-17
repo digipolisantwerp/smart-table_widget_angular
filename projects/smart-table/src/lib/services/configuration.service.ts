@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
-import {SmartTableColumnCustomType, SmartTableConfig} from '../smart-table/smart-table.types';
+import {SmartTableColumnCustomType, SmartTableConfig} from '../components/smart-table/smart-table.types';
 import {TableColumn} from '@acpaas-ui/ngx-table';
 import {filter, first, map, shareReplay, switchMap} from 'rxjs/operators';
 import {TableFactory} from './table.factory';

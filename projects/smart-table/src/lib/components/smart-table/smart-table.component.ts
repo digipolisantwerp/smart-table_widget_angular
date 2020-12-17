@@ -32,13 +32,13 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import {PROVIDE_ID} from '../indentifier.provider';
+import {PROVIDE_ID} from '../../indentifier.provider';
 import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
-import {TableFactory} from '../services/table.factory';
+import {TableFactory} from '../../services/table.factory';
 import {SmartTableFilter} from '../filter/smart-table.filter';
-import {selectFilters} from '../selectors/smart-table.selectors';
-import {ConfigurationService} from '../services/configuration.service';
-import {StorageService} from '../services/storage.service';
+import {selectFilters} from '../../selectors/smart-table.selectors';
+import {ConfigurationService} from '../../services/configuration.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'aui-smart-table',

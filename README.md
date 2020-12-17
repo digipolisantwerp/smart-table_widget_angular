@@ -115,7 +115,7 @@ This back-end service must implement the following protocol:
   - Fetch all rows (with filtering and sorting) for excel export.
 - GET `/path/to/endpoint/config`
   - Fetch the smart table configuration.
-  - See `SmartTableConfig` in [projects/smart-table/src/lib/smart-table/smart-table.types.ts](projects/smart-table/src/lib/smart-table/smart-table.types.ts).
+  - See `SmartTableConfig` in [projects/smart-table/src/lib/smart-table/smart-table.types.ts](projects/smart-table/src/lib/components/smart-table/smart-table.types.ts).
 
 The `POST` endpoints accept the following JSON body:
 

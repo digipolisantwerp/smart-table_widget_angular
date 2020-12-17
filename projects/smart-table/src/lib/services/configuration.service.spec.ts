@@ -1,5 +1,5 @@
 import {cold, hot} from 'jasmine-marbles';
-import {SmartTableConfig} from '../smart-table/smart-table.types';
+import {SmartTableConfig} from '../components/smart-table/smart-table.types';
 import {TestBed} from '@angular/core/testing';
 import {ConfigurationService} from './configuration.service';
 import {TableFactory} from './table.factory';

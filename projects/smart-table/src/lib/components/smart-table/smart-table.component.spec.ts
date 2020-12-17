@@ -12,14 +12,14 @@ import * as sinon from 'sinon';
 import {SinonSandbox, SinonStub} from 'sinon';
 import {DatePipe} from '@angular/common';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
-import {PROVIDE_ID} from '../indentifier.provider';
-import {TableFactory} from '../services/table.factory';
+import {PROVIDE_ID} from '../../indentifier.provider';
+import {TableFactory} from '../../services/table.factory';
 import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from './smart-table.types';
 import {cold} from 'jasmine-marbles';
 import {TableSearchFilterComponent} from '../table-search-filter/table-search-filter.component';
-import {TableColumnSelectorComponent} from '../components/column-selector/column-selector.component';
-import {ConfigurationService} from '../services/configuration.service';
-import {StorageService} from '../services/storage.service';
+import {TableColumnSelectorComponent} from '../column-selector/column-selector.component';
+import {ConfigurationService} from '../../services/configuration.service';
+import {StorageService} from '../../services/storage.service';
 
 describe('Smart Table Test', () => {
   let component: SmartTableComponent;

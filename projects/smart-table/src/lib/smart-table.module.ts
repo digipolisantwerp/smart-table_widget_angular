@@ -1,5 +1,5 @@
 import {ModuleWithProviders, NgModule} from '@angular/core';
-import {SmartTableComponent} from './smart-table/smart-table.component';
+import {SmartTableComponent} from './components/smart-table/smart-table.component';
 import {CommonModule, DatePipe} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -9,13 +9,18 @@ import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
 import {FlyoutModule} from '@acpaas-ui/ngx-flyout';
 import {components, services} from './index';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
-import {IModuleConfig} from './smart-table/smart-table.types';
+import {IModuleConfig} from './components/smart-table/smart-table.types';
 import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
 import {TableFactory} from './services/table.factory';
 import {TableColumnSelectorComponent} from './components/column-selector/column-selector.component';
 import {ConfigurationService} from './services/configuration.service';
 import {StorageService} from './services/storage.service';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {TableInputFilterComponent} from './components/table-input-filter/table-input-filter.component';
+import {TableSelectFilterComponent} from './components/table-select-filter/table-select-filter.component';
+import {TableDatepickerFilterComponent} from './components/table-datepicker-filter/table-datepicker-filter.component';
+import {TableSearchFilterComponent} from './components/table-search-filter/table-search-filter.component';
+import {SmartTableService} from './components/smart-table/smart-table.service';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
@@ -25,7 +30,11 @@ const defaultConfiguration: IModuleConfig = {
 
 @NgModule({
   declarations: [
-    ...components,
+    SmartTableComponent,
+    TableInputFilterComponent,
+    TableSelectFilterComponent,
+    TableDatepickerFilterComponent,
+    TableSearchFilterComponent,
     TableColumnSelectorComponent
   ],
   imports: [
@@ -44,7 +53,7 @@ const defaultConfiguration: IModuleConfig = {
   ],
   providers: [
     DatePipe,
-    ...services,
+    SmartTableService,
     TableFactory,
     {
       provide: PROVIDE_ID,

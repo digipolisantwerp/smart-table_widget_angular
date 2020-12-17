@@ -3,7 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import * as sinon from 'sinon';
 import {SinonSandbox, SinonStub} from 'sinon';
-import {SmartTableConfig} from '../smart-table/smart-table.types';
+import {SmartTableConfig} from '../components/smart-table/smart-table.types';
 
 describe('Storage Service Test', () => {
   let service: StorageService;

@@ -5,10 +5,10 @@ import {
   SmartTableColumnType,
   SmartTableFilterConfig,
   SmartTableOptions
-} from '../smart-table/smart-table.types';
+} from '../components/smart-table/smart-table.types';
 import {TableColumn} from '@acpaas-ui/ngx-table';
 import {DatePipe} from '@angular/common';
-import {SmartTableFilter} from '../filter/smart-table.filter';
+import {SmartTableFilter} from '../components/filter/smart-table.filter';
 
 @Injectable()
 export class TableFactory {

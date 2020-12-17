@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
 import {combineLatest, merge, Observable, Subject} from 'rxjs';
-import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table/smart-table.types';
+import {SmartTableColumnConfig, SmartTableConfig} from '../smart-table/smart-table.types';
 import {first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
