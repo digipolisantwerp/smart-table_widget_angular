@@ -54,7 +54,7 @@ export class TableColumnSelectorComponent implements OnInit {
         ))
       )
     ).pipe(
-      map(columns => columns.sort((a, b) => a.sortIndex > b.sortIndex ? 1 : a.sortIndex < b.sortIndex ? -1 : 0)),
+      map(columns => columns.sort(sortColumn)),
       shareReplay(1)
     );
   }

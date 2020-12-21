@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AppRatingComponent} from './rating.component';
-import {SmartTableColumnCustomType, SmartTableConfig} from 'projects/smart-table/src/lib/smart-table.types';
+import {SmartTableColumnCustomType, SmartTableConfig} from '@acpaas-ui-widgets/smart-table';
 
 @Component({
   selector: 'app-root',

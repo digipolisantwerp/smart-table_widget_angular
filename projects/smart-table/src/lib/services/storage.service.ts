@@ -70,7 +70,6 @@ export class StorageService {
       return storageObj;
     } catch (err) {
       console.warn(err);
-      console.warn('WARNING: Could not persist in storage!');
       return {};
     }
   }
