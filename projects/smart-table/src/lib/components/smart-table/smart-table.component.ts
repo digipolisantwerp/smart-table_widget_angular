@@ -104,7 +104,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public error$: Observable<HttpErrorResponse>;
 
   /** @internal */
-  orderBy$: Subject<OrderBy> = new BehaviorSubject<OrderBy>(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
+  orderBy$: Observable<OrderBy>;
   /** @internal */
   currentPage$ = new BehaviorSubject<number>(1);
   /** @internal */
@@ -172,6 +172,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     });
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
 
+    this.orderBy$ = this.configuration$.pipe(
+      map(config => config && config.options && config.options.defaultSortOrder),
+      startWith(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
+      tap(console.log)
+    );
 
     // Set up persistence hook
     this.configuration$.pipe(
@@ -228,7 +233,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       map(([value, configuration]: [UpdateFilterArgs, SmartTableConfig]) => {
         this.currentPage$.next(1);
         if (configuration.options && configuration.options.resetSortOrderOnFilter) {
-          this.resetOrderBy();
+          this.onOrderBy((configuration.options && configuration.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
         }
         return value;
       }),
@@ -316,13 +321,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected resetOrderBy(defaultSortOrder?) {
-    const sortOrder = defaultSortOrder || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder;
-    if (sortOrder) {
-      this.orderBy$.next(sortOrder);
-    }
-  }
-
   createDataQueryFilters(filters: SmartTableFilter[]): SmartTableDataQueryFilter[] {
     return filters.filter(f => f && f.value && f.value.length).map(this.createDataQueryFilter);
   }
@@ -354,13 +352,18 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   }
 
   public onOrderBy(orderBy: OrderBy) {
-    this.orderBy$.next(orderBy);
     this.configuration$.pipe(
       take(1),
-      map(obj => obj.options.storageIdentifier),
-      tap(storageID => {
-        return this.addToLocalStorage(storageID, 'defaultSortOrder', orderBy);
-      })
+      map(config => {
+        return {
+          ...config,
+          options: {
+            ...config.options,
+            defaultSortOrder: orderBy
+          }
+        };
+      }),
+      tap(config => this.configurationService.setConfiguration$.next(config))
     ).subscribe();
   }
 
@@ -394,13 +397,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         });
       })
     );
-  }
-
-  private addToLocalStorage(name: string, key: string, value: any) {
-    let storageObj: any = this.localstorageService.storage.getItem(name);
-    storageObj = !storageObj ? {} : JSON.parse(storageObj);
-    storageObj[key] = value;
-    this.localstorageService.storage.setItem(name, JSON.stringify(storageObj));
   }
 
   ngOnDestroy(): void {

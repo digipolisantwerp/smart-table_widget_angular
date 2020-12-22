@@ -4,7 +4,7 @@ import {combineLatest, merge, Observable, Subject} from 'rxjs';
 import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
 import {first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {sortColumn} from '../../helper/helpers';
 
 @Component({
@@ -78,10 +78,17 @@ export class TableColumnSelectorComponent implements OnInit {
     ).subscribe();
   }
 
-  updateColumnsSortIndex(event: CdkDragDrop<SmartTableColumnConfig[]>) {
+  moveColumnUp(index: number): void {
     this.updateSortIndexByKey$.next({
-      oldIndex: event.previousIndex,
-      newIndex: event.currentIndex
+      oldIndex: index,
+      newIndex: index - 1
+    });
+  }
+
+  moveColumnDown(index: number): void {
+    this.updateSortIndexByKey$.next({
+      oldIndex: index,
+      newIndex: index + 1
     });
   }
 }

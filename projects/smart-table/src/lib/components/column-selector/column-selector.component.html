@@ -8,15 +8,23 @@
 
   <div auiFlyoutZone>
     <div class="u-margin-xs">
-      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs u-text-left"
-          cdkDropList (cdkDropListDropped)="updateColumnsSortIndex($event)" aria-dropeffect="move">
-        <li aria-grabbed="true" cdkDrag class="a-list__item"
+      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs u-text-left">
+        <li class="a-list__item"
             *ngFor="let column of (pendingColumnOperation$ | async); index as i">
-          <div class="a-input__checkbox">
+          <div class="a-input a-input__checkbox">
             <input type="checkbox" [disabled]="!(column.canHide !== false)" id="{{ 'checkbox--' + i + '--' + column.key }}"
                    name="{{ 'checkbox--' + i + '--' + column.key }}" [checked]="column.visible !== false"
                    (change)="toggleColumnsVisibility$.next(column.key)">
             <label for="{{ 'checkbox--' + i + '--' + column.key }}">{{ column.label }}</label>
+          </div>
+          <div class="o-sort-buttons">
+            <button class="a-button a-button--small a-button--transparent has-icon" [disabled]="i === 0" (click)="moveColumnUp(i)">
+              <span class="fa fa-angle-up"></span>
+            </button>
+            <button class="a-button a-button--small a-button--transparent has-icon"
+                    [disabled]="i === (pendingColumnOperation$ | async)?.length -1" (click)="moveColumnDown(i)">
+              <span class="fa fa-angle-down"></span>
+            </button>
           </div>
         </li>
       </ul>
