@@ -66,6 +66,10 @@ SmartTableModule.withLabels
        itemsPerPageLabel: {
          singular: 'film per pagina',
          plural: 'films per pagina',
+       },
+       sorting: {   // Optional
+         sortAbove: 'Sorteer kolom naar boven',
+         sortUnderneath: 'Sorteer kolomn naar onder'
        }
     }
   })

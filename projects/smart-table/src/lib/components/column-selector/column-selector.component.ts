@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
 import {combineLatest, merge, Observable, Subject} from 'rxjs';
 import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
@@ -6,6 +6,7 @@ import {first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {sortColumn} from '../../helper/helpers';
+import {PROVIDE_SORT_LABELS} from '../../providers/sort-labels.provider';
 
 @Component({
   selector: 'aui-table-column-selector',
@@ -23,7 +24,8 @@ export class TableColumnSelectorComponent implements OnInit {
 
   constructor(
     private configurationService: ConfigurationService,
-    private flyoutService: FlyoutService) {
+    private flyoutService: FlyoutService,
+    @Inject(PROVIDE_SORT_LABELS) public labels) {
   }
 
   ngOnInit() {
@@ -73,7 +75,7 @@ export class TableColumnSelectorComponent implements OnInit {
       }),
       // This operation will trigger a new configuration to be loaded, thus our pendingColumnOperations will be reset
       // to the new configuration coming in. That's why we don't have to manually reset the observable.
-      tap((config: SmartTableConfig) => this.configurationService.setConfiguration$.next(config)),
+      tap((config: SmartTableConfig) => this.configurationService.setConfiguration(this.instanceId, config)),
       tap(() => this.flyoutService.close())
     ).subscribe();
   }

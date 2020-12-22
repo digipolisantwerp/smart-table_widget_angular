@@ -8,8 +8,8 @@ import {ITEM_COUNTER_LABEL, ItemCounterModule, ITEMS_PER_PAGE_LABEL, PaginationM
 import {DatepickerModule, SearchFilterModule} from '@acpaas-ui/ngx-forms';
 import {FlyoutModule} from '@acpaas-ui/ngx-flyout';
 import {LOCALSTORAGE_CONFIG, LocalstorageModule} from '@acpaas-ui/ngx-localstorage';
-import {IModuleConfig} from './smart-table.types';
-import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './indentifier.provider';
+import {ILabels, IModuleConfig} from './smart-table.types';
+import {PROVIDE_CONFIG, PROVIDE_ID, provideLocalstorageConfig} from './providers/indentifier.provider';
 import {TableFactory} from './services/table.factory';
 import {TableColumnSelectorComponent} from './components/column-selector/column-selector.component';
 import {ConfigurationService} from './services/configuration.service';
@@ -20,10 +20,18 @@ import {TableSelectFilterComponent} from './components/table-select-filter/table
 import {TableDatepickerFilterComponent} from './components/table-datepicker-filter/table-datepicker-filter.component';
 import {TableSearchFilterComponent} from './components/table-search-filter/table-search-filter.component';
 import {ApiService} from './services/api.service';
+import {PROVIDE_SORT_LABELS} from './providers/sort-labels.provider';
 
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
   identifier: 'aui-smart-table',
+};
+
+const defaultLabels: ILabels = {
+  sorting: {
+    sortAbove: 'Sorteer kolom naar boven',
+    sortUnderneath: 'Sorteer kolom naar onder'
+  }
 };
 
 
@@ -90,6 +98,10 @@ export class SmartTableModule {
         {
           provide: ITEM_COUNTER_LABEL,
           useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemCounterLabel
+        },
+        {
+          provide: PROVIDE_SORT_LABELS,
+          useValue: (moduleConfiguration.labels && moduleConfiguration.labels.sorting) || defaultLabels.sorting
         }
       ],
     };

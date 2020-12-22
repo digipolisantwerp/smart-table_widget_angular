@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 import {SmartTableConfig, SmartTableDataQuery} from '../smart-table.types';
 import {first, map} from 'rxjs/operators';
 import {SMARTTABLE_DEFAULT_OPTIONS} from '../components/smart-table/smart-table.defaults';
-import {PROVIDE_ID} from '../indentifier.provider';
+import {PROVIDE_ID} from '../providers/indentifier.provider';
 
 const EXCEL_EXTENSION = '.xlsx';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';

@@ -9,6 +9,7 @@ export interface IModuleConfig {
 }
 
 export interface ILabels {
+  sorting?: { sortAbove: string, sortUnderneath: string };
   itemCounterLabel?: { singular: string, plural: string };
   itemsPerPageLabel?: { singular: string, plural: string };
 }

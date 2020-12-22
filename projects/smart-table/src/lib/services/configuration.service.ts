@@ -8,9 +8,8 @@ import {sortColumn} from '../helper/helpers';
 
 @Injectable()
 export class ConfigurationService {
-  private _config$: { [id: string]: Observable<SmartTableConfig> };
-
-  readonly setConfiguration$ = new Subject<SmartTableConfig>();
+  private readonly _config$: { [id: string]: Observable<SmartTableConfig> } = {};
+  private readonly _setConfig$: { [id: string]: Subject<SmartTableConfig> } = {};
 
   constructor(private factory: TableFactory) {
   }
@@ -21,10 +20,8 @@ export class ConfigurationService {
     storageCallback: (config: SmartTableConfig) => Observable<SmartTableConfig>,
     customConfiguration$: Observable<SmartTableConfig>
   }): void {
-    if (!this._config$) {
-      this._config$ = {};
-    }
     const {id, backendCallback, storageCallback, customConfiguration$} = param;
+    this._setConfig$[id] = new Subject<SmartTableConfig>();
     this._config$[id] = concat(
       backendCallback(),  // First get the default configuration
       merge(
@@ -45,7 +42,7 @@ export class ConfigurationService {
           // Only override with stored configuration on custom configuration coming in
           switchMap(config => config && config.options.persistTableConfig ? storageCallback(config) : of(config))
         ),
-        this.setConfiguration$
+        this._setConfig$[id]
       )
     ).pipe(
       shareReplay(1)
@@ -54,6 +51,13 @@ export class ConfigurationService {
 
   getConfiguration(id: string): Observable<SmartTableConfig> {
     return this._config$[id];
+  }
+
+  setConfiguration(id: string, configuration: SmartTableConfig): void {
+    if (!this._setConfig$[id]) {
+      return;
+    }
+    this._setConfig$[id].next(configuration);
   }
 
   getColumns(id: string, columnTypes: SmartTableColumnCustomType[]): Observable<Array<TableColumn>> {

@@ -173,9 +173,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
 
     this.orderBy$ = this.configuration$.pipe(
-      map(config => config && config.options && config.options.defaultSortOrder),
-      startWith(SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
-      tap(console.log)
+      map(config => (config && config.options && config.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
     );
 
     // Set up persistence hook
@@ -363,7 +361,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
           }
         };
       }),
-      tap(config => this.configurationService.setConfiguration$.next(config))
+      tap(config => this.configurationService.setConfiguration(this.instanceId, config))
     ).subscribe();
   }
 
