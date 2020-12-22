@@ -2,7 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
 import {combineLatest, merge, Observable, Subject} from 'rxjs';
 import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
-import {first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
+import {filter, first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {sortColumn} from '../../helper/helpers';
@@ -31,7 +31,9 @@ export class TableColumnSelectorComponent implements OnInit {
   ngOnInit() {
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
     this.pendingColumnOperation$ = merge(
-      this.configuration$.pipe(map(config => [...config.columns.sort(sortColumn)])),
+      this.configuration$.pipe(
+        filter(config => !!config && config.columns && !!config.columns.length),
+        map(config => [...config.columns.sort(sortColumn)])),
       this.toggleColumnsVisibility$.pipe(
         switchMap((key: string) => this.pendingColumnOperation$.pipe(
           first(),

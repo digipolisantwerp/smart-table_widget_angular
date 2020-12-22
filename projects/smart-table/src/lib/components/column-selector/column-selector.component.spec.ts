@@ -6,6 +6,7 @@ import {SinonStub} from 'sinon';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
 import {cold} from 'jasmine-marbles';
+import {PROVIDE_SORT_LABELS} from '../../providers/sort-labels.provider';
 
 describe('TableColumnSelectorComponent', () => {
   let component: TableColumnSelectorComponent;
@@ -13,8 +14,13 @@ describe('TableColumnSelectorComponent', () => {
   let configurationService: ConfigurationService;
   let mockColumns: SmartTableColumnConfig[];
   let mockConfiguration: SmartTableConfig;
+  let mockLabels;
 
   beforeEach(async () => {
+    mockLabels = {
+      sortAbove: 'sort above',
+      sortUnderneath: 'sort underneath'
+    };
     await TestBed.configureTestingModule({
       declarations: [TableColumnSelectorComponent],
       providers: [
@@ -25,6 +31,10 @@ describe('TableColumnSelectorComponent', () => {
         {
           provide: FlyoutService,
           useValue: sinon.createStubInstance(FlyoutService)
+        },
+        {
+          provide: PROVIDE_SORT_LABELS,
+          useValue: mockLabels
         }
       ]
     }).compileComponents();
@@ -106,6 +116,13 @@ describe('TableColumnSelectorComponent', () => {
           {key: 'a', sortIndex: 2}
         ]
       }));
+    });
+  });
+  describe('Labels', () => {
+    it('should put correct labels', () => {
+      (configurationService.getConfiguration as SinonStub).returns(cold('--a', {a: {}}));
+      fixture.detectChanges();
+      expect(component.labels).toEqual(mockLabels);
     });
   });
 });
