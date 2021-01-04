@@ -50,8 +50,8 @@ describe('Storage Service Test', () => {
       const param = {
         ...mockConfiguration,
         columns: [
-          {key: 'a', sortIndex: 0},
-          {key: 'b', sortIndex: 1}
+          {key: 'a', orderIndex: 0},
+          {key: 'b', orderIndex: 1}
         ],
         options: {
           storageIdentifier: 'identifier',
@@ -62,8 +62,8 @@ describe('Storage Service Test', () => {
       service.persistConfiguration('some-id', param as any);
       expect((storage.storage.setItem as SinonStub).withArgs('identifier', JSON.stringify({
         columns: [
-          {key: 'a', sortIndex: 0},
-          {key: 'b', sortIndex: 1}
+          {key: 'a', orderIndex: 0},
+          {key: 'b', orderIndex: 1}
         ],
         options: {
           defaultSortOrder: {key: 'a', order: 'asc'}
@@ -108,7 +108,7 @@ describe('Storage Service Test', () => {
       } as any;
       (storage.storage.getItem as SinonStub).withArgs('identifier').returns(JSON.stringify({
         columns: [
-          {key: 'a', sortIndex: 1, order: 'desc'}
+          {key: 'a', orderIndex: 1, order: 'desc'}
         ],
         options: {
           defaultSortOrder: {key: 'a', order: 'asc'}

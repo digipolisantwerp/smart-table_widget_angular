@@ -53,7 +53,7 @@ export class TableColumnSelectorComponent implements OnInit {
           map(c => {
             const columns = [...c];
             moveItemInArray(columns, payload.oldIndex, payload.newIndex);
-            return columns.map((item, sortIndex) => ({...item, sortIndex}));
+            return columns.map((item, orderIndex) => ({...item, orderIndex}));
           })
         ))
       )

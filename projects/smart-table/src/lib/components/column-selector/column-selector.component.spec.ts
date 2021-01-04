@@ -4,7 +4,7 @@ import {ConfigurationService} from '../../services/configuration.service';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
-import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
+import {IOrderingLabels, SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
 import {cold} from 'jasmine-marbles';
 import {PROVIDE_SORT_LABELS} from '../../providers/sort-labels.provider';
 
@@ -14,12 +14,12 @@ describe('TableColumnSelectorComponent', () => {
   let configurationService: ConfigurationService;
   let mockColumns: SmartTableColumnConfig[];
   let mockConfiguration: SmartTableConfig;
-  let mockLabels;
+  let mockLabels: IOrderingLabels;
 
   beforeEach(async () => {
     mockLabels = {
-      sortAbove: 'sort above',
-      sortUnderneath: 'sort underneath'
+      orderAfter: 'sort above',
+      orderBefore: 'sort underneath'
     };
     await TestBed.configureTestingModule({
       declarations: [TableColumnSelectorComponent],
@@ -40,9 +40,9 @@ describe('TableColumnSelectorComponent', () => {
     }).compileComponents();
 
     mockColumns = [
-      {key: 'a', sortIndex: 2},
-      {key: 'b', sortIndex: 0},
-      {key: 'c', sortIndex: 1}
+      {key: 'a', orderIndex: 2},
+      {key: 'b', orderIndex: 0},
+      {key: 'c', orderIndex: 1}
     ] as any;
     configurationService = TestBed.get(ConfigurationService);
     mockConfiguration = {
@@ -69,9 +69,9 @@ describe('TableColumnSelectorComponent', () => {
       const result$ = component.pendingColumnOperation$;
       expect(result$).toBeObservable(cold('----a', {
         a: [
-          {key: 'b', sortIndex: 0},
-          {key: 'c', sortIndex: 1},
-          {key: 'a', sortIndex: 2}
+          {key: 'b', orderIndex: 0},
+          {key: 'c', orderIndex: 1},
+          {key: 'a', orderIndex: 2}
         ]
       }));
     });
@@ -92,9 +92,9 @@ describe('TableColumnSelectorComponent', () => {
       const result$ = component.pendingColumnOperation$;
       expect(result$).toBeObservable(cold('----(aa)', {
         a: [
-          {key: 'b', sortIndex: 0, visible: false},
-          {key: 'c', sortIndex: 1, visible: true},
-          {key: 'a', sortIndex: 2, visible: false}
+          {key: 'b', orderIndex: 0, visible: false},
+          {key: 'c', orderIndex: 1, visible: true},
+          {key: 'a', orderIndex: 2, visible: false}
         ]
       }));
     });
@@ -106,14 +106,14 @@ describe('TableColumnSelectorComponent', () => {
       const result$ = component.pendingColumnOperation$;
       expect(result$).toBeObservable(cold('---(ab)', {
         a: [
-          {key: 'c', sortIndex: 0},
-          {key: 'a', sortIndex: 1},
-          {key: 'b', sortIndex: 2}
+          {key: 'c', orderIndex: 0},
+          {key: 'a', orderIndex: 1},
+          {key: 'b', orderIndex: 2}
         ],
         b: [
-          {key: 'b', sortIndex: 0},
-          {key: 'c', sortIndex: 1},
-          {key: 'a', sortIndex: 2}
+          {key: 'b', orderIndex: 0},
+          {key: 'c', orderIndex: 1},
+          {key: 'a', orderIndex: 2}
         ]
       }));
     });

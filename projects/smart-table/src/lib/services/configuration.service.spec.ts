@@ -116,10 +116,10 @@ describe('Configuration Service', () => {
           ...mockConfiguration,
           columns: [{
             key: 'a',
-            sortIndex: 3
+            orderIndex: 3
           }, {
             key: 'b',
-            sortIndex: 0
+            orderIndex: 0
           }]
         }
       }));
@@ -127,8 +127,8 @@ describe('Configuration Service', () => {
       const result$ = service.getColumns('some-id', []);
       expect(result$).toBeObservable(cold('----a', {
         a: [
-          {key: 'b', sortIndex: 0, made: true},
-          {key: 'a', sortIndex: 3, made: true},
+          {key: 'b', orderIndex: 0, made: true},
+          {key: 'a', orderIndex: 3, made: true},
         ]
       }));
     });
