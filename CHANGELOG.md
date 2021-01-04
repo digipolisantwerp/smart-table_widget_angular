@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Option to change order of the columns in the table, choices can be persisted.
+
+### Changed
+- Configuration is stored and updated in the configuration.service
+- Configuration can be set manually
+
 ## [1.7.1] - 2020-11-16
 
 ### Fixed

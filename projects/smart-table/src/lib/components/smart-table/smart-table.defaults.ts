@@ -1,4 +1,4 @@
-import { SmartTableOptions } from './smart-table.types';
+import { SmartTableOptions } from '../../smart-table.types';
 
 export const SMARTTABLE_DEFAULT_OPTIONS: SmartTableOptions = {
   defaultSortOrder: { key: 'id', order: 'asc' },

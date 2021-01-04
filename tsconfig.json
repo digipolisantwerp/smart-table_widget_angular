@@ -21,11 +21,11 @@
       "dom"
     ],
     "paths": {
-      "smart-table": [
-        "dist/smart-table"
+      "@acpaas-ui-widgets/smart-table": [
+        "projects/smart-table/src/public-api.ts"
       ],
-      "smart-table/*": [
-        "dist/smart-table/*"
+      "@acpaas-ui-widgets/smart-table/*": [
+        "projects/smart-table/src/public-api.ts"
       ]
     }
   }

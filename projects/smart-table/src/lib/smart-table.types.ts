@@ -1,7 +1,6 @@
 import {ConstructableCell, OrderBy, TableColumnFormat} from '@acpaas-ui/ngx-table';
 import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
-import {Observable} from 'rxjs';
-import {SmartTableFilter} from '../filter/smart-table.filter';
+import {SmartTableFilter} from './components/filter/smart-table.filter';
 
 export interface IModuleConfig {
   storageType?: LocalStorageType;
@@ -10,8 +9,14 @@ export interface IModuleConfig {
 }
 
 export interface ILabels {
+  columnOrdering?: IOrderingLabels;
   itemCounterLabel?: { singular: string, plural: string };
   itemsPerPageLabel?: { singular: string, plural: string };
+}
+
+export interface IOrderingLabels {
+  orderBefore: string;
+  orderAfter: string;
 }
 
 /**
@@ -68,6 +73,7 @@ export interface SmartTableColumnConfig {
   classList?: string[];
   sortPath: string;
   canHide?: boolean;
+  orderIndex?: number;
 }
 
 export enum SmartTableColumnType {

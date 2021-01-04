@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {TableFactory} from './table.factory';
 import {DatePipe} from '@angular/common';
-import {SmartTableColumnType} from '../smart-table/smart-table.types';
+import {SmartTableColumnType} from '../smart-table.types';
 
 describe('Table Factory Test', () => {
   let datePipe: DatePipe;
