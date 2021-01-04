@@ -9,14 +9,14 @@ export interface IModuleConfig {
 }
 
 export interface ILabels {
-  ordering?: IOrderingLabels;
+  columnOrdering?: IOrderingLabels;
   itemCounterLabel?: { singular: string, plural: string };
   itemsPerPageLabel?: { singular: string, plural: string };
 }
 
 export interface IOrderingLabels {
-  orderAbove: string;
-  orderUnderneath: string;
+  orderBefore: string;
+  orderAfter: string;
 }
 
 /**

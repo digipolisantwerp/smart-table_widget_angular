@@ -20,13 +20,13 @@
           </div>
           <div class="o-sort-buttons">
             <button class="a-button a-button--small a-button--transparent has-icon" [disabled]="i === 0"
-                    (click)="moveColumnUp(i)" [title]="labels.orderAbove">
+                    (click)="moveColumnUp(i)" [title]="labels.orderBefore">
               <span class="fa fa-angle-up"></span>
             </button>
             <button class="a-button a-button--small a-button--transparent has-icon"
                     [disabled]="i === (pendingColumnOperation$ | async)?.length -1" (click)="moveColumnDown(i)"
                     aria-label="Sorteer kolomn naar onder"
-                    [title]="labels.orderUnderneath">
+                    [title]="labels.orderAfter">
               <span class="fa fa-angle-down"></span>
             </button>
           </div>

@@ -28,9 +28,9 @@ const defaultConfiguration: IModuleConfig = {
 };
 
 const defaultLabels: ILabels = {
-  ordering: {
-    orderAbove: 'Verplaats kolom naar voor',
-    orderUnderneath: 'Verplaats kolom naar achter'
+  columnOrdering: {
+    orderBefore: 'Verplaats kolom naar voor',
+    orderAfter: 'Verplaats kolom naar achter'
   }
 };
 
@@ -101,7 +101,7 @@ export class SmartTableModule {
         },
         {
           provide: PROVIDE_SORT_LABELS,
-          useValue: (moduleConfiguration.labels && moduleConfiguration.labels.ordering) || defaultLabels.ordering
+          useValue: (moduleConfiguration.labels && moduleConfiguration.labels.columnOrdering) || defaultLabels.columnOrdering
         }
       ],
     };

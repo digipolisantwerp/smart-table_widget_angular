@@ -67,9 +67,9 @@ SmartTableModule.withLabels
          singular: 'film per pagina',
          plural: 'films per pagina',
        },
-       ordering: {   // Optional
-         orderAbove: 'Verplaats kolom naar voor',
-         orderUnderneath: 'Verplaats kolomn naar achter'
+       columnOrdering: {   // Optional
+         orderBefore: 'Verplaats kolom naar voor',
+         orderAbove: 'Verplaats kolomn naar achter'
        }
     }
   })
