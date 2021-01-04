@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.8.0] - 2021-01-04
+
 ### Added
 - Option to change order of the columns in the table, choices can be persisted.
 
@@ -11,10 +14,12 @@ All notable changes to this project will be documented in this file.
 - Configuration is stored and updated in the configuration.service
 - Configuration can be set manually
 
+
 ## [1.7.1] - 2020-11-16
 
 ### Fixed
 - Cannot sort the table until a filter is applied
+
 
 ## [1.7.0] - 2020-10-27
 
@@ -161,7 +166,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.1...v1.8.0
 [1.7.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.5.7...v1.6.0

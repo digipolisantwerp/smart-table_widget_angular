@@ -19,11 +19,11 @@
             <label for="{{ 'checkbox--' + i + '--' + column.key }}">{{ column.label }}</label>
           </div>
           <div class="o-sort-buttons">
-            <button class="a-button a-button--small a-button--transparent has-icon" [disabled]="i === 0"
+            <button class="a-button-negative a-button--small has-icon" [disabled]="i === 0"
                     (click)="moveColumnUp(i)" [title]="labels.orderBefore">
               <span class="fa fa-angle-up"></span>
             </button>
-            <button class="a-button a-button--small a-button--transparent has-icon"
+            <button class="a-button-negative a-button--small has-icon"
                     [disabled]="i === (pendingColumnOperation$ | async)?.length -1" (click)="moveColumnDown(i)"
                     [title]="labels.orderAfter">
               <span class="fa fa-angle-down"></span>
