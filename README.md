@@ -69,7 +69,7 @@ SmartTableModule.withLabels
        },
        columnOrdering: {   // Optional
          orderBefore: 'Verplaats kolom naar voor',
-         orderAbove: 'Verplaats kolomn naar achter'
+         orderAfter: 'Verplaats kolomn naar achter'
        }
     }
   })
