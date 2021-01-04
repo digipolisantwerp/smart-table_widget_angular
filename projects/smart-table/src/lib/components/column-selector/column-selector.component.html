@@ -25,7 +25,6 @@
             </button>
             <button class="a-button a-button--small a-button--transparent has-icon"
                     [disabled]="i === (pendingColumnOperation$ | async)?.length -1" (click)="moveColumnDown(i)"
-                    aria-label="Sorteer kolomn naar onder"
                     [title]="labels.orderAfter">
               <span class="fa fa-angle-down"></span>
             </button>
