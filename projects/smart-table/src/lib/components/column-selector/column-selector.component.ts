@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
 import {combineLatest, merge, Observable, Subject} from 'rxjs';
-import {SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
+import {IOrderingLabels, SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
 import {filter, first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
@@ -25,7 +25,7 @@ export class TableColumnSelectorComponent implements OnInit {
   constructor(
     private configurationService: ConfigurationService,
     private flyoutService: FlyoutService,
-    @Inject(PROVIDE_SORT_LABELS) public labels) {
+    @Inject(PROVIDE_SORT_LABELS) public labels: IOrderingLabels) {
   }
 
   ngOnInit() {

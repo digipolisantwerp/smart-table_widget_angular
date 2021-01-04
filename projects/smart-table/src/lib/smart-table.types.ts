@@ -9,9 +9,14 @@ export interface IModuleConfig {
 }
 
 export interface ILabels {
-  sorting?: { sortAbove: string, sortUnderneath: string };
+  ordering?: IOrderingLabels;
   itemCounterLabel?: { singular: string, plural: string };
   itemsPerPageLabel?: { singular: string, plural: string };
+}
+
+export interface IOrderingLabels {
+  orderAbove: string;
+  orderUnderneath: string;
 }
 
 /**
@@ -68,7 +73,7 @@ export interface SmartTableColumnConfig {
   classList?: string[];
   sortPath: string;
   canHide?: boolean;
-  sortIndex?: number;
+  orderIndex?: number;
 }
 
 export enum SmartTableColumnType {

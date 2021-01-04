@@ -119,7 +119,7 @@ describe('Storage Service Test', () => {
         ...config,
         columns: [
           // It should not be replacing columns, but overriding existing properties
-          {key: 'a', someOtherKey: 'random', sortIndex: 1, order: 'desc'},
+          {key: 'a', someOtherKey: 'random', orderIndex: 1, order: 'desc'},
           {key: 'b'}
         ],
         options: {
