@@ -66,7 +66,7 @@ describe('TableColumnSelectorComponent', () => {
         }
       }));
       fixture.detectChanges();
-      const result$ = component.pendingColumnOperation$;
+      const result$ = component.columns$;
       expect(result$).toBeObservable(cold('----a', {
         a: [
           {key: 'b', orderIndex: 0},
@@ -77,7 +77,7 @@ describe('TableColumnSelectorComponent', () => {
     });
     it('should toggle column visibility', () => {
       mockColumns[0].visible = false; // A
-      mockColumns[2].visible = true; // C
+      mockColumns[2].visible = false; // C
       (configurationService.getConfiguration as SinonStub).returns(cold('----a', {
         a: {
           ...mockConfiguration,
@@ -85,36 +85,31 @@ describe('TableColumnSelectorComponent', () => {
         }
       }));
       fixture.detectChanges();
-      component.toggleColumnsVisibility$.next('a');
-      component.toggleColumnsVisibility$.next('c');
-      component.toggleColumnsVisibility$.next('b'); // All toggled, but all in different ways
-      fixture.detectChanges();
-      const result$ = component.pendingColumnOperation$;
-      expect(result$).toBeObservable(cold('----(aa)', {
-        a: [
-          {key: 'b', orderIndex: 0, visible: false},
-          {key: 'c', orderIndex: 1, visible: true},
-          {key: 'a', orderIndex: 2, visible: false}
-        ]
+      const result$ = component.toggleColumnVisibility('a');
+      expect(result$).toBeObservable(cold('----(a|)', {
+        a: {
+          ...mockConfiguration,
+          columns: [
+            {key: 'b', orderIndex: 0},
+            {key: 'c', orderIndex: 1, visible: false},
+            {key: 'a', orderIndex: 2, visible: true}
+          ]
+        }
       }));
     });
     it('should move a column by sort index', () => {
       (configurationService.getConfiguration as SinonStub).returns(cold('---a', {a: {...mockConfiguration}}));
       fixture.detectChanges();
-      component.updateSortIndexByKey$.next({oldIndex: 0, newIndex: 2});
-      fixture.detectChanges();
-      const result$ = component.pendingColumnOperation$;
-      expect(result$).toBeObservable(cold('---(ab)', {
-        a: [
-          {key: 'c', orderIndex: 0},
-          {key: 'a', orderIndex: 1},
-          {key: 'b', orderIndex: 2}
-        ],
-        b: [
-          {key: 'b', orderIndex: 0},
-          {key: 'c', orderIndex: 1},
-          {key: 'a', orderIndex: 2}
-        ]
+      const result$ = component.updateOrderIndex({oldIndex: 0, newIndex: 2});
+      expect(result$).toBeObservable(cold('---(a|)', {
+        a: {
+          ...mockConfiguration,
+          columns: [
+            {key: 'c', orderIndex: 0},
+            {key: 'a', orderIndex: 1},
+            {key: 'b', orderIndex: 2}
+          ],
+        }
       }));
     });
   });

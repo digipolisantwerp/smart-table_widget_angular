@@ -1,12 +1,11 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {ConfigurationService} from '../../services/configuration.service';
-import {combineLatest, merge, Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {IOrderingLabels, SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
-import {filter, first, map, shareReplay, switchMap, tap} from 'rxjs/operators';
-import {FlyoutService} from '@acpaas-ui/ngx-flyout';
+import {first, map} from 'rxjs/operators';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
-import {sortColumn} from '../../helper/helpers';
 import {PROVIDE_SORT_LABELS} from '../../providers/sort-labels.provider';
+import {sortColumn} from '../../helper/helpers';
 
 @Component({
   selector: 'aui-table-column-selector',
@@ -17,82 +16,69 @@ export class TableColumnSelectorComponent implements OnInit {
   @Input()
   instanceId: string;
   configuration$: Observable<SmartTableConfig>;
-
-  pendingColumnOperation$: Observable<SmartTableColumnConfig[]>;
-  toggleColumnsVisibility$ = new Subject<string>();
-  updateSortIndexByKey$ = new Subject<{ oldIndex: number, newIndex: number }>();
+  columns$: Observable<SmartTableColumnConfig[]>;
 
   constructor(
     private configurationService: ConfigurationService,
-    private flyoutService: FlyoutService,
     @Inject(PROVIDE_SORT_LABELS) public labels: IOrderingLabels) {
   }
 
   ngOnInit() {
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
-    this.pendingColumnOperation$ = merge(
-      this.configuration$.pipe(
-        filter(config => !!config && config.columns && !!config.columns.length),
-        map(config => [...config.columns.sort(sortColumn)])),
-      this.toggleColumnsVisibility$.pipe(
-        switchMap((key: string) => this.pendingColumnOperation$.pipe(
-          first(),
-          map(columns => {
-            const newColumns = [...columns];
-            const index = newColumns.findIndex(c => c.key === key);
-            if (index > -1) {
-              newColumns[index].visible = !(newColumns[index].visible !== false);
-            }
-            return newColumns;
-          })
-        ))
-      ),
-      this.updateSortIndexByKey$.pipe(
-        switchMap((payload) => this.pendingColumnOperation$.pipe(
-          first(),
-          map(c => {
-            const columns = [...c];
-            moveItemInArray(columns, payload.oldIndex, payload.newIndex);
-            return columns.map((item, orderIndex) => ({...item, orderIndex}));
-          })
-        ))
-      )
-    ).pipe(
-      map(columns => columns.sort(sortColumn)),
-      shareReplay(1)
+    this.columns$ = this.configuration$.pipe(
+      map(config => config.columns.sort(sortColumn))
     );
   }
 
-  applyChanges(): void {
-    combineLatest([
-      this.configuration$,
-      this.pendingColumnOperation$
-    ]).pipe(
+  updateOrderIndex(payload: { oldIndex: number, newIndex: number }): Observable<SmartTableConfig> {
+    return this.configuration$.pipe(
       first(),
-      map(([config, columns]): SmartTableConfig => {
+      map((c: SmartTableConfig) => {
+        const columns = [...c.columns.sort(sortColumn)];
+        moveItemInArray(columns, payload.oldIndex, payload.newIndex);
+        return {
+          ...c,
+          columns: columns
+            .map((item, orderIndex) => ({...item, orderIndex}))
+            .sort(sortColumn)
+        };
+      })
+    );
+  }
+
+  toggleColumnVisibility(key: string): Observable<SmartTableConfig> {
+    return this.configuration$.pipe(
+      first(),
+      map(config => {
+        const newColumns = [...config.columns];
+        const index = newColumns.findIndex(c => c.key === key);
+        if (index > -1) {
+          newColumns[index].visible = !(newColumns[index].visible !== false);
+        }
         return {
           ...config,
-          columns: (columns as SmartTableColumnConfig[])
+          columns: newColumns.sort(sortColumn)
         };
-      }),
-      // This operation will trigger a new configuration to be loaded, thus our pendingColumnOperations will be reset
-      // to the new configuration coming in. That's why we don't have to manually reset the observable.
-      tap((config: SmartTableConfig) => this.configurationService.setConfiguration(this.instanceId, config)),
-      tap(() => this.flyoutService.close())
-    ).subscribe();
+      })
+    );
+  }
+
+  toggleVisibilityHook(key: string): void {
+    this.toggleColumnVisibility(key)
+      .subscribe((config) => this.configurationService.setConfiguration(this.instanceId, config));
   }
 
   moveColumnUp(index: number): void {
-    this.updateSortIndexByKey$.next({
+    this.updateOrderIndex({
       oldIndex: index,
       newIndex: index - 1
-    });
+    }).subscribe(config => this.configurationService.setConfiguration(this.instanceId, config));
   }
 
   moveColumnDown(index: number): void {
-    this.updateSortIndexByKey$.next({
+    this.updateOrderIndex({
       oldIndex: index,
       newIndex: index + 1
-    });
+    }).subscribe(config => this.configurationService.setConfiguration(this.instanceId, config));
   }
 }
