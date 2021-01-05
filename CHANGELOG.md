@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Removed the 'apply' button when hiding/ordering columns. Changes are immediately reflected.
 
 ## [1.8.0] - 2021-01-04
 
