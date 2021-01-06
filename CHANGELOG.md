@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.8.1] - 2021-01-06
+
 ### Changed
 - Removed the 'apply' button when hiding/ordering columns. Changes are immediately reflected.
+
 
 ## [1.8.0] - 2021-01-04
 
@@ -168,7 +172,8 @@ All notable changes to this project will be documented in this file.
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.1...v1.8.0
 [1.7.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.6.0...v1.7.0
