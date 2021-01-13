@@ -28,10 +28,8 @@ import {
   skip,
   startWith,
   switchMap,
-  take,
   takeUntil,
-  tap,
-  withLatestFrom
+  tap
 } from 'rxjs/operators';
 import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../../services/table.factory';
@@ -180,10 +178,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       tap(config => this.configurationChanged.next(config))
     ).subscribe();
 
-    this.orderBy$ = this.configuration$.pipe(
-      map(config => (config && config.options && config.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
-    );
-
     // Set up persistence hook
     this.configuration$.pipe(
       takeUntil(this.destroy$),
@@ -235,17 +229,20 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       switchMap(([genericFilter, optionalFilter, visibleFilter]: [SmartTableFilter | any, SmartTableFilter[], SmartTableFilter[]]) =>
         merge(...[genericFilter, ...optionalFilter, ...visibleFilter].map(f => f.valueChanges$))),
       takeUntil(this.destroy$),
-      withLatestFrom(this.configuration$),
-      map(([value, configuration]: [UpdateFilterArgs, SmartTableConfig]) => {
-        this.currentPage$.next(1);
-        if (configuration.options && configuration.options.resetSortOrderOnFilter) {
-          this.onOrderBy((configuration.options && configuration.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder);
-        }
-        return value;
-      }),
+      tap(() => this.currentPage$.next(1)),
       share(),
     );
 
+    this.orderBy$ = combineLatest([
+      this.onFilterChanged$.pipe(startWith(undefined)),
+      this.configuration$
+    ]).pipe(
+      filter(([filterChanged, configuration]: [SmartTableFilter, SmartTableConfig]) =>
+        !!filterChanged ? configuration.options && configuration.options.resetSortOrderOnFilter === true : true),
+      map(values => values[1]),
+      map(config => (config && config.options && config.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
+      tap(console.log)
+    );
     /**
      * Active filters is an array of all the filters (with their values)
      * that are applied on the table at the moment. The array will be empty
@@ -357,19 +354,17 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.rowClicked.emit(row);
   }
 
-  public onOrderBy(orderBy: OrderBy) {
+  public onOrderBy(orderBy: OrderBy): void {
     this.configuration$.pipe(
-      take(1),
-      map(config => {
-        return {
-          ...config,
-          options: {
-            ...config.options,
-            defaultSortOrder: orderBy
-          }
-        };
-      }),
-      tap(config => this.configurationService.setConfiguration(this.instanceId, config))
+      first(),
+      map(config => ({
+        ...config,
+        options: {
+          ...config.options,
+          defaultSortOrder: orderBy
+        }
+      })),
+      tap(configuration => this.configurationService.setConfiguration(this.instanceId, configuration))
     ).subscribe();
   }
 
