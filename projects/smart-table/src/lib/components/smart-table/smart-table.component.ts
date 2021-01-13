@@ -241,7 +241,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         !!filterChanged ? configuration.options && configuration.options.resetSortOrderOnFilter === true : true),
       map(values => values[1]),
       map(config => (config && config.options && config.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
-      tap(console.log)
     );
     /**
      * Active filters is an array of all the filters (with their values)
