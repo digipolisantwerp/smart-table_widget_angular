@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+### Added
+- 'configurationChanged' output that emits the latest configuration. This is a read only property.
 
 ## [1.8.1] - 2021-01-06
 

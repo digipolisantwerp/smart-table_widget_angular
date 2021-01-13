@@ -6,7 +6,8 @@
       [columnTypes]="moviesCustomColumns"
       [configuration]="customConfiguration"
       (rowClicked)="onRowClicked($event)"
-      (filter)="filterChanged($event)">
+      (filter)="filterChanged($event)"
+      (configurationChanged)="logConfig($event)">
     </aui-smart-table>
   </div>
 </main>

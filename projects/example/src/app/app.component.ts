@@ -41,4 +41,8 @@ export class AppComponent {
   filterChanged(event) {
     console.log('Filter changed:', event);
   }
+
+  logConfig(config: SmartTableConfig) {
+    console.log('Configuration:', config);
+  }
 }

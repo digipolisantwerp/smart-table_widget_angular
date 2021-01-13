@@ -56,6 +56,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.customConfiguration$.next(value);
   }
 
+  @Output()
+  configurationChanged = new EventEmitter<SmartTableConfig>();
+
   /** fires when the user selects a row */
   @Output()
   rowClicked = new EventEmitter<any>();
@@ -171,6 +174,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       storageCallback: (config) => of(this.storageService.getConfiguration(config)),
     });
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
+    this.configuration$.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      tap(config => this.configurationChanged.next(config))
+    ).subscribe();
 
     this.orderBy$ = this.configuration$.pipe(
       map(config => (config && config.options && config.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
