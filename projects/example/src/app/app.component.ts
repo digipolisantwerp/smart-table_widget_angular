@@ -30,7 +30,8 @@ export class AppComponent {
         moreFilters: 'Extra filters',
         export: 'Exporteer',
         apply: 'Toepassen',
-      }
+      },
+      resetSortOrderOnFilter: false
     }
   };
 

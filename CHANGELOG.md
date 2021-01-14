@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Fixed missing dependency @angular/cdk in package.json
+- Fixed infinite loop issue when `resetSortOrderOnFilter` option is set to true in config
+
 ## [1.9.0] - 2021-01-13
 
 ### Added
