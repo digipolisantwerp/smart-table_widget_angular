@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- Fixed broken filters when there is no generic filter
 - Fixed missing dependency @angular/cdk in package.json
 - Fixed infinite loop issue when `resetSortOrderOnFilter` option is set to true in config
 
