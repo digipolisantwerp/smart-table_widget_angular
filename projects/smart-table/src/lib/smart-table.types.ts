@@ -7,6 +7,10 @@ export interface IModuleConfig {
   storageType?: LocalStorageType;
   identifier?: string;
   labels?: ILabels;
+  options?: {
+    useLowerCaseQueryParams?: boolean,
+    noConfigApiCall?: boolean
+  };
 }
 
 export interface ILabels {

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Added
+
+- `useLowerCaseQueryParams` option in the module configuration. When set to true, all calls will use all
+  lower case query parameters. This is required for some APIs.
+  
+- `noConfigApiCall`: option in the module configuration. When set to true, the smart table
+won't make any /config calls, so that configuration and setup may be provided entirely in the frontend.
+  
+
 ## [1.9.1] - 2021-01-15
 
 ### Fixed
