@@ -25,6 +25,10 @@ import {PROVIDE_SORT_LABELS} from './providers/sort-labels.provider';
 const defaultConfiguration: IModuleConfig = {
   storageType: 'localStorage',
   identifier: 'aui-smart-table',
+  options: {
+    useLowerCaseQueryParams: false,
+    noConfigApiCall: false
+  }
 };
 
 const defaultLabels: ILabels = {

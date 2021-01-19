@@ -1,14 +1,14 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import * as queryString from 'query-string';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 
-import {SmartTableConfig, SmartTableDataQuery} from '../smart-table.types';
+import {IModuleConfig, SmartTableConfig, SmartTableDataQuery} from '../smart-table.types';
 import {first, map} from 'rxjs/operators';
 import {SMARTTABLE_DEFAULT_OPTIONS} from '../components/smart-table/smart-table.defaults';
-import {PROVIDE_ID} from '../providers/indentifier.provider';
+import {PROVIDE_CONFIG, PROVIDE_ID} from '../providers/indentifier.provider';
 
 const EXCEL_EXTENSION = '.xlsx';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -16,14 +16,22 @@ const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.
 @Injectable()
 export class ApiService {
 
-  constructor(private http: HttpClient, @Inject(PROVIDE_ID) private storageIdentifier: string) {
+  constructor(private http: HttpClient,
+              @Inject(PROVIDE_ID) private storageIdentifier: string,
+              @Inject(PROVIDE_CONFIG) private moduleConfig: IModuleConfig) {
   }
 
   public getConfiguration(apiUrl: string, headers?: HttpHeaders): Observable<any> {
     if (!headers) {
       headers = new HttpHeaders();
     }
-    return this.http.get(`${apiUrl}/config`, {headers}).pipe(
+    return (this.moduleConfig.options && this.moduleConfig.options.noConfigApiCall === true ? of({
+        columns: [],
+        filters: [],
+        baseFilters: [],
+        options: {}
+      })
+      : this.http.get(`${apiUrl}/config`, {headers})).pipe(
       first(),
       map((configuration: SmartTableConfig) => {
         // Start of with default options and override
@@ -60,10 +68,11 @@ export class ApiService {
     if (!headers) {
       headers = new HttpHeaders();
     }
-    const queryParams = queryString.stringify({
-      page,
-      pageSize
-    });
+    const queryParams = queryString.stringify(
+      this.moduleConfig && this.moduleConfig.options && this.moduleConfig.options.useLowerCaseQueryParams === true ? {
+        page,
+        pagesize: pageSize
+      } : {page, pageSize});
     headers = headers.set('Content-Type', 'application/json');
     return this.http.post(`${apiUrl}${queryParams ? `?${queryParams}` : ''}`,
       JSON.stringify(dataQuery),

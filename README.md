@@ -71,6 +71,10 @@ SmartTableModule.withLabels
          orderBefore: 'Verplaats kolom naar voor',
          orderAfter: 'Verplaats kolomn naar achter'
        }
+    },
+    options: {
+      useLowerCaseQueryParams: true,    // Some APIs require all lower case query params
+      noConfigApiCall: false    // Skip the /config call and provide all config in the frontend
     }
   })
 ```
