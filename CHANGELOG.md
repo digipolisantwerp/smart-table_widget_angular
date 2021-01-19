@@ -4,14 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## Added
 
+## [1.10.0] - 2021-01-19
+
+## Added
 - `useLowerCaseQueryParams` option in the module configuration. When set to true, all calls will use all
   lower case query parameters. This is required for some APIs.
-  
 - `noConfigApiCall`: option in the module configuration. When set to true, the smart table
 won't make any /config calls, so that configuration and setup may be provided entirely in the frontend.
-  
+
 
 ## [1.9.1] - 2021-01-15
 
@@ -192,7 +193,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.0...v1.8.1
