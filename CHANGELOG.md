@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 won't make any /config calls, so that configuration and setup may be provided entirely in the frontend.
   
 
+## [1.9.1] - 2021-01-15
+
 ### Fixed
 - Fixed broken filters when there is no generic filter
 - Fixed missing dependency @angular/cdk in package.json
@@ -190,7 +192,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.7.1...v1.8.0
