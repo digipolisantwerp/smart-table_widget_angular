@@ -94,6 +94,11 @@ class YourComponent {
 
 Every value in the backing list must have a unique id.
 
+### Module configuration
+- **options.useLowerCaseQueryParams**: (default false) If true, will parse query params to all lower case vaules (if any). Some api's cannot handle camelcase or uppercase parameters, thus this option enables flexibility.
+- **options.noConfigApiCall**: (default false). By default the Smart Table will query `/config` to get default setup configuration. Setting this option to true will enable the component to 
+parse frontend-only configuration by setting the *configuration* attribute on the component, without making backend config calls.
+
 ### Supported attributes
 
 - **apiUrl**: the URL of the back-end service feeding this widget
