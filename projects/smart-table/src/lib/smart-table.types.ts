@@ -9,7 +9,8 @@ export interface IModuleConfig {
   labels?: ILabels;
   options?: {
     useLowerCaseQueryParams?: boolean,
-    noConfigApiCall?: boolean
+    noConfigApiCall?: boolean,
+    noExport?: boolean
   };
 }
 

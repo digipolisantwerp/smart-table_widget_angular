@@ -74,7 +74,8 @@ SmartTableModule.withLabels
     },
     options: {
       useLowerCaseQueryParams: true,    // Some APIs require all lower case query params
-      noConfigApiCall: false    // Skip the /config call and provide all config in the frontend
+      noConfigApiCall: false,    // Skip the /config call and provide all config in the frontend
+      noExport: false // If true hides the export button
     }
   })
 ```
@@ -98,6 +99,7 @@ Every value in the backing list must have a unique id.
 - **options.useLowerCaseQueryParams**: (default false) If true, will parse query params to all lower case vaules (if any). Some api's cannot handle camelcase or uppercase parameters, thus this option enables flexibility.
 - **options.noConfigApiCall**: (default false). By default the Smart Table will query `/config` to get default setup configuration. Setting this option to true will enable the component to 
 parse frontend-only configuration by setting the *configuration* attribute on the component, without making backend config calls.
+  - **options.noExport**: If true, hides the export button
 
 ### Supported attributes
 

@@ -27,7 +27,8 @@ const defaultConfiguration: IModuleConfig = {
   identifier: 'aui-smart-table',
   options: {
     useLowerCaseQueryParams: false,
-    noConfigApiCall: false
+    noConfigApiCall: false,
+    noExport: false
   }
 };
 
