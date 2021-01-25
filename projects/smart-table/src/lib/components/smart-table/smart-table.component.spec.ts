@@ -12,7 +12,7 @@ import * as sinon from 'sinon';
 import {SinonSandbox, SinonStub} from 'sinon';
 import {DatePipe} from '@angular/common';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
-import {PROVIDE_ID} from '../../providers/indentifier.provider';
+import {PROVIDE_CONFIG, PROVIDE_ID} from '../../providers/indentifier.provider';
 import {TableFactory} from '../../services/table.factory';
 import {SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay} from '../../smart-table.types';
 import {cold} from 'jasmine-marbles';
@@ -79,6 +79,10 @@ describe('Smart Table Test', () => {
         {
           provide: StorageService,
           useValue: sinon.createStubInstance(StorageService)
+        },
+        {
+          provide: PROVIDE_CONFIG,
+          useValue: {}
         }
       ]
     }).compileComponents();

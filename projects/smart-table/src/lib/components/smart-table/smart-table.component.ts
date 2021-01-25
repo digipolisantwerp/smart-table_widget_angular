@@ -2,10 +2,11 @@ import {OrderBy, TableColumn} from '@acpaas-ui/ngx-table';
 import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
 import {FlyoutService} from '@acpaas-ui/ngx-flyout';
 import {DatePipe} from '@angular/common';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
 import {
+  IModuleConfig,
   SmartTableColumnCustomType,
   SmartTableConfig,
   SmartTableDataQuery,
@@ -38,6 +39,7 @@ import {selectFilters} from '../../selectors/smart-table.selectors';
 import {ConfigurationService} from '../../services/configuration.service';
 import {StorageService} from '../../services/storage.service';
 import {ApiService} from '../../services/api.service';
+import {PROVIDE_CONFIG} from '../../providers/indentifier.provider';
 
 @Component({
   selector: 'aui-smart-table',
@@ -131,7 +133,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     private localstorageService: LocalstorageService,
     private factory: TableFactory,
     private configurationService: ConfigurationService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    @Inject(PROVIDE_CONFIG) public moduleConfig: IModuleConfig
   ) {
     this.rowsLoading = true;
     this.pageChanging = false;
