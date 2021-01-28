@@ -14,7 +14,6 @@ export class SmartTableFilter extends Filter {
 
   constructor(_config: SmartTableFilterConfig) {
     super();
-    console.log(_config);
     this.id = _config.id;
     this.type = _config.type;
     this.fields = _config.fields ? [..._config.fields] : [_config.field];

@@ -3,7 +3,7 @@
     <label class="a-input__label" [for]="id">{{ filter.label }}</label>
     <div class="a-input__wrapper">
       <aui-search-filter size="small" [formControl]="formControl" [id]="id" name="filter-{{ filter.id }}"
-                         [placeholder]="filter.placeholder" [choices]="filter.options" loading="true" [(ngModel)]="filter.selectedItems"
+                         [placeholder]="filter.placeholder" [choices]="filter.options" [(ngModel)]="filter.selectedItems"
                          [showAllByDefault]="true"></aui-search-filter>
     </div>
   </div>
