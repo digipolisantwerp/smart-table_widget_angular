@@ -51,7 +51,7 @@ app.get('/api/movies/config', (req, res) => {
   for (let i = 1900; i <= new Date().getFullYear(); i++) {
     dates.push({
       label: i.toString(),
-      value: i.toString(),
+      value: i.toString()
     });
   }
 
@@ -112,7 +112,7 @@ app.get('/api/movies/config', (req, res) => {
       "display": "optional",
       "type": "search-filter",
       "options": dates,
-      "selectedItems": ["1900"],
+      "value": ["1900", "1901"],
       "operator": "in",
       "label": "Jaren",
       "field": "title_year",

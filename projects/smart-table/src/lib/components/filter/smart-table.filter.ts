@@ -7,7 +7,6 @@ export class SmartTableFilter extends Filter {
   fields: string[];
   operator?: SmartTableFilterOperator;
   label: string;
-  selectedItems: any[];
   placeholder?: string;
   disabled: boolean;
   valueChanges$: Observable<UpdateFilterArgs> = new Subject<UpdateFilterArgs>();
@@ -21,7 +20,6 @@ export class SmartTableFilter extends Filter {
     this.label = _config.label;
     this.placeholder = _config.placeholder;
     this.options = _config.options;
-    this.selectedItems = _config.selectedItems;
     this.value = _config.value;
   }
 }

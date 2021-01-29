@@ -123,7 +123,6 @@ export interface SmartTableFilterConfig {
   display?: SmartTableFilterDisplay;
   label: string;
   options?: any[];            // Currently applies only to filters of type 'Select'
-  selectedItems?: any[];
   placeholder?: string;
   value?: string | any[];      // See ACPaaS Filter class
 }
