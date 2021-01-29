@@ -112,7 +112,6 @@ app.get('/api/movies/config', (req, res) => {
       "display": "optional",
       "type": "search-filter",
       "options": dates,
-      "value": ["1900", "1901"],
       "operator": "in",
       "label": "Jaren",
       "field": "title_year",
