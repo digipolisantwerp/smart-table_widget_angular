@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.11.1] - 2021-02-02
+
 ## Fixed
 - Select filter - Don't set the defaultSelection to the placeholder when a value is set
+
 
 ## [1.11.0] - 2021-01-25
 
@@ -201,7 +205,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.1...HEAD
+[1.11.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.10.1...v1.11.0
 [1.10.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.0...v1.9.1
