@@ -106,6 +106,7 @@ app.get('/api/movies/config', (req, res) => {
       "options": GENRES.split('|').map((v) => ({id: v, label: v})),
       "label": "Genre",
       "field": "genres",
+      "value": GENRES.split('|')[0],
       "placeholder": "All Genres"
     }, {
       "id": "years",
