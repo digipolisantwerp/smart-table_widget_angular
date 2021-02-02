@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Fixed
+- Select filter - Don't set the defaultSelection to the placeholder when a value is set
 
 ## [1.11.0] - 2021-01-25
 
