@@ -5,21 +5,27 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.11.2] - 2021-02-05
+
+### Fixed
+- Fixed an issue with setting a default value for a datepicker filter
+
+
 ## [1.11.1] - 2021-02-02
 
-## Fixed
+### Fixed
 - Select filter - Don't set the defaultSelection to the placeholder when a value is set
 
 
 ## [1.11.0] - 2021-01-25
 
-## Added
+### Added
 - `noExport` option in the module configuration, which can hide the export button
 
 
 ## [1.10.0] - 2021-01-19
 
-## Added
+### Added
 - `useLowerCaseQueryParams` option in the module configuration. When set to true, all calls will use all
   lower case query parameters. This is required for some APIs.
 - `noConfigApiCall`: option in the module configuration. When set to true, the smart table
@@ -33,10 +39,12 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Fixed missing dependency @angular/cdk in package.json
 - Fixed infinite loop issue when `resetSortOrderOnFilter` option is set to true in config
 
+
 ## [1.9.0] - 2021-01-13
 
 ### Added
 - 'configurationChanged' output that emits the latest configuration. This is a read only property.
+
 
 ## [1.8.1] - 2021-01-06
 
@@ -205,7 +213,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.2...HEAD
+[1.11.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.10.1...v1.11.0
 [1.10.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.9.1...v1.10.0
