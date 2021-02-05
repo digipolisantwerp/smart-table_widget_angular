@@ -20,6 +20,7 @@ import {TableSearchFilterComponent} from '../table-search-filter/table-search-fi
 import {TableColumnSelectorComponent} from '../column-selector/column-selector.component';
 import {ConfigurationService} from '../../services/configuration.service';
 import {StorageService} from '../../services/storage.service';
+import {FlyoutService} from "@acpaas-ui/ngx-flyout";
 
 describe('Smart Table Test', () => {
   let component: SmartTableComponent;
@@ -55,6 +56,9 @@ describe('Smart Table Test', () => {
         {
           provide: TableFactory,
           useValue: sinon.createStubInstance(TableFactory)
+        }, {
+          provide: FlyoutService,
+          useValue: sinon.createStubInstance(FlyoutService)
         },
         {
           provide: ApiService,
