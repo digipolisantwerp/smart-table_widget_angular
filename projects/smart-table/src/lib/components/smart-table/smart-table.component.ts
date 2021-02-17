@@ -178,7 +178,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       storageCallback: (config) => of(this.storageService.getConfiguration(config)),
     });
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
-    this.configuration$.pipe(take(2), tap(config => {
+    this.configuration$.pipe(take(2), skip(1), tap(config => {
       this.initialConfiguration = config;
     })).subscribe();
     this.configuration$.pipe(
