@@ -255,9 +255,23 @@ export class SmartTableComponent implements OnInit, OnDestroy {
      */
     this.activeFilters$ = this.onFilterChanged$.pipe(
       takeUntil(this.destroy$),
-      tap(filters => {
+      withLatestFrom(this.configuration$),
+      tap(([filters, config]) => {
         this.filters = filters;
+        if (config.options && config.options.resetSortOrderOnFilter === true) {
+          // reset sortOrder
+          config = {
+            ...config,
+            options: {
+              ...config.options,
+              defaultSortOrder: this.initialConfiguration.options.defaultSortOrder
+            },
+            filters: this.filters || config.filters
+          };
+          this.configurationService.setConfiguration(this.instanceId, config);
+        }
       }),
+      map(values => values[0]),
       scan((accumulator: SmartTableFilter[], update: UpdateFilterArgs) => {
         const index = accumulator.findIndex(f => f.id === update.filter.id);
         if (index < 0 && !!update.value && !!update.value.length) {
@@ -269,23 +283,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }
         return accumulator;
       }, []),
-      withLatestFrom(this.configuration$),
-      tap(([filters, config]) => {
-          if (config.options && config.options.resetSortOrderOnFilter === true) {
-            // reset sortOrder
-            config = {
-              ...config,
-              options: {
-                ...config.options,
-                defaultSortOrder: this.initialConfiguration.options.defaultSortOrder
-              },
-              filters: this.filters || config.filters
-            };
-            this.configurationService.setConfiguration(this.instanceId, config);
-          }
+      tap(filters => {
           this.filter.next(filters);
       }),
-      map(values => values[0]),
       startWith([])
     );
     // Build up the data query based on the different filters

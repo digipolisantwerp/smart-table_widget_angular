@@ -31,7 +31,7 @@ export class AppComponent {
         export: 'Exporteer',
         apply: 'Toepassen',
       },
-      resetSortOrderOnFilter: false
+      resetSortOrderOnFilter: true
     }
   };
 
