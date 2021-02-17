@@ -21,16 +21,16 @@ import {
   catchError,
   distinctUntilChanged,
   filter,
-  first,
+  first, last,
   map,
   scan,
   share,
   shareReplay,
   skip,
   startWith,
-  switchMap,
+  switchMap, take,
   takeUntil,
-  tap
+  tap, withLatestFrom
 } from 'rxjs/operators';
 import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../../services/table.factory';
@@ -106,6 +106,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public rows$: Observable<Array<any>>;
   public error$: Observable<HttpErrorResponse>;
 
+  private initialConfiguration;
+  private filters;
+
   /** @internal */
   orderBy$: Observable<OrderBy>;
   /** @internal */
@@ -175,6 +178,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       storageCallback: (config) => of(this.storageService.getConfiguration(config)),
     });
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
+    this.configuration$.pipe(take(2), tap(config => {
+      this.initialConfiguration = config;
+    })).subscribe();
     this.configuration$.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
@@ -238,13 +244,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       share(),
     );
 
-    this.orderBy$ = combineLatest([
-      this.onFilterChanged$.pipe(startWith(undefined)),
-      this.configuration$
-    ]).pipe(
-      filter(([filterChanged, configuration]: [SmartTableFilter, SmartTableConfig]) =>
-        !!filterChanged ? configuration.options && configuration.options.resetSortOrderOnFilter === true : true),
-      map(values => values[1]),
+    // let lastFilter;
+    this.orderBy$ = this.configuration$.pipe(
       map(config => (config && config.options && config.options.defaultSortOrder) || SMARTTABLE_DEFAULT_OPTIONS.defaultSortOrder),
     );
     /**
@@ -254,6 +255,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
      */
     this.activeFilters$ = this.onFilterChanged$.pipe(
       takeUntil(this.destroy$),
+      tap(filters => {
+        this.filters = filters;
+      }),
       scan((accumulator: SmartTableFilter[], update: UpdateFilterArgs) => {
         const index = accumulator.findIndex(f => f.id === update.filter.id);
         if (index < 0 && !!update.value && !!update.value.length) {
@@ -265,7 +269,23 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         }
         return accumulator;
       }, []),
-      tap(filters => this.filter.next(filters)),
+      withLatestFrom(this.configuration$),
+      tap(([filters, config]) => {
+          if (config.options && config.options.resetSortOrderOnFilter === true) {
+            // reset sortOrder
+            config = {
+              ...config,
+              options: {
+                ...config.options,
+                defaultSortOrder: this.initialConfiguration.options.defaultSortOrder
+              },
+              filters: this.filters || config.filters
+            };
+            this.configurationService.setConfiguration(this.instanceId, config);
+          }
+          this.filter.next(filters);
+      }),
+      map(values => values[0]),
       startWith([])
     );
     // Build up the data query based on the different filters
@@ -366,7 +386,8 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         options: {
           ...config.options,
           defaultSortOrder: orderBy
-        }
+        },
+        filters: this.filters || config.filters
       })),
       tap(configuration => this.configurationService.setConfiguration(this.instanceId, configuration))
     ).subscribe();

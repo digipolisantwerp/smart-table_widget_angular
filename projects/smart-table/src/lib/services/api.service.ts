@@ -65,6 +65,7 @@ export class ApiService {
   public getData(
     apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page?: number, pageSize?: number
   ): Observable<any> {
+    console.log("Dataquery: ", dataQuery);
     if (!headers) {
       headers = new HttpHeaders();
     }

@@ -136,6 +136,9 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 function getDataFromRequest(req) {
   const body = req.body || {};
+  console.log("-------------------------------", (new Date()).toISOString());
+  console.log(req.body);
+  console.log("-------------------------------");
 
   let response = movies.slice();
 
