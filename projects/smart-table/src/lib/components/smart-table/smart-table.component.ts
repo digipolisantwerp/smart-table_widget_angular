@@ -21,16 +21,18 @@ import {
   catchError,
   distinctUntilChanged,
   filter,
-  first, last,
+  first,
   map,
   scan,
   share,
   shareReplay,
   skip,
   startWith,
-  switchMap, take,
+  switchMap,
+  take,
   takeUntil,
-  tap, withLatestFrom
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
 import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {TableFactory} from '../../services/table.factory';
@@ -178,9 +180,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       storageCallback: (config) => of(this.storageService.getConfiguration(config)),
     });
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
-    this.configuration$.pipe(take(2), skip(1), tap(config => {
-      this.initialConfiguration = config;
-    })).subscribe();
+    this.configuration$.pipe(
+      take(2),
+      skip(1),
+      tap(config => {
+        this.initialConfiguration = config;
+      })
+    ).subscribe();
     this.configuration$.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
@@ -284,7 +290,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         return accumulator;
       }, []),
       tap(filters => {
-          this.filter.next(filters);
+        this.filter.next(filters);
       }),
       startWith([])
     );
