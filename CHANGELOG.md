@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.11.4] - 2021-02-22
+
+### Fixed
+- Fixed an issue where a filter was visually reset while it was still active
+- Fixed an issue where a filter was only visually working
+
+
 ## [1.11.3] - 2021-02-05
 
 ### Fixed
@@ -219,7 +226,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.3...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.4...HEAD
+[1.11.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.0...v1.11.1
