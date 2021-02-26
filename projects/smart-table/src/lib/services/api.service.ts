@@ -52,7 +52,7 @@ export class ApiService {
             ...config,
             options: {
               ...config.options,
-              storageIdentifier: this.storageIdentifier
+              storageIdentifier: config.options.storageIdentifier || this.storageIdentifier
             }
           };
         } else {
