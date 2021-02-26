@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - `options.columnDateFormat` and `options.columnDateTimeFormat` were ignored
+- `options.storageIdentifier` was ignored if provided from server config
 
 ## [1.11.4] - 2021-02-22
 
