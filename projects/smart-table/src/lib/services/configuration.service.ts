@@ -65,7 +65,7 @@ export class ConfigurationService {
       map((config: SmartTableConfig) =>
         config.columns
           .sort(sortColumn)
-          .map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes)))
+          .map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes, config.options)))
     );
   }
 }
