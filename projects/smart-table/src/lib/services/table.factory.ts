@@ -39,7 +39,7 @@ export class TableFactory {
         switch (columnConfig.type) {
           case SmartTableColumnType.DateTime: {
             column.format = value => {
-              if (this.isValidISODate(value)) {
+              if (typeof value !== 'string' || this.isValidISODate(value)) {
                 return this.datePipe.transform(value, (options && options.columnDateTimeFormat) || 'dd/MM/yyyy - hh:mm');
               }
               return '';
@@ -48,7 +48,7 @@ export class TableFactory {
           }
           case SmartTableColumnType.Date: {
             column.format = value => {
-              if (this.isValidDate(value) || this.isValidISODate(value)) {
+              if (typeof value !== 'string' || this.isValidDate(value) || this.isValidISODate(value)) {
                 return this.datePipe.transform(value, (options && options.columnDateFormat) || 'dd/MM/yyyy');
               }
               return '';
