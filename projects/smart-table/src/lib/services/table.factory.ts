@@ -38,17 +38,36 @@ export class TableFactory {
       } else {
         switch (columnConfig.type) {
           case SmartTableColumnType.DateTime: {
-            column.format = value => this.datePipe.transform(value, (options && options.columnDateTimeFormat) || 'dd/MM/yyyy - hh:mm');
+            column.format = value => {
+              if (this.isValidISODate(value)) {
+                return this.datePipe.transform(value, (options && options.columnDateTimeFormat) || 'dd/MM/yyyy - hh:mm');
+              }
+              return '';
+            };
             break;
           }
           case SmartTableColumnType.Date: {
-            column.format = value => this.datePipe.transform(value, (options && options.columnDateFormat) || 'dd/MM/yyyy');
+            column.format = value => {
+              if (this.isValidDate(value) || this.isValidISODate(value)) {
+                return this.datePipe.transform(value, (options && options.columnDateFormat) || 'dd/MM/yyyy');
+              }
+              return '';
+            };
             break;
           }
         }
       }
     }
     return column;
+  }
+
+
+  isValidDate(dateStr: string): boolean {
+    return /^\d{4}[-]\d{2}[-]\d{2}$/.test(dateStr);
+  }
+
+  isValidISODate(dateStr: string): boolean {
+    return /^\d{4}[-]\d{2}[-]\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(dateStr);
   }
 
   createSmartFilterFromConfig(filterConfig: SmartTableFilterConfig): SmartTableFilter {

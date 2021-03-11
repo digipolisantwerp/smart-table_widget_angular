@@ -1,5 +1,6 @@
 li {
   display: flex;
+  word-break: break-all;
   .a-input {
     flex: 1;
   }
