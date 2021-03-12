@@ -4,11 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [1.12.0] - 2021-03-12
+
+### Added
+- Added date-check when formatting date(Time) columns
+
+### Fixed
+- Added styling to handle very long column names
+
+
 ## [1.11.5] - 2021-02-26
 
 ### Fixed
 - `options.columnDateFormat` and `options.columnDateTimeFormat` were ignored
 - `options.storageIdentifier` was ignored if provided from server config
+
 
 ## [1.11.4] - 2021-02-22
 
@@ -231,7 +242,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.5...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.5...v1.12.0
 [1.11.5]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.2...v1.11.3
