@@ -1,10 +1,21 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks';
+
 li {
   display: flex;
+  hyphens: auto;
+  padding: 0;
+  word-break: break-all;
+
   .a-input {
     flex: 1;
-  }
-}
 
-.o-sort-buttons {
-  display: flex;
+    &.a-input__checkbox:not(:last-child) {
+      margin-top: $spacer / 4;
+    }
+  }
+
+  button:focus {
+    position: relative;
+    z-index: 1;
+  }
 }

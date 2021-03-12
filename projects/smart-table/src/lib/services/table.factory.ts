@@ -38,11 +38,27 @@ export class TableFactory {
       } else {
         switch (columnConfig.type) {
           case SmartTableColumnType.DateTime: {
-            column.format = value => this.datePipe.transform(value, (options && options.columnDateTimeFormat) || 'dd/MM/yyyy - hh:mm');
+            column.format = value => {
+              let returnValue;
+              try {
+                returnValue = this.datePipe.transform(value, (options && options.columnDateTimeFormat) || 'dd/MM/yyyy - hh:mm');
+              } catch (err) {
+                returnValue = '';
+              }
+              return returnValue;
+            };
             break;
           }
           case SmartTableColumnType.Date: {
-            column.format = value => this.datePipe.transform(value, (options && options.columnDateFormat) || 'dd/MM/yyyy');
+            column.format = value => {
+              let returnValue;
+              try {
+                returnValue = this.datePipe.transform(value, (options && options.columnDateFormat) || 'dd/MM/yyyy');
+              } catch (err) {
+                returnValue = '';
+              }
+              return returnValue;
+            };
             break;
           }
         }
