@@ -3,9 +3,8 @@
 li {
   display: flex;
   hyphens: auto;
-  overflow-wrap: break-word;
   padding: 0;
-  word-wrap: break-all;
+  word-break: break-all;
 
   .a-input {
     flex: 1;
