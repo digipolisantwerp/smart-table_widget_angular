@@ -1,8 +1,12 @@
 li {
   display: flex;
-  word-break: break-all;
+
   .a-input {
     flex: 1;
+
+    label {
+      hyphens: auto;
+    }
   }
 }
 
