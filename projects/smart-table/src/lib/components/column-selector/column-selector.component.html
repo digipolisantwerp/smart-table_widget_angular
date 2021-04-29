@@ -7,8 +7,8 @@
   </button>
 
   <div auiFlyoutZone>
-    <div class="u-margin-xs">
-      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-margin-bottom-xs u-text-left">
+    <div class="u-margin-left-xs u-margin-top-xs">
+      <ul class="a-list a-list--reset aui-smart-table__column-checklist u-text-left">
         <li class="a-list__item"
             *ngFor="let column of (configuration$ | async)?.columns; index as i">
           <div class="a-input a-input__checkbox">
