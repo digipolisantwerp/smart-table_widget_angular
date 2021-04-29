@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.12.1] - 2021-04-29
+
+### Fixed
+- Fixed layout of column selector layout when there's a large amount of columns
+
+
 ## [1.12.0] - 2021-03-12
 
 ### Added
@@ -242,7 +248,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.1...HEAD
+[1.12.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.5...v1.12.0
 [1.11.5]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.3...v1.11.4
