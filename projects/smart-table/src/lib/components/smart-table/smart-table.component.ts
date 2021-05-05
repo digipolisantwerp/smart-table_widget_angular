@@ -240,7 +240,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.visibleFilters$,
     ]).pipe(
       takeUntil(this.destroy$),
-      switchMap(([genericFilter, optionalFilter, visibleFilter]: [SmartTableFilter | any, SmartTableFilter[], SmartTableFilter[]]) => {
+      switchMap(([genericFilter, optionalFilter, visibleFilter]: [SmartTableFilter, SmartTableFilter[], SmartTableFilter[]]) => {
         // Map to all the valueChanges$ observables of every filters
         const observables = [genericFilter, ...optionalFilter, ...visibleFilter].filter(f => !!f).map(f => f.valueChanges$);
         return merge(...observables);
