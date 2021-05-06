@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   SmartTableColumnConfig,
   SmartTableColumnCustomType,
@@ -6,9 +6,9 @@ import {
   SmartTableFilterConfig,
   SmartTableOptions
 } from '../smart-table.types';
-import {TableColumn} from '@acpaas-ui/ngx-table';
-import {DatePipe} from '@angular/common';
-import {SmartTableFilter} from '../components/filter/smart-table.filter';
+import { TableColumn } from '@acpaas-ui/ngx-table';
+import { DatePipe } from '@angular/common';
+import { SmartTableFilter } from '../components/filter/smart-table.filter';
 
 @Injectable()
 export class TableFactory {

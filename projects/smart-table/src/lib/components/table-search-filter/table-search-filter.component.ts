@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractFilterComponent} from '../filter/abstract-filter-component';
+import { Component, OnInit } from '@angular/core';
+import { AbstractFilterComponent } from '../filter/abstract-filter-component';
 
 @Component({
   selector: 'aui-table-search-filter',

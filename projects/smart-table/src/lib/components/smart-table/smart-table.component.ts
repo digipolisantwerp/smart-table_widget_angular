@@ -1,10 +1,10 @@
-import {OrderBy, TableColumn} from '@acpaas-ui/ngx-table';
-import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
-import {FlyoutService} from '@acpaas-ui/ngx-flyout';
-import {DatePipe} from '@angular/common';
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {SMARTTABLE_DEFAULT_OPTIONS} from './smart-table.defaults';
+import { OrderBy, TableColumn } from '@acpaas-ui/ngx-table';
+import { LocalstorageService } from '@acpaas-ui/ngx-localstorage';
+import { FlyoutService } from '@acpaas-ui/ngx-flyout';
+import { DatePipe } from '@angular/common';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { SMARTTABLE_DEFAULT_OPTIONS } from './smart-table.defaults';
 import {
   IModuleConfig,
   SmartTableColumnCustomType,
@@ -34,14 +34,14 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, merge, Observable, of, Subject} from 'rxjs';
-import {TableFactory} from '../../services/table.factory';
-import {SmartTableFilter} from '../filter/smart-table.filter';
-import {selectFilters} from '../../selectors/smart-table.selectors';
-import {ConfigurationService} from '../../services/configuration.service';
-import {StorageService} from '../../services/storage.service';
-import {ApiService} from '../../services/api.service';
-import {PROVIDE_CONFIG} from '../../providers/indentifier.provider';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
+import { TableFactory } from '../../services/table.factory';
+import { SmartTableFilter } from '../filter/smart-table.filter';
+import { selectFilters } from '../../selectors/smart-table.selectors';
+import { ConfigurationService } from '../../services/configuration.service';
+import { StorageService } from '../../services/storage.service';
+import { ApiService } from '../../services/api.service';
+import { PROVIDE_CONFIG } from '../../providers/indentifier.provider';
 
 @Component({
   selector: 'aui-smart-table',
@@ -221,11 +221,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.optionalFilters$ = this.configuration$.pipe(selectFilters(this.factory, SmartTableFilterDisplay.Optional));
     this.visibleFilters$ = this.configuration$.pipe(selectFilters(this.factory, SmartTableFilterDisplay.Visible));
     this.genericFilter$ = this.configuration$.pipe(selectFilters(this.factory, SmartTableFilterDisplay.Generic, genericFilter => ({
-        ...genericFilter,
-        id: 'generic',
-        type: SmartTableFilterType.Input,
-        operator: SmartTableFilterOperator.ILike,
-      })),
+      ...genericFilter,
+      id: 'generic',
+      type: SmartTableFilterType.Input,
+      operator: SmartTableFilterOperator.ILike,
+    })),
       map(filters => (filters && filters[0]) || null),
       shareReplay(1)
     );
@@ -302,7 +302,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       this.orderBy$
     ]).pipe(
       map(([activeFilters, configuration, orderBy]:
-             [any, SmartTableConfig, OrderBy]) => {
+        [any, SmartTableConfig, OrderBy]) => {
         const filters = [
           ...configuration.baseFilters,
           ...this.createDataQueryFilters(activeFilters),
@@ -311,18 +311,18 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       }),
       map(([filters, configuration, orderBy]: [any[], SmartTableConfig, OrderBy]) => {
         if (!orderBy) {
-          return {filters};
+          return { filters };
         }
         const sortColumn = configuration.columns.find(column => column.key === orderBy.key);
         if (!sortColumn) {
-          return {filters};
+          return { filters };
         }
         return {
           filters,
-          sort: {path: sortColumn.sortPath, ascending: orderBy.order === 'asc'}
+          sort: { path: sortColumn.sortPath, ascending: orderBy.order === 'asc' }
         };
       }),
-      startWith({filters: [], sort: {path: '', ascending: false}}),
+      startWith({ filters: [], sort: { path: '', ascending: false } }),
     );
     // Get the data on the bases of the data query
     // or when we change the pagination

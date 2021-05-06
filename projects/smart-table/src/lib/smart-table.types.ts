@@ -1,7 +1,7 @@
-import {Cell, CellWithMetadata, OrderBy, TableColumnFormat} from '@acpaas-ui/ngx-table';
-import {LocalStorageType} from '@acpaas-ui/ngx-localstorage';
-import {SmartTableFilter} from './components/filter/smart-table.filter';
-import {Type} from '@angular/core';
+import { Cell, CellWithMetadata, OrderBy, TableColumnFormat } from '@acpaas-ui/ngx-table';
+import { LocalStorageType } from '@acpaas-ui/ngx-localstorage';
+import { SmartTableFilter } from './components/filter/smart-table.filter';
+import { Type } from '@angular/core';
 
 export interface IModuleConfig {
   storageType?: LocalStorageType;

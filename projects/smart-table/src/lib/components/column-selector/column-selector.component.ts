@@ -1,11 +1,11 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {ConfigurationService} from '../../services/configuration.service';
-import {Observable} from 'rxjs';
-import {IOrderingLabels, SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
-import {first, map} from 'rxjs/operators';
-import {moveItemInArray} from '@angular/cdk/drag-drop';
-import {PROVIDE_SORT_LABELS} from '../../providers/sort-labels.provider';
-import {sortColumn} from '../../helper/helpers';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ConfigurationService } from '../../services/configuration.service';
+import { Observable } from 'rxjs';
+import { IOrderingLabels, SmartTableColumnConfig, SmartTableConfig } from '../../smart-table.types';
+import { first, map } from 'rxjs/operators';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { PROVIDE_SORT_LABELS } from '../../providers/sort-labels.provider';
+import { sortColumn } from '../../helper/helpers';
 
 @Component({
   selector: 'aui-table-column-selector',
@@ -39,7 +39,7 @@ export class TableColumnSelectorComponent implements OnInit {
         return {
           ...c,
           columns: columns
-            .map((item, orderIndex) => ({...item, orderIndex}))
+            .map((item, orderIndex) => ({ ...item, orderIndex }))
             .sort(sortColumn)
         };
       })

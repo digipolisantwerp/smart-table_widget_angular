@@ -1,7 +1,7 @@
-import {TestBed} from '@angular/core/testing';
-import {TableFactory} from './table.factory';
-import {DatePipe} from '@angular/common';
-import {SmartTableColumnType} from '../smart-table.types';
+import { TestBed } from '@angular/core/testing';
+import { TableFactory } from './table.factory';
+import { DatePipe } from '@angular/common';
+import { SmartTableColumnType } from '../smart-table.types';
 
 describe('Table Factory Test', () => {
   let datePipe: DatePipe;
@@ -99,7 +99,7 @@ describe('Table Factory Test', () => {
         key: 'test-key',
         type: SmartTableColumnType.Date,
         sortPath: 'none'
-      }, [], {columnDateFormat: 'yyyy/MM'});
+      }, [], { columnDateFormat: 'yyyy/MM' });
       // Now let's format a date
       const d = new Date(2019, 8, 10, 6, 23);
       expect(column.format(d as any)).toBe('2019/09');

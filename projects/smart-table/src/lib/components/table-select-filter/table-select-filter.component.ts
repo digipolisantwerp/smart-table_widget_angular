@@ -1,6 +1,6 @@
-import {FilterComponent} from '@acpaas-ui/ngx-utils';
-import {Component, OnInit} from '@angular/core';
-import {AbstractFilterComponent} from '../filter/abstract-filter-component';
+import { FilterComponent } from '@acpaas-ui/ngx-utils';
+import { Component, OnInit } from '@angular/core';
+import { AbstractFilterComponent } from '../filter/abstract-filter-component';
 
 @Component({
   selector: 'aui-table-select-filter',

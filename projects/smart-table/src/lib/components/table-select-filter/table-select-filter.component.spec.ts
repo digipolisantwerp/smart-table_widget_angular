@@ -1,7 +1,7 @@
-import {TableSelectFilterComponent} from './table-select-filter.component';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ReactiveFormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
+import { TableSelectFilterComponent } from './table-select-filter.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import * as sinon from 'sinon';
 
 describe('Table Select Filter Test', () => {

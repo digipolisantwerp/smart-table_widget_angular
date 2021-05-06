@@ -3,16 +3,6 @@
 $loading-overlay-color: rgba($white, .75);
 
 .aui-smart-table {
-  .a-toggle-filters {
-    > .fa {
-      transition: transform $animation-duration $animation-easing;
-
-      &.is-toggled {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
   &__filters {
     display: flex;
     flex-wrap: wrap;

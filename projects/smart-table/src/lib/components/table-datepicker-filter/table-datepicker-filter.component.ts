@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
-import {AbstractFilterComponent} from '../filter/abstract-filter-component';
+import { AbstractFilterComponent } from '../filter/abstract-filter-component';
 
 @Component({
   selector: 'aui-table-datepicker-filter',
