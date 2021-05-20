@@ -110,6 +110,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   private initialConfiguration;
   private filters;
+  private activeDataQuery;
 
   /** @internal */
   orderBy$: Observable<OrderBy>;
@@ -317,10 +318,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         if (!sortColumn) {
           return {filters};
         }
-        return {
+        this.activeDataQuery =  {
           filters,
           sort: {path: sortColumn.sortPath, ascending: orderBy.order === 'asc'}
         };
+        return this.activeDataQuery;
       }),
       startWith({filters: [], sort: {path: '', ascending: false}}),
     );
@@ -406,16 +408,13 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public exportToExcel() {
     this.pageChanging = true;
     console.log('@@@@@@@@@@@@@@@@@@@@@');
-    console.log('filters', this.createDataQueryFilters([this.filters]));
+    console.log('filters', this.activeDataQuery);
     console.log('@@@@@@@@@@@@@@@@@@@@@');
 
-    this.dataQuery$.pipe(
-      first(),
-      switchMap(dataQuery => this.dataService.getAllData(this.apiUrl, this.httpHeaders, { ...dataQuery, filters: this.filters})),
+    this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.activeDataQuery).pipe(
       switchMap((data) => this.filterOutColumns(data._embedded.resourceList)),
       tap(exportData => this.dataService.exportAsExcelFile(exportData, 'smart-table')),
       tap(() => this.pageChanging = false),
-      first()
     ).subscribe();
   }
 
