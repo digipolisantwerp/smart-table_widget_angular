@@ -11,6 +11,7 @@ export interface IModuleConfig {
     useLowerCaseQueryParams?: boolean,
     noConfigApiCall?: boolean,
     noExport?: boolean
+    exportWithFitlers?: boolean
   };
 }
 
