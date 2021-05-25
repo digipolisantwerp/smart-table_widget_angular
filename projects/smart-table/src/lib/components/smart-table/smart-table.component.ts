@@ -407,11 +407,15 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public exportToExcel() {
     this.pageChanging = true;
-    console.log('@@@@@@@@@@@@@@@@@@@@@');
-    console.log('filters', this.activeDataQuery);
-    console.log('@@@@@@@@@@@@@@@@@@@@@');
-
-    this.dataService.getAllData(this.apiUrl, this.httpHeaders, this.activeDataQuery).pipe(
+    let dataQuery = this.activeDataQuery;
+    if (!this.moduleConfig.options || !this.moduleConfig.options.exportWithFitlers) {
+      dataQuery = {
+        ...this.activeDataQuery,
+        filters: [],
+        sort: [ this.initialConfiguration.options.defaultSortOrder ],
+      };
+    }
+    this.dataService.getAllData(this.apiUrl, this.httpHeaders, dataQuery).pipe(
       switchMap((data) => this.filterOutColumns(data._embedded.resourceList)),
       tap(exportData => this.dataService.exportAsExcelFile(exportData, 'smart-table')),
       tap(() => this.pageChanging = false),

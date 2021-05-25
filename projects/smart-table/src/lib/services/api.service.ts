@@ -80,25 +80,12 @@ export class ApiService {
   }
 
   public getAllData(apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery): Observable<any> {
-    console.log('@@@@@@@@@@@@@@@@@@@@@');
-    console.log('dataQuery', dataQuery);
-    console.log('@@@@@@@@@@@@@@@@@@@@@');
     if (!headers) {
       headers = new HttpHeaders();
     }
 
     headers = headers.set('Content-Type', 'application/json');
-    let url = `${apiUrl}/all`;
-    // @TODO: add dataquery to filter if option is set
-    // if(this.moduleConfig.options?.exportWithFitlers) {
-    //   const queryParams = queryString.stringify(
-    //     this.moduleConfig && this.moduleConfig.options && this.moduleConfig.options.useLowerCaseQueryParams === true ? {
-    //       page,
-    //       pagesize: pageSize
-    //     } : {page, pageSize});
-    //   let url = `${apiUrl}/all`;
-    // }
-    return this.http.post(url,
+    return this.http.post(`${apiUrl}/all`,
       JSON.stringify(dataQuery),
       {headers});
   }
