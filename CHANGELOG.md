@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+- Add option to export with filters
 
 ## [1.12.1] - 2021-04-29
 

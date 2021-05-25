@@ -76,6 +76,7 @@ SmartTableModule.withLabels
       useLowerCaseQueryParams: true,    // Some APIs require all lower case query params
       noConfigApiCall: false,    // Skip the /config call and provide all config in the frontend
       noExport: false // If true hides the export button
+      exportWithFilters: false // If true filters and sorting will be respected in export. pagination will still be removed.
     }
   })
 ```
@@ -97,9 +98,10 @@ Every value in the backing list must have a unique id.
 
 ### Module configuration
 - **options.useLowerCaseQueryParams**: (default false) If true, will parse query params to all lower case vaules (if any). Some api's cannot handle camelcase or uppercase parameters, thus this option enables flexibility.
-- **options.noConfigApiCall**: (default false). By default the Smart Table will query `/config` to get default setup configuration. Setting this option to true will enable the component to 
+- **options.noConfigApiCall**: (default false). By default the Smart Table will query `/config` to get default setup configuration. Setting this option to true will enable the component to
 parse frontend-only configuration by setting the *configuration* attribute on the component, without making backend config calls.
   - **options.noExport**: If true, hides the export button
+  - **options.exportWithFilters**: If False, export will respect the set filters & order
 
 ### Supported attributes
 
@@ -135,7 +137,7 @@ This back-end service must implement the following protocol:
 The `POST` endpoints accept the following JSON body:
 
 ```js
-{ 
+{
   "filters": [{
     "fields": string[], /* field id's */
     "operator": string, /* '=' or 'ILIKE' */
@@ -215,7 +217,7 @@ An explanation of the properties of the configuration object:
   - `display`: string, how to show the filter in the UI
     - `generic`: a google-like search textbox to search across multiple fields, always shown
     - `visible`: field-specific filter control, always shown
-    - `optional`: field-specific filter control, hidden behind 'Extra filters' button 
+    - `optional`: field-specific filter control, hidden behind 'Extra filters' button
   - `label`: string, label to show next to filter control
   - `field`: string, key of the field (column) to filter on
   - `fields`: string[], keys of the fields to filter on, for filter type `generic`

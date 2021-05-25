@@ -10,8 +10,8 @@ export interface IModuleConfig {
   options?: {
     useLowerCaseQueryParams?: boolean,
     noConfigApiCall?: boolean,
-    noExport?: boolean
-    exportWithFitlers?: boolean
+    noExport?: boolean,
+    exportWithFilters?: boolean
   };
 }
 

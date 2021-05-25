@@ -29,7 +29,7 @@ const defaultConfiguration: IModuleConfig = {
     useLowerCaseQueryParams: false,
     noConfigApiCall: false,
     noExport: false,
-    exportWithFitlers: false
+    exportWithFilters: false
   }
 };
 
