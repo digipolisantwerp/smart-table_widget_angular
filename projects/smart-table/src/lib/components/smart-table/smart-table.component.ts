@@ -419,6 +419,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       switchMap((data) => this.filterOutColumns(data._embedded.resourceList)),
       tap(exportData => this.dataService.exportAsExcelFile(exportData, 'smart-table')),
       tap(() => this.pageChanging = false),
+      first()
     ).subscribe();
   }
 
