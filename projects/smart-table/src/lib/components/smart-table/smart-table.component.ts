@@ -408,7 +408,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
   public exportToExcel() {
     this.pageChanging = true;
     let dataQuery = this.activeDataQuery;
-    if (true || !this.moduleConfig.options || !this.moduleConfig.options.exportWithFilters) {
+    if (!this.moduleConfig.options || !this.moduleConfig.options.exportWithFilters) {
       dataQuery = {
         filters: [],
         sort: [ this.initialConfiguration.options.defaultSortOrder ],
