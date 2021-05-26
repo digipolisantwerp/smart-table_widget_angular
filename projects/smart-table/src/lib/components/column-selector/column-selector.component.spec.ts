@@ -19,30 +19,30 @@ describe('TableColumnSelectorComponent', () => {
   beforeEach(async () => {
     mockLabels = {
       orderAfter: 'sort above',
-      orderBefore: 'sort underneath'
+      orderBefore: 'sort underneath',
     };
     await TestBed.configureTestingModule({
       declarations: [TableColumnSelectorComponent],
       providers: [
         {
           provide: ConfigurationService,
-          useValue: sinon.createStubInstance(ConfigurationService)
+          useValue: sinon.createStubInstance(ConfigurationService),
         },
         {
           provide: FlyoutService,
-          useValue: sinon.createStubInstance(FlyoutService)
+          useValue: sinon.createStubInstance(FlyoutService),
         },
         {
           provide: PROVIDE_SORT_LABELS,
-          useValue: mockLabels
-        }
-      ]
+          useValue: mockLabels,
+        },
+      ],
     }).compileComponents();
 
     mockColumns = [
       {key: 'a', orderIndex: 2},
       {key: 'b', orderIndex: 0},
-      {key: 'c', orderIndex: 1}
+      {key: 'c', orderIndex: 1},
     ] as any;
     configurationService = TestBed.get(ConfigurationService);
     mockConfiguration = {
@@ -52,7 +52,7 @@ describe('TableColumnSelectorComponent', () => {
       options: {
         storageIdentifier: 'id',
         persistTableConfig: false,
-      }
+      },
     };
     fixture = TestBed.createComponent(TableColumnSelectorComponent);
     component = fixture.componentInstance;
@@ -62,8 +62,8 @@ describe('TableColumnSelectorComponent', () => {
     it('should start out with the columns from the configuration, sorted by index', () => {
       (configurationService.getConfiguration as SinonStub).returns(cold('----a', {
         a: {
-          ...mockConfiguration
-        }
+          ...mockConfiguration,
+        },
       }));
       fixture.detectChanges();
       const result$ = component.columns$;
@@ -71,8 +71,8 @@ describe('TableColumnSelectorComponent', () => {
         a: [
           {key: 'b', orderIndex: 0},
           {key: 'c', orderIndex: 1},
-          {key: 'a', orderIndex: 2}
-        ]
+          {key: 'a', orderIndex: 2},
+        ],
       }));
     });
     it('should toggle column visibility', () => {
@@ -81,8 +81,8 @@ describe('TableColumnSelectorComponent', () => {
       (configurationService.getConfiguration as SinonStub).returns(cold('----a', {
         a: {
           ...mockConfiguration,
-          columns: [...mockColumns]
-        }
+          columns: [...mockColumns],
+        },
       }));
       fixture.detectChanges();
       const result$ = component.toggleColumnVisibility('a');
@@ -92,9 +92,9 @@ describe('TableColumnSelectorComponent', () => {
           columns: [
             {key: 'b', orderIndex: 0},
             {key: 'c', orderIndex: 1, visible: false},
-            {key: 'a', orderIndex: 2, visible: true}
-          ]
-        }
+            {key: 'a', orderIndex: 2, visible: true},
+          ],
+        },
       }));
     });
     it('should move a column by sort index', () => {
@@ -107,9 +107,9 @@ describe('TableColumnSelectorComponent', () => {
           columns: [
             {key: 'c', orderIndex: 0},
             {key: 'a', orderIndex: 1},
-            {key: 'b', orderIndex: 2}
+            {key: 'b', orderIndex: 2},
           ],
-        }
+        },
       }));
     });
   });

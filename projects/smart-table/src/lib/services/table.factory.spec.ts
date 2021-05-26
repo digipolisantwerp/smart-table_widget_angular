@@ -11,8 +11,8 @@ describe('Table Factory Test', () => {
     TestBed.configureTestingModule({
       providers: [
         TableFactory,
-        DatePipe
-      ]
+        DatePipe,
+      ],
     });
     datePipe = TestBed.get(DatePipe);
     factory = TestBed.get(TableFactory);
@@ -25,7 +25,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.Date,
-        sortPath: 'none'
+        sortPath: 'none',
       }, []);
       // Now let's format a date
       const d = new Date(2019, 8, 10, 6, 23);
@@ -37,7 +37,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.Date,
-        sortPath: 'none'
+        sortPath: 'none',
       }, []);
       // Now let's format a date
       const d = '2020-08-10';
@@ -49,7 +49,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.Date,
-        sortPath: 'none'
+        sortPath: 'none',
       }, []);
       // Now let's format a date
       const d = 'ABC';
@@ -61,7 +61,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.DateTime,
-        sortPath: 'none'
+        sortPath: 'none',
       }, []);
       // Now let's format a date
       const d = new Date(2019, 8, 10, 6, 23);
@@ -73,7 +73,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.DateTime,
-        sortPath: 'none'
+        sortPath: 'none',
       }, []);
       // Now let's format a date
       const d = '2020-08-10T08:13:13.584Z';
@@ -86,7 +86,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.DateTime,
-        sortPath: 'none'
+        sortPath: 'none',
       }, []);
       // Now let's format a date
       const d = 'ABC';
@@ -98,7 +98,7 @@ describe('Table Factory Test', () => {
         label: 'test-column',
         key: 'test-key',
         type: SmartTableColumnType.Date,
-        sortPath: 'none'
+        sortPath: 'none',
       }, [], {columnDateFormat: 'yyyy/MM'});
       // Now let's format a date
       const d = new Date(2019, 8, 10, 6, 23);

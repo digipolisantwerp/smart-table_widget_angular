@@ -8,7 +8,7 @@ import {AppRatingComponent} from './rating.component';
 @NgModule({
   declarations: [
     AppComponent,
-    AppRatingComponent
+    AppRatingComponent,
   ],
   imports: [
     BrowserModule,
@@ -24,13 +24,13 @@ import {AppRatingComponent} from './rating.component';
           itemsPerPageLabel: {
             singular: 'film per pagina',
             plural: 'films per pagina',
-          }
-        }
-      })
+          },
+        },
+      }),
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [AppRatingComponent]
+  entryComponents: [AppRatingComponent],
 })
 export class AppModule {
 }
