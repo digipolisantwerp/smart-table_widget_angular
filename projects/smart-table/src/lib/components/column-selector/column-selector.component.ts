@@ -10,7 +10,7 @@ import {sortColumn} from '../../helper/helpers';
 @Component({
   selector: 'aui-table-column-selector',
   templateUrl: './column-selector.component.html',
-  styleUrls: ['./column-selector.component.scss']
+  styleUrls: ['./column-selector.component.scss'],
 })
 export class TableColumnSelectorComponent implements OnInit {
   @Input()
@@ -26,7 +26,7 @@ export class TableColumnSelectorComponent implements OnInit {
   ngOnInit() {
     this.configuration$ = this.configurationService.getConfiguration(this.instanceId);
     this.columns$ = this.configuration$.pipe(
-      map(config => config.columns.sort(sortColumn))
+      map(config => config.columns.sort(sortColumn)),
     );
   }
 
@@ -40,9 +40,9 @@ export class TableColumnSelectorComponent implements OnInit {
           ...c,
           columns: columns
             .map((item, orderIndex) => ({...item, orderIndex}))
-            .sort(sortColumn)
+            .sort(sortColumn),
         };
-      })
+      }),
     );
   }
 
@@ -57,9 +57,9 @@ export class TableColumnSelectorComponent implements OnInit {
         }
         return {
           ...config,
-          columns: newColumns.sort(sortColumn)
+          columns: newColumns.sort(sortColumn),
         };
-      })
+      }),
     );
   }
 
@@ -71,14 +71,14 @@ export class TableColumnSelectorComponent implements OnInit {
   moveColumnUp(index: number): void {
     this.updateOrderIndex({
       oldIndex: index,
-      newIndex: index - 1
+      newIndex: index - 1,
     }).subscribe(config => this.configurationService.setConfiguration(this.instanceId, config));
   }
 
   moveColumnDown(index: number): void {
     this.updateOrderIndex({
       oldIndex: index,
-      newIndex: index + 1
+      newIndex: index + 1,
     }).subscribe(config => this.configurationService.setConfiguration(this.instanceId, config));
   }
 }

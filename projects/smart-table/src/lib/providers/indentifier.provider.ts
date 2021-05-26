@@ -7,6 +7,6 @@ export const PROVIDE_CONFIG = new InjectionToken('SmartTable-Provide-Config');
 
 export function provideLocalstorageConfig(config: IModuleConfig): ILocalStorageConfig {
   return {
-    storageType: config.storageType || 'localStorage'
+    storageType: config.storageType || 'localStorage',
   };
 }

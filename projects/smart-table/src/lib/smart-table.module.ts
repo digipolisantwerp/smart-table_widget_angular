@@ -29,15 +29,15 @@ const defaultConfiguration: IModuleConfig = {
     useLowerCaseQueryParams: false,
     noConfigApiCall: false,
     noExport: false,
-    exportWithFilters: false
-  }
+    exportWithFilters: false,
+  },
 };
 
 const defaultLabels: ILabels = {
   columnOrdering: {
     orderBefore: 'Verplaats kolom naar voor',
-    orderAfter: 'Verplaats kolom naar achter'
-  }
+    orderAfter: 'Verplaats kolom naar achter',
+  },
 };
 
 
@@ -48,7 +48,7 @@ const defaultLabels: ILabels = {
     TableSelectFilterComponent,
     TableDatepickerFilterComponent,
     TableSearchFilterComponent,
-    TableColumnSelectorComponent
+    TableColumnSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -62,7 +62,7 @@ const defaultLabels: ILabels = {
     SearchFilterModule,
     LocalstorageModule.forRoot(defaultConfiguration),
     ItemCounterModule,
-    DragDropModule
+    DragDropModule,
   ],
   providers: [
     DatePipe,
@@ -70,14 +70,14 @@ const defaultLabels: ILabels = {
     TableFactory,
     {
       provide: PROVIDE_ID,
-      useValue: null
+      useValue: null,
     },
     ConfigurationService,
-    StorageService
+    StorageService,
   ],
   exports: [
-    SmartTableComponent
-  ]
+    SmartTableComponent,
+  ],
 })
 export class SmartTableModule {
   static forRoot(moduleConfiguration: IModuleConfig = defaultConfiguration): ModuleWithProviders {
@@ -86,29 +86,29 @@ export class SmartTableModule {
       providers: [
         {
           provide: PROVIDE_CONFIG,
-          useValue: moduleConfiguration
+          useValue: moduleConfiguration,
         },
         {
           provide: PROVIDE_ID,
-          useValue: moduleConfiguration.identifier
+          useValue: moduleConfiguration.identifier,
         },
         {
           provide: LOCALSTORAGE_CONFIG,
           useFactory: provideLocalstorageConfig,
-          deps: [PROVIDE_CONFIG]
+          deps: [PROVIDE_CONFIG],
         },
         {
           provide: ITEMS_PER_PAGE_LABEL,
-          useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemsPerPageLabel
+          useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemsPerPageLabel,
         },
         {
           provide: ITEM_COUNTER_LABEL,
-          useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemCounterLabel
+          useValue: moduleConfiguration.labels && moduleConfiguration.labels.itemCounterLabel,
         },
         {
           provide: PROVIDE_SORT_LABELS,
-          useValue: (moduleConfiguration.labels && moduleConfiguration.labels.columnOrdering) || defaultLabels.columnOrdering
-        }
+          useValue: (moduleConfiguration.labels && moduleConfiguration.labels.columnOrdering) || defaultLabels.columnOrdering,
+        },
       ],
     };
   }

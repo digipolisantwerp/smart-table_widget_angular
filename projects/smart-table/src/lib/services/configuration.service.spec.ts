@@ -18,16 +18,16 @@ describe('Configuration Service', () => {
       options: {
         storageIdentifier: 'id',
         persistTableConfig: false,
-      }
+      },
     };
     TestBed.configureTestingModule({
       providers: [
         ConfigurationService,
         {
           provide: TableFactory,
-          useValue: sinon.createStubInstance(TableFactory)
-        }
-      ]
+          useValue: sinon.createStubInstance(TableFactory),
+        },
+      ],
     });
     service = TestBed.get(ConfigurationService);
     factory = TestBed.get(TableFactory);
@@ -38,7 +38,7 @@ describe('Configuration Service', () => {
         id: 'some-id',
         backendCallback: () => cold('---(a|)', {a: mockConfiguration}),
         customConfiguration$: cold(''),
-        storageCallback: () => cold('')
+        storageCallback: () => cold(''),
       });
       const result$ = service.getConfiguration('some-id');
       expect(result$).toBeObservable(cold('---a', {a: mockConfiguration}));
@@ -49,7 +49,7 @@ describe('Configuration Service', () => {
         id: 'some-id',
         backendCallback: () => cold('---(a|)', {a: mockConfiguration}),
         customConfiguration$: hot('--------a', {a: {options: {pageSizeOptions: [10, 11, 12]}}}),
-        storageCallback: () => cold('')
+        storageCallback: () => cold(''),
       });
       const result$ = service.getConfiguration('some-id');
       expect(result$).toBeObservable(cold('---a----b', {
@@ -58,8 +58,8 @@ describe('Configuration Service', () => {
           ...mockConfiguration,
           options: {
             ...mockConfiguration.options,
-            pageSizeOptions: [10, 11, 12]
-          }
+            pageSizeOptions: [10, 11, 12],
+          },
         },
       }));
     });
@@ -68,7 +68,7 @@ describe('Configuration Service', () => {
         id: 'some-id',
         backendCallback: () => cold('----(a|)', {a: mockConfiguration}),
         customConfiguration$: cold('-a', {a: {options: {pageSizeOptions: [10, 11, 12]}}}),
-        storageCallback: () => cold('')
+        storageCallback: () => cold(''),
       });
       const result$ = service.getConfiguration('some-id');
       expect(result$).toBeObservable(cold('----ab', {
@@ -77,8 +77,8 @@ describe('Configuration Service', () => {
           ...mockConfiguration,
           options: {
             ...mockConfiguration.options,
-            pageSizeOptions: [10, 11, 12]
-          }
+            pageSizeOptions: [10, 11, 12],
+          },
         },
       }));
     });
@@ -91,9 +91,9 @@ describe('Configuration Service', () => {
         storageCallback: () => cold('---(a|)', {
           a: {
             ...mockConfiguration,
-            options: {...mockConfiguration.options, defaultSortOrder: {key: 'k', order: 'asc'}, persistTableConfig: true}
-          }
-        })
+            options: {...mockConfiguration.options, defaultSortOrder: {key: 'k', order: 'asc'}, persistTableConfig: true},
+          },
+        }),
       });
       const result$ = service.getConfiguration('some-id');
       expect(result$).toBeObservable(cold('--a---b', {
@@ -103,9 +103,9 @@ describe('Configuration Service', () => {
           options: {
             ...mockConfiguration.options,
             defaultSortOrder: {key: 'k', order: 'asc'},
-            persistTableConfig: true
-          }
-        }
+            persistTableConfig: true,
+          },
+        },
       }));
     });
   });
@@ -116,12 +116,12 @@ describe('Configuration Service', () => {
           ...mockConfiguration,
           columns: [{
             key: 'a',
-            orderIndex: 3
+            orderIndex: 3,
           }, {
             key: 'b',
-            orderIndex: 0
-          }]
-        }
+            orderIndex: 0,
+          }],
+        },
       }));
       (factory.createTableColumnFromConfig as SinonStub).callsFake((columnConfig) => ({...columnConfig, made: true}));
       const result$ = service.getColumns('some-id', []);
@@ -129,7 +129,7 @@ describe('Configuration Service', () => {
         a: [
           {key: 'b', orderIndex: 0, made: true},
           {key: 'a', orderIndex: 3, made: true},
-        ]
+        ],
       }));
     });
   });

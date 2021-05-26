@@ -41,7 +41,7 @@ describe('Smart Table Test', () => {
         TableSelectFilterComponent,
         TableDatepickerFilterComponent,
         TableSearchFilterComponent,
-        TableColumnSelectorComponent
+        TableColumnSelectorComponent,
       ],
       imports: [
         ReactiveFormsModule,
@@ -49,42 +49,42 @@ describe('Smart Table Test', () => {
         ItemCounterModule,
         PaginationModule,
         DatepickerModule,
-        SearchFilterModule
+        SearchFilterModule,
       ],
       providers: [
         {
           provide: TableFactory,
-          useValue: sinon.createStubInstance(TableFactory)
+          useValue: sinon.createStubInstance(TableFactory),
         },
         {
           provide: ApiService,
-          useValue: sinon.createStubInstance(ApiService)
+          useValue: sinon.createStubInstance(ApiService),
         },
         {
           provide: DatePipe,
-          useValue: sinon.createStubInstance(DatePipe)
+          useValue: sinon.createStubInstance(DatePipe),
         },
         {
           provide: LocalstorageService,
-          useValue: sinon.createStubInstance(LocalstorageService)
+          useValue: sinon.createStubInstance(LocalstorageService),
         },
         {
           provide: PROVIDE_ID,
-          useValue: 'test-smart-table'
+          useValue: 'test-smart-table',
         },
         {
           provide: ConfigurationService,
-          useValue: sinon.createStubInstance(ConfigurationService)
+          useValue: sinon.createStubInstance(ConfigurationService),
         },
         {
           provide: StorageService,
-          useValue: sinon.createStubInstance(StorageService)
+          useValue: sinon.createStubInstance(StorageService),
         },
         {
           provide: PROVIDE_CONFIG,
-          useValue: {}
-        }
-      ]
+          useValue: {},
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SmartTableComponent);
@@ -97,25 +97,25 @@ describe('Smart Table Test', () => {
       options: {
         storageIdentifier: 'id',
         persistTableConfig: false,
-      }
+      },
     };
 
     mockFilters = [
       {
         id: 'a',
-        display: SmartTableFilterDisplay.Visible
+        display: SmartTableFilterDisplay.Visible,
       },
       {
         id: 'b',
-        display: SmartTableFilterDisplay.Optional
-      }
+        display: SmartTableFilterDisplay.Optional,
+      },
     ] as any;
 
     storageService = TestBed.get(LocalstorageService);
     factory = TestBed.get(TableFactory);
     sandbox.stub(storageService, 'storage').value({
       getItem: sinon.stub(),
-      setItem: sinon.stub()
+      setItem: sinon.stub(),
     });
     service = TestBed.get(ApiService);
     (service.getData as SinonStub).returns(cold('a'));
@@ -140,20 +140,20 @@ describe('Smart Table Test', () => {
       (configurationService.getConfiguration as SinonStub).returns(cold('---a', {
         a: {
           ...mockConfiguration,
-          filters: [...mockFilters]
-        }
+          filters: [...mockFilters],
+        },
       }));
       (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
         return {
-          id: config.id
+          id: config.id,
         };
       });
       fixture.detectChanges();
       expect(component.visibleFilters$).toBeObservable(cold('a--b', {
         a: [],
         b: [{
-          id: 'a'
-        }]
+          id: 'a',
+        }],
       }));
     });
 
@@ -161,20 +161,20 @@ describe('Smart Table Test', () => {
       (configurationService.getConfiguration as SinonStub).returns(cold('---a', {
         a: {
           ...mockConfiguration,
-          filters: [...mockFilters]
-        }
+          filters: [...mockFilters],
+        },
       }));
       (factory.createSmartFilterFromConfig as SinonStub).callsFake(config => {
         return {
-          id: config.id
+          id: config.id,
         };
       });
       fixture.detectChanges();
       expect(component.optionalFilters$).toBeObservable(cold('a--b', {
         a: [],
         b: [{
-          id: 'b'
-        }]
+          id: 'b',
+        }],
       }));
     });
 

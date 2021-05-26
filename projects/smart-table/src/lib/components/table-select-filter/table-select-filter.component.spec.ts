@@ -11,12 +11,12 @@ describe('Table Select Filter Test', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        TableSelectFilterComponent
+        TableSelectFilterComponent,
       ],
       imports: [
         ReactiveFormsModule,
-        CommonModule
-      ]
+        CommonModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TableSelectFilterComponent);
@@ -36,20 +36,20 @@ describe('Table Select Filter Test', () => {
       const options = [
         {
           id: '1',
-          label: 'one'
+          label: 'one',
         },
         {
           id: '2',
-          label: 'two'
+          label: 'two',
         },
         {
           id: '3',
-          label: 'three'
-        }
+          label: 'three',
+        },
       ];
       component.filter = {
         options,
-        value: '2'
+        value: '2',
       } as any;
       const spy = sinon.spy(component.formControl, 'setValue');
       fixture.detectChanges();
@@ -60,7 +60,7 @@ describe('Table Select Filter Test', () => {
       const spy = sinon.spy(component.formControl, 'setValue');
       component.filter = {
         options,
-        value: 'inexistent'
+        value: 'inexistent',
       } as any;
       fixture.detectChanges();
       expect(spy.called).toBe(false);

@@ -11,7 +11,7 @@ export interface IModuleConfig {
     useLowerCaseQueryParams?: boolean,
     noConfigApiCall?: boolean,
     noExport?: boolean,
-    exportWithFilters?: boolean
+    exportWithFilters?: boolean,
   };
 }
 
@@ -87,7 +87,7 @@ export enum SmartTableColumnType {
   Number = 'number',
   Text = 'text',
   Date = 'date',
-  DateTime = 'dateTime'
+  DateTime = 'dateTime',
 }
 
 export interface SmartTableColumnCustomType {
@@ -100,19 +100,19 @@ export enum SmartTableFilterType {
   Select = 'select',
   Input = 'input',
   Datepicker = 'datepicker',
-  SearchFilter = 'search-filter'
+  SearchFilter = 'search-filter',
 }
 
 export enum SmartTableFilterDisplay {
   Generic = 'generic',
   Visible = 'visible',
-  Optional = 'optional'
+  Optional = 'optional',
 }
 
 export enum SmartTableFilterOperator {
   Equal = '=',
   ILike = 'ILIKE',
-  In = 'in'
+  In = 'in',
 }
 
 export interface SmartTableFilterConfig {
