@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
+## [1.13.1] - 2021-05-26
+
+### Fixed
+- Fixed a bug introduced while testing the new filter export feature
+
+
 ## [1.13.0] - 2021-05-26
 
 ### Added
@@ -254,7 +260,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.1...HEAD
+[1.13.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.5...v1.12.0
