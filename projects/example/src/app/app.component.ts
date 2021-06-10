@@ -5,7 +5,7 @@ import {SmartTableColumnCustomType, SmartTableConfig} from '@acpaas-ui-widgets/s
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'example';
@@ -14,15 +14,15 @@ export class AppComponent {
     name: 'rating',
     component: {
       instance: AppRatingComponent,
-      metadata: {ratingType: 'stars'}
-    }
+      metadata: {ratingType: 'stars'},
+    },
   }];
 
   customConfiguration: SmartTableConfig = {
     options: {
       defaultSortOrder: {
         key: 'title_year',
-        order: 'desc'
+        order: 'desc',
       },
       persistTableConfig: true,
       storageIdentifier: 'test-smart-table',
@@ -31,8 +31,8 @@ export class AppComponent {
         export: 'Exporteer',
         apply: 'Toepassen',
       },
-      resetSortOrderOnFilter: true
-    }
+      resetSortOrderOnFilter: true,
+    },
   };
 
   onRowClicked(row) {

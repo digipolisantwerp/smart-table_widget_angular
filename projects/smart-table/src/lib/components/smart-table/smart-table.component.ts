@@ -32,7 +32,7 @@ import {
   take,
   takeUntil,
   tap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
 import { TableFactory } from '../../services/table.factory';
@@ -46,7 +46,7 @@ import { PROVIDE_CONFIG } from '../../providers/indentifier.provider';
 @Component({
   selector: 'aui-smart-table',
   styleUrls: ['./smart-table.component.scss'],
-  templateUrl: './smart-table.component.html'
+  templateUrl: './smart-table.component.html',
 })
 export class SmartTableComponent implements OnInit, OnDestroy {
   @Input() apiUrl: string;
@@ -110,6 +110,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   private initialConfiguration;
   private filters;
+  private activeDataQuery;
 
   /** @internal */
   orderBy$: Observable<OrderBy>;
@@ -139,7 +140,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     private factory: TableFactory,
     private configurationService: ConfigurationService,
     private storageService: StorageService,
-    @Inject(PROVIDE_CONFIG) public moduleConfig: IModuleConfig
+    @Inject(PROVIDE_CONFIG) public moduleConfig: IModuleConfig,
   ) {
     this.rowsLoading = true;
     this.pageChanging = false;
@@ -185,12 +186,12 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       skip(1),
       tap(config => {
         this.initialConfiguration = config;
-      })
+      }),
     ).subscribe();
     this.configuration$.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
-      tap(config => this.configurationChanged.next(config))
+      tap(config => this.configurationChanged.next(config)),
     ).subscribe();
 
     // Set up persistence hook
@@ -198,7 +199,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       distinctUntilChanged(),
       skip(2),
-      tap(config => this.storageService.persistConfiguration(this.instanceId, config))
+      tap(config => this.storageService.persistConfiguration(this.instanceId, config)),
     ).subscribe();
 
     // Columns are extracted from configuration
@@ -210,11 +211,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
      */
     this.visibleColumns$ = combineLatest([
       this.configuration$,
-      this.allColumns$
+      this.allColumns$,
     ]).pipe(
       map(([configuration, columns]) => {
         return (columns as TableColumn[]).filter(c => configuration.columns.find(item => item.key === c.value).visible !== false);
-      })
+      }),
     );
 
     // Filters are based on the configuration coming in
@@ -227,7 +228,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       operator: SmartTableFilterOperator.ILike,
     })),
       map(filters => (filters && filters[0]) || null),
-      shareReplay(1)
+      shareReplay(1),
     );
 
     /**
@@ -270,9 +271,9 @@ export class SmartTableComponent implements OnInit, OnDestroy {
             ...config,
             options: {
               ...config.options,
-              defaultSortOrder: this.initialConfiguration.options.defaultSortOrder
+              defaultSortOrder: this.initialConfiguration.options.defaultSortOrder,
             },
-            filters: this.filters || config.filters
+            filters: this.filters || config.filters,
           };
           this.configurationService.setConfiguration(this.instanceId, config);
         }
@@ -292,14 +293,14 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       tap(filters => {
         this.filter.next(filters);
       }),
-      startWith([])
+      startWith([]),
     );
     // Build up the data query based on the different filters
     // A new data query will be created every time that new filters come in
     this.dataQuery$ = combineLatest([
       this.activeFilters$,
       this.configuration$,
-      this.orderBy$
+      this.orderBy$,
     ]).pipe(
       map(([activeFilters, configuration, orderBy]:
         [any, SmartTableConfig, OrderBy]) => {
@@ -317,10 +318,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         if (!sortColumn) {
           return { filters };
         }
-        return {
+        this.activeDataQuery =  {
           filters,
-          sort: { path: sortColumn.sortPath, ascending: orderBy.order === 'asc' }
+          sort: { path: sortColumn.sortPath, ascending: orderBy.order === 'asc' },
         };
+        return this.activeDataQuery;
       }),
       startWith({ filters: [], sort: { path: '', ascending: false } }),
     );
@@ -329,7 +331,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     this.rows$ = combineLatest(
       this.dataQuery$,
       this.pageSize$,
-      this.currentPage$
+      this.currentPage$,
     ).pipe(
       auditTime(100),  // Skip initial time based values, don't reset the timer after new values come in
       tap(() => this.pageChanging = !this.rowsLoading),
@@ -345,12 +347,12 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         return data._embedded ? data._embedded.resourceList : [];
       }),
       startWith([]),
-      share()
+      share(),
     );
 
     this.error$ = this.rows$.pipe(
       catchError(err => of(err)),
-      filter(err => err instanceof HttpErrorResponse)
+      filter(err => err instanceof HttpErrorResponse),
     );
   }
 
@@ -363,7 +365,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
       return {
         fields: f.fields,
         operator: f.operator,
-        value: f.operator === SmartTableFilterOperator.ILike ? `%${f.value}%` : f.value
+        value: f.operator === SmartTableFilterOperator.ILike ? `%${f.value}%` : f.value,
       };
     }
   }
@@ -391,11 +393,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
         ...config,
         options: {
           ...config.options,
-          defaultSortOrder: orderBy
+          defaultSortOrder: orderBy,
         },
-        filters: this.filters || config.filters
+        filters: this.filters || config.filters,
       })),
-      tap(configuration => this.configurationService.setConfiguration(this.instanceId, configuration))
+      tap(configuration => this.configurationService.setConfiguration(this.instanceId, configuration)),
     ).subscribe();
   }
 
@@ -405,13 +407,18 @@ export class SmartTableComponent implements OnInit, OnDestroy {
 
   public exportToExcel() {
     this.pageChanging = true;
-    this.dataQuery$.pipe(
-      first(),
-      switchMap(dataQuery => this.dataService.getAllData(this.apiUrl, this.httpHeaders, dataQuery)),
+    let dataQuery = this.activeDataQuery;
+    if (!this.moduleConfig.options || !this.moduleConfig.options.exportWithFilters) {
+      dataQuery = {
+        filters: [],
+        sort: [ this.initialConfiguration.options.defaultSortOrder ],
+      };
+    }
+    this.dataService.getAllData(this.apiUrl, this.httpHeaders, dataQuery).pipe(
       switchMap((data) => this.filterOutColumns(data._embedded.resourceList)),
       tap(exportData => this.dataService.exportAsExcelFile(exportData, 'smart-table')),
       tap(() => this.pageChanging = false),
-      first()
+      first(),
     ).subscribe();
   }
 
@@ -427,7 +434,7 @@ export class SmartTableComponent implements OnInit, OnDestroy {
               return acc;
             }, {});
         });
-      })
+      }),
     );
   }
 

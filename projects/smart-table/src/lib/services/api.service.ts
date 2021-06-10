@@ -29,7 +29,7 @@ export class ApiService {
       columns: [],
       filters: [],
       baseFilters: [],
-      options: {}
+      options: {},
     })
       : this.http.get(`${apiUrl}/config`, { headers })).pipe(
         first(),
@@ -41,8 +41,8 @@ export class ApiService {
             baseFilters: configuration.baseFilters || [],
             options: {
               ...SMARTTABLE_DEFAULT_OPTIONS,
-              ...configuration.options
-            }
+              ...configuration.options,
+            },
           };
         }),
         map(config => {
@@ -52,18 +52,18 @@ export class ApiService {
               ...config,
               options: {
                 ...config.options,
-                storageIdentifier: config.options.storageIdentifier || this.storageIdentifier
-              }
+                storageIdentifier: config.options.storageIdentifier || this.storageIdentifier,
+              },
             };
           } else {
             return config;
           }
-        })
+        }),
       );
   }
 
   public getData(
-    apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page?: number, pageSize?: number
+    apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery, page?: number, pageSize?: number,
   ): Observable<any> {
     if (!headers) {
       headers = new HttpHeaders();
@@ -71,7 +71,7 @@ export class ApiService {
     const queryParams = queryString.stringify(
       this.moduleConfig && this.moduleConfig.options && this.moduleConfig.options.useLowerCaseQueryParams === true ? {
         page,
-        pagesize: pageSize
+        pagesize: pageSize,
       } : { page, pageSize });
     headers = headers.set('Content-Type', 'application/json');
     return this.http.post(`${apiUrl}${queryParams ? `?${queryParams}` : ''}`,

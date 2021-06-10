@@ -16,9 +16,9 @@ describe('Storage Service Test', () => {
         StorageService,
         {
           provide: LocalstorageService,
-          useValue: sinon.createStubInstance(LocalstorageService)
-        }
-      ]
+          useValue: sinon.createStubInstance(LocalstorageService),
+        },
+      ],
     });
     storage = TestBed.get(LocalstorageService);
     service = TestBed.get(StorageService);
@@ -29,12 +29,12 @@ describe('Storage Service Test', () => {
       options: {
         storageIdentifier: 'id',
         persistTableConfig: false,
-      }
+      },
     };
     sandbox = sinon.createSandbox();
     sandbox.stub(storage, 'storage').value({
       setItem: sinon.stub(),
-      getItem: sinon.stub()
+      getItem: sinon.stub(),
     });
   });
   afterEach(() => {
@@ -51,23 +51,23 @@ describe('Storage Service Test', () => {
         ...mockConfiguration,
         columns: [
           { key: 'a', orderIndex: 0 },
-          { key: 'b', orderIndex: 1 }
+          { key: 'b', orderIndex: 1 },
         ],
         options: {
           storageIdentifier: 'identifier',
           defaultSortOrder: { key: 'a', order: 'asc' },
-          persistTableConfig: true
-        }
+          persistTableConfig: true,
+        },
       };
       service.persistConfiguration('some-id', param as any);
       expect((storage.storage.setItem as SinonStub).withArgs('identifier', JSON.stringify({
         columns: [
           { key: 'a', orderIndex: 0 },
-          { key: 'b', orderIndex: 1 }
+          { key: 'b', orderIndex: 1 },
         ],
         options: {
-          defaultSortOrder: { key: 'a', order: 'asc' }
-        }
+          defaultSortOrder: { key: 'a', order: 'asc' },
+        },
       })).calledOnce).toBe(true);
     });
   });
@@ -83,12 +83,12 @@ describe('Storage Service Test', () => {
         ...mockConfiguration,
         columns: [
           { key: 'a' },
-          { key: 'b' }
+          { key: 'b' },
         ],
         options: {
           persistTableConfig: true,
-          identifier: 'identifier'
-        }
+          identifier: 'identifier',
+        },
       } as any;
       (storage.storage.getItem as SinonStub).withArgs('identifier').returns(JSON.stringify({}));
       const newConfig = service.getConfiguration(config);
@@ -99,20 +99,20 @@ describe('Storage Service Test', () => {
         ...mockConfiguration,
         columns: [
           { key: 'a', someOtherKey: 'random', order: 'asc' },
-          { key: 'b' }
+          { key: 'b' },
         ],
         options: {
           persistTableConfig: true,
-          storageIdentifier: 'identifier'
-        }
+          storageIdentifier: 'identifier',
+        },
       } as any;
       (storage.storage.getItem as SinonStub).withArgs('identifier').returns(JSON.stringify({
         columns: [
-          { key: 'a', orderIndex: 1, order: 'desc' }
+          { key: 'a', orderIndex: 1, order: 'desc' },
         ],
         options: {
-          defaultSortOrder: { key: 'a', order: 'asc' }
-        }
+          defaultSortOrder: { key: 'a', order: 'asc' },
+        },
       }));
       const newConfig = service.getConfiguration(config);
       expect(newConfig).toEqual({
@@ -120,12 +120,12 @@ describe('Storage Service Test', () => {
         columns: [
           // It should not be replacing columns, but overriding existing properties
           { key: 'a', someOtherKey: 'random', orderIndex: 1, order: 'desc' },
-          { key: 'b' }
+          { key: 'b' },
         ],
         options: {
           ...config.options,
-          defaultSortOrder: { key: 'a', order: 'asc' }
-        }
+          defaultSortOrder: { key: 'a', order: 'asc' },
+        },
       });
     });
   });

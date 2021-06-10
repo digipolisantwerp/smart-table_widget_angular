@@ -5,12 +5,24 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 
-## [2.0.0] - 2021-05-xx
+## [2.0.0] - 2021-06-xx
 
 ### Changed
 - [BREAKING] Upgraded the component to work with Angular 8
 - [BREAKING] Replaced FontAwesome icons with all new Streamline icons
 - [BREAKING] Upgraded to core branding v5
+
+
+## [1.13.1] - 2021-05-26
+
+### Fixed
+- Fixed a bug introduced while testing the new filter export feature
+
+
+## [1.13.0] - 2021-05-26
+
+### Added
+- Added option to export with filters
 
 
 ## [1.12.1] - 2021-04-29
@@ -256,8 +268,9 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.1...v2.0.0
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.1...HEAD
+[1.13.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.0...v1.13.1
+[1.13.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.5...v1.12.0
 [1.11.5]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.11.4...v1.11.5

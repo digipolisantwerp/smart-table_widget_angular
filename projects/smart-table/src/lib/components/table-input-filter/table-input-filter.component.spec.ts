@@ -12,12 +12,12 @@ describe('Table Input Filter', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        TableInputFilterComponent
+        TableInputFilterComponent,
       ],
       imports: [
         ReactiveFormsModule,
-        CommonModule
-      ]
+        CommonModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TableInputFilterComponent);
@@ -36,7 +36,7 @@ describe('Table Input Filter', () => {
     it('should set the initial value', () => {
       const spy: SinonSpy = sinon.spy(component.formControl, 'setValue');
       component.filter = {
-        value: 'hey there'
+        value: 'hey there',
       } as any;
       fixture.detectChanges();
       expect(spy.withArgs('hey there').calledOnce).toBe(true);

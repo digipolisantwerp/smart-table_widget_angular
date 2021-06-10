@@ -4,7 +4,7 @@ import {
   SmartTableColumnCustomType,
   SmartTableColumnType,
   SmartTableFilterConfig,
-  SmartTableOptions
+  SmartTableOptions,
 } from '../smart-table.types';
 import { TableColumn } from '@acpaas-ui/ngx-table';
 import { DatePipe } from '@angular/common';
@@ -18,13 +18,13 @@ export class TableFactory {
   createTableColumnFromConfig(
     columnConfig: SmartTableColumnConfig,
     columnTypes: SmartTableColumnCustomType[],
-    options?: SmartTableOptions
+    options?: SmartTableOptions,
   ): TableColumn {
     const column: TableColumn = {
       value: columnConfig.key,
       label: columnConfig.label,
       hidden: !(columnConfig.visible || columnConfig.visible == null),
-      disableSorting: !columnConfig.sortPath
+      disableSorting: !columnConfig.sortPath,
     };
     if (columnConfig.visible || columnConfig.visible == null) {
       if (Array.isArray(columnConfig.classList) && columnConfig.classList.length) {

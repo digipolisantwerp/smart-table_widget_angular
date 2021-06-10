@@ -25,19 +25,19 @@ export class StorageService {
           // Do not replace existing columns, but override properties
           return {
             ...found,
-            ...column
+            ...column,
           };
         });
       const columnsNotInStorage = defaultConfiguration.columns.filter(column => !localStorageColumns.some(c => c.key === column.key));
       config.columns = [
         ...localStorageColumns,
-        ...columnsNotInStorage
+        ...columnsNotInStorage,
       ];
     }
     if (obj && obj.options && obj.options) {
       config.options = {
         ...config.options,
-        ...obj.options
+        ...obj.options,
       };
     }
     return config;
@@ -54,7 +54,7 @@ export class StorageService {
     obj.columns = [...configuration.columns];
     obj.options = {
       ...obj.options,
-      defaultSortOrder: configuration.options.defaultSortOrder
+      defaultSortOrder: configuration.options.defaultSortOrder,
     };
     this.setItemToStorage(name, obj);
   }

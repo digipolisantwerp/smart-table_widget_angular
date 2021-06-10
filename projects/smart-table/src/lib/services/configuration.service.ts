@@ -18,7 +18,7 @@ export class ConfigurationService {
     id: string,
     backendCallback: () => Observable<SmartTableConfig>,
     storageCallback: (config: SmartTableConfig) => Observable<SmartTableConfig>,
-    customConfiguration$: Observable<SmartTableConfig>
+    customConfiguration$: Observable<SmartTableConfig>,
   }): void {
     const { id, backendCallback, storageCallback, customConfiguration$ } = param;
     this._setConfig$[id] = new Subject<SmartTableConfig>();
@@ -35,17 +35,17 @@ export class ConfigurationService {
               ...customConfig,
               options: {
                 ...configuration.options,
-                ...customConfig.options
-              }
+                ...customConfig.options,
+              },
             };
           }),
           // Only override with stored configuration on custom configuration coming in
-          switchMap(config => config && config.options.persistTableConfig ? storageCallback(config) : of(config))
+          switchMap(config => config && config.options.persistTableConfig ? storageCallback(config) : of(config)),
         ),
-        this._setConfig$[id]
-      )
+        this._setConfig$[id],
+      ),
     ).pipe(
-      shareReplay(1)
+      shareReplay(1),
     );
   }
 
@@ -65,7 +65,7 @@ export class ConfigurationService {
       map((config: SmartTableConfig) =>
         config.columns
           .sort(sortColumn)
-          .map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes, config.options)))
+          .map(columnConfig => this.factory.createTableColumnFromConfig(columnConfig, columnTypes, config.options))),
     );
   }
 }

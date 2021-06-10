@@ -14,6 +14,6 @@ export const selectFilters: (factory: TableFactory, type: SmartTableFilterDispla
         .map(filterConfig => factory.createSmartFilterFromConfig(mapFilterToConfig ? mapFilterToConfig(filterConfig) : filterConfig))
       ),
       startWith([]),
-      shareReplay(1)
+      shareReplay(1),
     );
   };
