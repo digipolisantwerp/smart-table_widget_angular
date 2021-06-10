@@ -4,6 +4,7 @@ import { TableInputFilterComponent } from '../table-input-filter/table-input-fil
 import { TableSelectFilterComponent } from '../table-select-filter/table-select-filter.component';
 import { TableDatepickerFilterComponent } from '../table-datepicker-filter/table-datepicker-filter.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IconModule } from '@acpaas-ui/ngx-icon';
 import { TableModule } from '@acpaas-ui/ngx-table';
 import { ItemCounterModule, PaginationModule } from '@acpaas-ui/ngx-pagination';
 import { DatepickerModule, SearchFilterModule } from '@acpaas-ui/ngx-forms';
@@ -45,6 +46,7 @@ describe('Smart Table Test', () => {
       ],
       imports: [
         ReactiveFormsModule,
+        IconModule,
         TableModule,
         ItemCounterModule,
         PaginationModule,

@@ -3,6 +3,7 @@ import { TableColumnSelectorComponent } from './column-selector.component';
 import { ConfigurationService } from '../../services/configuration.service';
 import * as sinon from 'sinon';
 import { SinonStub } from 'sinon';
+import { IconModule } from '@acpaas-ui/ngx-icon';
 import { FlyoutService } from '@acpaas-ui/ngx-flyout';
 import { IOrderingLabels, SmartTableColumnConfig, SmartTableConfig } from '../../smart-table.types';
 import { cold } from 'jasmine-marbles';
@@ -22,6 +23,7 @@ describe('TableColumnSelectorComponent', () => {
       orderBefore: 'sort underneath',
     };
     await TestBed.configureTestingModule({
+      imports: [IconModule],
       declarations: [TableColumnSelectorComponent],
       providers: [
         {

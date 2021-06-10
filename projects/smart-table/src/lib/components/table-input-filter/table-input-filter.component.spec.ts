@@ -2,6 +2,7 @@ import { TableInputFilterComponent } from './table-input-filter.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { IconModule } from '@acpaas-ui/ngx-icon';
 import * as sinon from 'sinon';
 import { SinonSpy } from 'sinon';
 
@@ -17,6 +18,7 @@ describe('Table Input Filter', () => {
       imports: [
         ReactiveFormsModule,
         CommonModule,
+        IconModule,
       ],
     }).compileComponents();
 
