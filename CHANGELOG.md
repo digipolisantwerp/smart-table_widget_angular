@@ -268,7 +268,8 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.1...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.1...v2.0.0
 [1.13.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.0...v1.12.1
