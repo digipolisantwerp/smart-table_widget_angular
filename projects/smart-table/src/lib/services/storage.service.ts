@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
-import {SmartTableConfig} from '../smart-table.types';
+import { Injectable } from '@angular/core';
+import { LocalstorageService } from '@acpaas-ui/ngx-localstorage';
+import { SmartTableConfig } from '../smart-table.types';
 
 @Injectable()
 export class StorageService {
@@ -16,7 +16,7 @@ export class StorageService {
       return defaultConfiguration;
     }
     const obj = this.getStoredItem(defaultConfiguration.options.storageIdentifier);
-    const config = {...defaultConfiguration};
+    const config = { ...defaultConfiguration };
     if (obj && obj.columns && Array.isArray(obj.columns)) {
       const localStorageColumns = (obj.columns || [])
         .filter((column) => !!defaultConfiguration.columns.find((c) => c.key === column.key))

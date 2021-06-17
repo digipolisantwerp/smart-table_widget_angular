@@ -7,7 +7,7 @@
                   (click)="exportToExcel()"
                   [attr.aria-label]="(configuration$ | async)?.options.translations?.export || 'Exporteer'"
                   [title]="(configuration$ | async)?.options.translations?.export || 'Exporteer'">
-            <span class="fa fa-file-o"></span>
+            <aui-icon name="ai-office-file-sheet"></aui-icon>
           </button>
         </div>
       </div>
@@ -49,9 +49,9 @@
         <div class="a-input__wrapper">
           <button class="a-button-outline has-icon-right a-toggle-filters" (click)="toggleOptionalFilters()"
                   [attr.aria-controls]="'toggle-' + instanceId" [attr.aria-expanded]="optionalFiltersVisible">
-            {{ (configuration$ | async)?.options.translations?.moreFilters || 'Extra filters'}} <span
-            class="fa fa-angle-down"
-            [ngClass]="{'is-toggled': optionalFiltersVisible }"></span>
+            {{ (configuration$ | async)?.options.translations?.moreFilters || 'Extra filters'}}
+            <aui-icon *ngIf="!optionalFiltersVisible" name="ai-arrow-down-1"></aui-icon>
+            <aui-icon *ngIf="optionalFiltersVisible" name="ai-arrow-up-1"></aui-icon>
           </button>
         </div>
       </div>

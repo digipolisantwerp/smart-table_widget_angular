@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {combineLatest, concat, merge, Observable, of, Subject} from 'rxjs';
-import {SmartTableColumnCustomType, SmartTableConfig} from '../smart-table.types';
-import {TableColumn} from '@acpaas-ui/ngx-table';
-import {filter, first, map, shareReplay, switchMap} from 'rxjs/operators';
-import {TableFactory} from './table.factory';
-import {sortColumn} from '../helper/helpers';
+import { Injectable } from '@angular/core';
+import { combineLatest, concat, merge, Observable, of, Subject } from 'rxjs';
+import { SmartTableColumnCustomType, SmartTableConfig } from '../smart-table.types';
+import { TableColumn } from '@acpaas-ui/ngx-table';
+import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { TableFactory } from './table.factory';
+import { sortColumn } from '../helper/helpers';
 
 @Injectable()
 export class ConfigurationService {
@@ -20,7 +20,7 @@ export class ConfigurationService {
     storageCallback: (config: SmartTableConfig) => Observable<SmartTableConfig>,
     customConfiguration$: Observable<SmartTableConfig>,
   }): void {
-    const {id, backendCallback, storageCallback, customConfiguration$} = param;
+    const { id, backendCallback, storageCallback, customConfiguration$ } = param;
     this._setConfig$[id] = new Subject<SmartTableConfig>();
     this._config$[id] = concat(
       backendCallback(),  // First get the default configuration

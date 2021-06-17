@@ -1,7 +1,7 @@
-import {FilterComponent} from '@acpaas-ui/ngx-utils';
-import {Component, OnInit} from '@angular/core';
+import { FilterComponent } from '@acpaas-ui/ngx-utils';
+import { Component, OnInit } from '@angular/core';
 import _ from 'lodash';
-import {AbstractFilterComponent} from '../filter/abstract-filter-component';
+import { AbstractFilterComponent } from '../filter/abstract-filter-component';
 
 @Component({
   selector: 'aui-table-input-filter',

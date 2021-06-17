@@ -1,12 +1,13 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {TableColumnSelectorComponent} from './column-selector.component';
-import {ConfigurationService} from '../../services/configuration.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TableColumnSelectorComponent } from './column-selector.component';
+import { ConfigurationService } from '../../services/configuration.service';
 import * as sinon from 'sinon';
-import {SinonStub} from 'sinon';
-import {FlyoutService} from '@acpaas-ui/ngx-flyout';
-import {IOrderingLabels, SmartTableColumnConfig, SmartTableConfig} from '../../smart-table.types';
-import {cold} from 'jasmine-marbles';
-import {PROVIDE_SORT_LABELS} from '../../providers/sort-labels.provider';
+import { SinonStub } from 'sinon';
+import { IconModule } from '@acpaas-ui/ngx-icon';
+import { FlyoutService } from '@acpaas-ui/ngx-flyout';
+import { IOrderingLabels, SmartTableColumnConfig, SmartTableConfig } from '../../smart-table.types';
+import { cold } from 'jasmine-marbles';
+import { PROVIDE_SORT_LABELS } from '../../providers/sort-labels.provider';
 
 describe('TableColumnSelectorComponent', () => {
   let component: TableColumnSelectorComponent;
@@ -22,6 +23,7 @@ describe('TableColumnSelectorComponent', () => {
       orderBefore: 'sort underneath',
     };
     await TestBed.configureTestingModule({
+      imports: [IconModule],
       declarations: [TableColumnSelectorComponent],
       providers: [
         {
@@ -40,9 +42,9 @@ describe('TableColumnSelectorComponent', () => {
     }).compileComponents();
 
     mockColumns = [
-      {key: 'a', orderIndex: 2},
-      {key: 'b', orderIndex: 0},
-      {key: 'c', orderIndex: 1},
+      { key: 'a', orderIndex: 2 },
+      { key: 'b', orderIndex: 0 },
+      { key: 'c', orderIndex: 1 },
     ] as any;
     configurationService = TestBed.get(ConfigurationService);
     mockConfiguration = {
@@ -69,10 +71,10 @@ describe('TableColumnSelectorComponent', () => {
       const result$ = component.columns$;
       expect(result$).toBeObservable(cold('----a', {
         a: [
-          {key: 'b', orderIndex: 0},
-          {key: 'c', orderIndex: 1},
-          {key: 'a', orderIndex: 2},
-        ],
+          { key: 'b', orderIndex: 0 },
+          { key: 'c', orderIndex: 1 },
+          { key: 'a', orderIndex: 2 },
+        ]
       }));
     });
     it('should toggle column visibility', () => {
@@ -90,24 +92,24 @@ describe('TableColumnSelectorComponent', () => {
         a: {
           ...mockConfiguration,
           columns: [
-            {key: 'b', orderIndex: 0},
-            {key: 'c', orderIndex: 1, visible: false},
-            {key: 'a', orderIndex: 2, visible: true},
-          ],
-        },
+            { key: 'b', orderIndex: 0 },
+            { key: 'c', orderIndex: 1, visible: false },
+            { key: 'a', orderIndex: 2, visible: true },
+          ]
+        }
       }));
     });
     it('should move a column by sort index', () => {
-      (configurationService.getConfiguration as SinonStub).returns(cold('---a', {a: {...mockConfiguration}}));
+      (configurationService.getConfiguration as SinonStub).returns(cold('---a', { a: { ...mockConfiguration } }));
       fixture.detectChanges();
-      const result$ = component.updateOrderIndex({oldIndex: 0, newIndex: 2});
+      const result$ = component.updateOrderIndex({ oldIndex: 0, newIndex: 2 });
       expect(result$).toBeObservable(cold('---(a|)', {
         a: {
           ...mockConfiguration,
           columns: [
-            {key: 'c', orderIndex: 0},
-            {key: 'a', orderIndex: 1},
-            {key: 'b', orderIndex: 2},
+            { key: 'c', orderIndex: 0 },
+            { key: 'a', orderIndex: 1 },
+            { key: 'b', orderIndex: 2 },
           ],
         },
       }));
@@ -115,7 +117,7 @@ describe('TableColumnSelectorComponent', () => {
   });
   describe('Labels', () => {
     it('should put correct labels', () => {
-      (configurationService.getConfiguration as SinonStub).returns(cold('--a', {a: {}}));
+      (configurationService.getConfiguration as SinonStub).returns(cold('--a', { a: {} }));
       fixture.detectChanges();
       expect(component.labels).toEqual(mockLabels);
     });

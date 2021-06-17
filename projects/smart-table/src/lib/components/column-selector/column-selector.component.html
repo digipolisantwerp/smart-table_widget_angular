@@ -3,7 +3,7 @@
           [attr.aria-label]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
           [title]="(configuration$ | async)?.options.translations?.openColumnSelector || 'Toon/verberg kolommen'"
           auiFlyoutAction>
-    <span class="fa fa-columns"></span>
+    <aui-icon name="ai-layout-column"></aui-icon>
   </button>
 
   <div auiFlyoutZone>
@@ -21,12 +21,12 @@
           <div class="o-sort-buttons">
             <button class="a-button-negative a-button--small has-icon" [disabled]="i === 0"
                     (click)="moveColumnUp(i)" [title]="labels.orderBefore">
-              <span class="fa fa-angle-up"></span>
+              <aui-icon name="ai-arrow-up-1"></aui-icon>
             </button>
             <button class="a-button-negative a-button--small has-icon"
                     [disabled]="i === (configuration$ | async)?.columns?.length -1" (click)="moveColumnDown(i)"
                     [title]="labels.orderAfter">
-              <span class="fa fa-angle-down"></span>
+              <aui-icon name="ai-arrow-down-1"></aui-icon>
             </button>
           </div>
         </li>

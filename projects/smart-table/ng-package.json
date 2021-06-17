@@ -10,7 +10,6 @@
     "lodash.unionby",
     "query-string",
     "xlsx",
-    "@acpaas-ui",
     "@angular/cdk"
   ]
 }

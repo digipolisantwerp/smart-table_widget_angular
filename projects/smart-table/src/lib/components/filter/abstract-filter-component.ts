@@ -1,10 +1,10 @@
-import {EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
-import {UpdateFilterArgs} from '../../smart-table.types';
-import {FormControl} from '@angular/forms';
-import {Subject} from 'rxjs';
-import {debounceTime, takeUntil, tap} from 'rxjs/operators';
+import { EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { UpdateFilterArgs } from '../../smart-table.types';
+import { FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
-import {SmartTableFilter} from './smart-table.filter';
+import { SmartTableFilter } from './smart-table.filter';
 
 export abstract class AbstractFilterComponent implements OnDestroy, OnChanges {
   @Input() filter: SmartTableFilter;
@@ -39,7 +39,7 @@ export abstract class AbstractFilterComponent implements OnDestroy, OnChanges {
     if (this.filter) {
       this.filter.value = value;
     }
-    this.update.emit({filter: this.filter, value});
+    this.update.emit({ filter: this.filter, value });
   }
 
   ngOnDestroy(): void {

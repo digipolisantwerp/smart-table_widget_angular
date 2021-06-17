@@ -1,9 +1,9 @@
-import {StorageService} from './storage.service';
-import {TestBed} from '@angular/core/testing';
-import {LocalstorageService} from '@acpaas-ui/ngx-localstorage';
+import { StorageService } from './storage.service';
+import { TestBed } from '@angular/core/testing';
+import { LocalstorageService } from '@acpaas-ui/ngx-localstorage';
 import * as sinon from 'sinon';
-import {SinonSandbox, SinonStub} from 'sinon';
-import {SmartTableConfig} from '../smart-table.types';
+import { SinonSandbox, SinonStub } from 'sinon';
+import { SmartTableConfig } from '../smart-table.types';
 
 describe('Storage Service Test', () => {
   let service: StorageService;
@@ -43,30 +43,30 @@ describe('Storage Service Test', () => {
 
   describe('Persisting configuration', () => {
     it('should not persist if the option is disabled in configuration', () => {
-      service.persistConfiguration('some-id', {...mockConfiguration, options: {persistTableConfig: false}});
+      service.persistConfiguration('some-id', { ...mockConfiguration, options: { persistTableConfig: false } });
       expect((storage.storage.setItem as SinonStub).called).toBe(false);
     });
     it('should persist columns when option enabled', () => {
       const param = {
         ...mockConfiguration,
         columns: [
-          {key: 'a', orderIndex: 0},
-          {key: 'b', orderIndex: 1},
+          { key: 'a', orderIndex: 0 },
+          { key: 'b', orderIndex: 1 },
         ],
         options: {
           storageIdentifier: 'identifier',
-          defaultSortOrder: {key: 'a', order: 'asc'},
+          defaultSortOrder: { key: 'a', order: 'asc' },
           persistTableConfig: true,
         },
       };
       service.persistConfiguration('some-id', param as any);
       expect((storage.storage.setItem as SinonStub).withArgs('identifier', JSON.stringify({
         columns: [
-          {key: 'a', orderIndex: 0},
-          {key: 'b', orderIndex: 1},
+          { key: 'a', orderIndex: 0 },
+          { key: 'b', orderIndex: 1 },
         ],
         options: {
-          defaultSortOrder: {key: 'a', order: 'asc'},
+          defaultSortOrder: { key: 'a', order: 'asc' },
         },
       })).calledOnce).toBe(true);
     });
@@ -74,16 +74,16 @@ describe('Storage Service Test', () => {
 
   describe('Getting configuration', () => {
     it('should not get configuration when option is disabled', () => {
-      const config = service.getConfiguration({...mockConfiguration, options: {persistTableConfig: false}});
-      expect(config).toEqual({...mockConfiguration, options: {persistTableConfig: false}});
+      const config = service.getConfiguration({ ...mockConfiguration, options: { persistTableConfig: false } });
+      expect(config).toEqual({ ...mockConfiguration, options: { persistTableConfig: false } });
       expect((storage.storage.getItem as SinonStub).called).toBe(false);
     });
     it('should get unaltered configuration in no columns are in localstorage', () => {
       const config = {
         ...mockConfiguration,
         columns: [
-          {key: 'a'},
-          {key: 'b'},
+          { key: 'a' },
+          { key: 'b' },
         ],
         options: {
           persistTableConfig: true,
@@ -98,8 +98,8 @@ describe('Storage Service Test', () => {
       const config = {
         ...mockConfiguration,
         columns: [
-          {key: 'a', someOtherKey: 'random', order: 'asc'},
-          {key: 'b'},
+          { key: 'a', someOtherKey: 'random', order: 'asc' },
+          { key: 'b' },
         ],
         options: {
           persistTableConfig: true,
@@ -108,10 +108,10 @@ describe('Storage Service Test', () => {
       } as any;
       (storage.storage.getItem as SinonStub).withArgs('identifier').returns(JSON.stringify({
         columns: [
-          {key: 'a', orderIndex: 1, order: 'desc'},
+          { key: 'a', orderIndex: 1, order: 'desc' },
         ],
         options: {
-          defaultSortOrder: {key: 'a', order: 'asc'},
+          defaultSortOrder: { key: 'a', order: 'asc' },
         },
       }));
       const newConfig = service.getConfiguration(config);
@@ -119,12 +119,12 @@ describe('Storage Service Test', () => {
         ...config,
         columns: [
           // It should not be replacing columns, but overriding existing properties
-          {key: 'a', someOtherKey: 'random', orderIndex: 1, order: 'desc'},
-          {key: 'b'},
+          { key: 'a', someOtherKey: 'random', orderIndex: 1, order: 'desc' },
+          { key: 'b' },
         ],
         options: {
           ...config.options,
-          defaultSortOrder: {key: 'a', order: 'asc'},
+          defaultSortOrder: { key: 'a', order: 'asc' },
         },
       });
     });

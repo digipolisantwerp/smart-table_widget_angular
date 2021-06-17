@@ -27,7 +27,7 @@ Browse to [localhost:4200](http://localhost:4200)
 
 ### Using
 
-Prerequisite: set up [ACPaaS UI](https://github.com/digipolisantwerp/acpaas-ui_angular/) for your application.
+Prerequisite: set up [Antwerp UI](https://github.com/digipolisantwerp/antwerp-ui_angular/) for your application.
 
 Import the component in your module:
 

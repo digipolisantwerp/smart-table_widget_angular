@@ -1,14 +1,14 @@
-import {Inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import * as queryString from 'query-string';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 
-import {IModuleConfig, SmartTableConfig, SmartTableDataQuery} from '../smart-table.types';
-import {first, map} from 'rxjs/operators';
-import {SMARTTABLE_DEFAULT_OPTIONS} from '../components/smart-table/smart-table.defaults';
-import {PROVIDE_CONFIG, PROVIDE_ID} from '../providers/indentifier.provider';
+import { IModuleConfig, SmartTableConfig, SmartTableDataQuery } from '../smart-table.types';
+import { first, map } from 'rxjs/operators';
+import { SMARTTABLE_DEFAULT_OPTIONS } from '../components/smart-table/smart-table.defaults';
+import { PROVIDE_CONFIG, PROVIDE_ID } from '../providers/indentifier.provider';
 
 const EXCEL_EXTENSION = '.xlsx';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -17,8 +17,8 @@ const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.
 export class ApiService {
 
   constructor(private http: HttpClient,
-              @Inject(PROVIDE_ID) private storageIdentifier: string,
-              @Inject(PROVIDE_CONFIG) private moduleConfig: IModuleConfig) {
+    @Inject(PROVIDE_ID) private storageIdentifier: string,
+    @Inject(PROVIDE_CONFIG) private moduleConfig: IModuleConfig) {
   }
 
   public getConfiguration(apiUrl: string, headers?: HttpHeaders): Observable<any> {
@@ -26,40 +26,40 @@ export class ApiService {
       headers = new HttpHeaders();
     }
     return (this.moduleConfig.options && this.moduleConfig.options.noConfigApiCall === true ? of({
-        columns: [],
-        filters: [],
-        baseFilters: [],
-        options: {},
-      })
-      : this.http.get(`${apiUrl}/config`, {headers})).pipe(
-      first(),
-      map((configuration: SmartTableConfig) => {
-        // Start of with default options and override
-        // those with whatever options we get from the configuration
-        return {
-          ...configuration,
-          baseFilters: configuration.baseFilters || [],
-          options: {
-            ...SMARTTABLE_DEFAULT_OPTIONS,
-            ...configuration.options,
-          },
-        };
-      }),
-      map(config => {
-        // Override the storage identifier is we configured it in the module
-        if (this.storageIdentifier) {
+      columns: [],
+      filters: [],
+      baseFilters: [],
+      options: {},
+    })
+      : this.http.get(`${apiUrl}/config`, { headers })).pipe(
+        first(),
+        map((configuration: SmartTableConfig) => {
+          // Start of with default options and override
+          // those with whatever options we get from the configuration
           return {
-            ...config,
+            ...configuration,
+            baseFilters: configuration.baseFilters || [],
             options: {
-              ...config.options,
-              storageIdentifier: config.options.storageIdentifier || this.storageIdentifier,
+              ...SMARTTABLE_DEFAULT_OPTIONS,
+              ...configuration.options,
             },
           };
-        } else {
-          return config;
-        }
-      }),
-    );
+        }),
+        map(config => {
+          // Override the storage identifier is we configured it in the module
+          if (this.storageIdentifier) {
+            return {
+              ...config,
+              options: {
+                ...config.options,
+                storageIdentifier: config.options.storageIdentifier || this.storageIdentifier,
+              },
+            };
+          } else {
+            return config;
+          }
+        }),
+      );
   }
 
   public getData(
@@ -72,11 +72,11 @@ export class ApiService {
       this.moduleConfig && this.moduleConfig.options && this.moduleConfig.options.useLowerCaseQueryParams === true ? {
         page,
         pagesize: pageSize,
-      } : {page, pageSize});
+      } : { page, pageSize });
     headers = headers.set('Content-Type', 'application/json');
     return this.http.post(`${apiUrl}${queryParams ? `?${queryParams}` : ''}`,
       JSON.stringify(dataQuery),
-      {headers});
+      { headers });
   }
 
   public getAllData(apiUrl: string, headers: HttpHeaders, dataQuery: SmartTableDataQuery): Observable<any> {
@@ -87,18 +87,18 @@ export class ApiService {
     headers = headers.set('Content-Type', 'application/json');
     return this.http.post(`${apiUrl}/all`,
       JSON.stringify(dataQuery),
-      {headers});
+      { headers });
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-    const workbook: XLSX.WorkBook = {Sheets: {data: worksheet}, SheetNames: ['data']};
-    const excelBuffer: any = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+    const workbook: XLSX.WorkBook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);
   }
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
-    const data: Blob = new Blob([buffer], {type: EXCEL_TYPE});
+    const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 }

@@ -4,11 +4,11 @@ import {Cell} from '@acpaas-ui/ngx-table';
 @Component({
   template: `
     <div role="img" attr.aria-label="{{ starRating() }} van 5">
-      <span class="fa {{ (starRating() >= 1) ? 'fa-star' : 'fa-star-o' }}"></span>
-      <span class="fa {{ (starRating() >= 2) ? 'fa-star' : 'fa-star-o' }}"></span>
-      <span class="fa {{ (starRating() >= 3) ? 'fa-star' : 'fa-star-o' }}"></span>
-      <span class="fa {{ (starRating() >= 4) ? 'fa-star' : 'fa-star-o' }}"></span>
-      <span class="fa {{ (starRating() == 5) ? 'fa-star' : 'fa-star-o' }}"></span>
+      <span [ngClass]="{'u-text-light ai--thin': starRating() < 1}"><aui-icon name="ai-rating-star"></aui-icon></span>
+      <span [ngClass]="{'u-text-light ai--thin': starRating() < 2}"><aui-icon name="ai-rating-star"></aui-icon></span>
+      <span [ngClass]="{'u-text-light ai--thin': starRating() < 3}"><aui-icon name="ai-rating-star"></aui-icon></span>
+      <span [ngClass]="{'u-text-light ai--thin': starRating() < 4}"><aui-icon name="ai-rating-star"></aui-icon></span>
+      <span [ngClass]="{'u-text-light ai--thin': starRating() < 5}"><aui-icon name="ai-rating-star"></aui-icon></span>
     </div>
   `,
 })

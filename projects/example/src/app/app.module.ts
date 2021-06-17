@@ -1,9 +1,10 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { IconModule } from '@acpaas-ui/ngx-icon';
 
-import {AppComponent} from './app.component';
-import {SmartTableModule} from 'projects/smart-table/src/public-api';
-import {AppRatingComponent} from './rating.component';
+import { AppComponent } from './app.component';
+import { SmartTableModule } from 'projects/smart-table/src/public-api';
+import { AppRatingComponent } from './rating.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import {AppRatingComponent} from './rating.component';
   ],
   imports: [
     BrowserModule,
+    IconModule,
     SmartTableModule
       .forRoot({
         identifier: 'aui-smarttable-ngx',
