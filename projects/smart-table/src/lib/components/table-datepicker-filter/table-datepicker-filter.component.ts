@@ -13,4 +13,11 @@ export class TableDatepickerFilterComponent extends AbstractFilterComponent impl
       this.formControl.setValue(this.filter.value);
     }
   }
+
+  public onFilter(value) {
+    // only filter on empty value or valid dates
+    if (!value || !isNaN(Date.parse(value))) {
+      super.onFilter(value);
+    }
+  }
 }
