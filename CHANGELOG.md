@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Fix datepicker filter so it only sends valid values to the server (fixes #34)
 
 ## [2.0.0] - 2021-06-17
 
