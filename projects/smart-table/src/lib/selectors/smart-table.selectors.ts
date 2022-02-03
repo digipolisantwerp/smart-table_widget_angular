@@ -11,7 +11,7 @@ export const selectFilters: (factory: TableFactory, type: SmartTableFilterDispla
       filter((config: SmartTableConfig) => !!config && Array.isArray(config.filters) && config.filters.length > 0),
       map((config: SmartTableConfig) => config.filters
         .filter(f => f.display === type)
-        .map(filterConfig => factory.createSmartFilterFromConfig(mapFilterToConfig ? mapFilterToConfig(filterConfig) : filterConfig))
+        .map(filterConfig => factory.createSmartFilterFromConfig(mapFilterToConfig ? mapFilterToConfig(filterConfig) : filterConfig)),
       ),
       startWith([]),
       shareReplay(1),

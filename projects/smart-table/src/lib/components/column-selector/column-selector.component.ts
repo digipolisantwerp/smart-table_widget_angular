@@ -40,7 +40,7 @@ export class TableColumnSelectorComponent implements OnInit {
           ...c,
           columns: columns
             .map((item, orderIndex) => ({ ...item, orderIndex }))
-            .sort(sortColumn)
+            .sort(sortColumn),
         };
       }),
     );

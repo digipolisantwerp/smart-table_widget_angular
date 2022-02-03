@@ -92,8 +92,8 @@ describe('Configuration Service', () => {
           a: {
             ...mockConfiguration,
             options: { ...mockConfiguration.options, defaultSortOrder: { key: 'k', order: 'asc' }, persistTableConfig: true },
-          }
-        })
+          },
+        }),
       });
       const result$ = service.getConfiguration('some-id');
       expect(result$).toBeObservable(cold('--a---b', {
