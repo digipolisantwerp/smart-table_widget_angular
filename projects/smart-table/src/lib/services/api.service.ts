@@ -17,8 +17,8 @@ const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.
 export class ApiService {
 
   constructor(private http: HttpClient,
-    @Inject(PROVIDE_ID) private storageIdentifier: string,
-    @Inject(PROVIDE_CONFIG) private moduleConfig: IModuleConfig) {
+              @Inject(PROVIDE_ID) private storageIdentifier: string,
+              @Inject(PROVIDE_CONFIG) private moduleConfig: IModuleConfig) {
   }
 
   public getConfiguration(apiUrl: string, headers?: HttpHeaders): Observable<any> {

@@ -328,11 +328,11 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     );
     // Get the data on the bases of the data query
     // or when we change the pagination
-    this.rows$ = combineLatest(
+    this.rows$ = combineLatest([
       this.dataQuery$,
       this.pageSize$,
       this.currentPage$,
-    ).pipe(
+    ]).pipe(
       auditTime(100),  // Skip initial time based values, don't reset the timer after new values come in
       tap(() => this.pageChanging = !this.rowsLoading),
       switchMap(([dataQuery, pageSize, page]) =>

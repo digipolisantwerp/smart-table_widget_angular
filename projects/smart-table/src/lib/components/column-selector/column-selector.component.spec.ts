@@ -74,7 +74,7 @@ describe('TableColumnSelectorComponent', () => {
           { key: 'b', orderIndex: 0 },
           { key: 'c', orderIndex: 1 },
           { key: 'a', orderIndex: 2 },
-        ]
+        ],
       }));
     });
     it('should toggle column visibility', () => {
@@ -95,8 +95,8 @@ describe('TableColumnSelectorComponent', () => {
             { key: 'b', orderIndex: 0 },
             { key: 'c', orderIndex: 1, visible: false },
             { key: 'a', orderIndex: 2, visible: true },
-          ]
-        }
+          ],
+        },
       }));
     });
     it('should move a column by sort index', () => {
