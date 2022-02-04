@@ -4,10 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [2.0.2] - 2022-02-04
+
+### Fixed
+- Fixed localstorage deep imports
+- Added names for external modules
+
+
 ## [2.0.1] - 2021-07-30
 
 ### Fixed
 - Fix datepicker filter so it only sends valid values to the server (fixes #34)
+
 
 ## [2.0.0] - 2021-06-17
 
@@ -272,7 +281,9 @@ won't make any /config calls, so that configuration and setup may be provided en
 - Initial release.
 
 
-[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.1...v2.0.0
 [1.13.1]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/digipolisantwerp/smart-table_widget_angular/compare/v1.12.1...v1.13.0
