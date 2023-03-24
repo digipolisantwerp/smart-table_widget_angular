@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { InjectionToken } from '@angular/core';\nexport const PROVIDE_SORT_LABELS = new InjectionToken('SMART_TABLE_PROVIDE_SORT_LABELS');","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

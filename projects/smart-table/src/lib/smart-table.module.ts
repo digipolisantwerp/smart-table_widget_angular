@@ -82,7 +82,7 @@ const defaultLabels: ILabels = {
   ],
 })
 export class SmartTableModule {
-  static forRoot(moduleConfiguration: IModuleConfig = defaultConfiguration): ModuleWithProviders {
+  static forRoot(moduleConfiguration: IModuleConfig = defaultConfiguration): ModuleWithProviders<any> {
     return {
       ngModule: SmartTableModule,
       providers: [

@@ -1,4 +1,4 @@
-@import '~@a-ui/core/dist/assets/styles/_quarks';
+@import '@a-ui/core/dist/assets/styles/_quarks';
 
 $loading-overlay-color: rgba($white, .75);
 
@@ -15,7 +15,7 @@ $loading-overlay-color: rgba($white, .75);
     &--toggle {
       margin-top: $spacer-xs;
       max-height: 0;
-      transition: max-height $animation-duration $animation-easing;
+      transition: max-height 200ms ease-in-out;
       overflow: hidden;
 
       @include at($screen-xs) {
