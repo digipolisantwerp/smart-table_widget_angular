@@ -6,6 +6,8 @@ import { AbstractFilterComponent } from '../filter/abstract-filter-component';
   selector: 'aui-table-select-filter',
   templateUrl: './table-select-filter.component.html',
   styleUrls: ['../filter/filter.component.scss'],
+  inputs: ['filter', 'optional'],
+  outputs: ['update'],
 })
 export class TableSelectFilterComponent extends AbstractFilterComponent implements OnInit, FilterComponent {
 
