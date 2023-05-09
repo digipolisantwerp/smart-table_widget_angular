@@ -4,22 +4,22 @@
   "license": "MIT",
   "homepage": "https://github.com/digipolisantwerp/smart-table_widget_angular#readme",
   "peerDependencies": {
-    "@angular/common": ">=8.0.0",
-    "@angular/compiler": ">=8.0.0",
-    "@angular/forms": ">=8.0.0",
-    "rxjs": ">=6.1.0"
+    "@angular/common": ">=15.0.0",
+    "@angular/compiler": ">=15.0.0",
+    "@angular/forms": ">=15.0.0",
+    "rxjs": ">=7.0.0"
   },
   "dependencies": {
-    "@acpaas-ui/ngx-flyout": "^5.0.1",
-    "@acpaas-ui/ngx-forms": "^5.0.1",
-    "@acpaas-ui/ngx-localstorage": "^5.0.1",
-    "@acpaas-ui/ngx-pagination": "^5.0.1",
-    "@acpaas-ui/ngx-table": "^5.0.1",
+    "@acpaas-ui/ngx-flyout": "^6.0.0-beta.0",
+    "@acpaas-ui/ngx-forms": "^6.0.0-beta.0",
+    "@acpaas-ui/ngx-localstorage": "^5.0.0",
+    "@acpaas-ui/ngx-pagination": "^6.0.0-beta.0",
+    "@acpaas-ui/ngx-table": "^6.0.0-beta.0",
     "file-saver": "^2.0.2",
     "lodash.unionby": "^4.8.0",
     "query-string": "^6.8.3",
-    "xlsx": "^0.15.1",
-    "@angular/cdk": "^7.3.7"
+    "xlsx": "^0.17.0",
+    "@angular/cdk": "^15.2.4"
   },
   "publishConfig": {
     "access": "public"
