@@ -7,6 +7,8 @@ import { AbstractFilterComponent } from '../filter/abstract-filter-component';
   selector: 'aui-table-input-filter',
   templateUrl: './table-input-filter.component.html',
   styleUrls: ['../filter/filter.component.scss'],
+  inputs: ['filter', 'optional'],
+  outputs: ['update'],
 })
 export class TableInputFilterComponent extends AbstractFilterComponent implements OnInit, FilterComponent {
   public ngOnInit() {

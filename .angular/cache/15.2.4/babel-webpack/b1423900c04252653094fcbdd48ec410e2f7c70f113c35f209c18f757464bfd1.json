@@ -1,1 +1,0 @@
-{"ast":null,"code":"/*\n * Public API Surface of smart-table\n */\nexport * from './lib/services/api.service';\nexport * from './lib/components/smart-table/smart-table.component';\nexport * from './lib/smart-table.module';\nexport * from './lib/smart-table.types';","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

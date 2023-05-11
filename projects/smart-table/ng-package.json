@@ -2,22 +2,9 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/smart-table",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "@acpaas-ui/ngx-flyout": "@acpaas-ui/ngx-flyout",
-      "@acpaas-ui/ngx-forms": "@acpaas-ui/ngx-forms",
-      "@acpaas-ui/ngx-icon": "@acpaas-ui/ngx-icon",
-      "@acpaas-ui/ngx-localstorage": "@acpaas-ui/ngx-localstorage",
-      "@acpaas-ui/ngx-pagination": "@acpaas-ui/ngx-pagination",
-      "@acpaas-ui/ngx-table": "@acpaas-ui/ngx-table",
-      "@acpaas-ui/ngx-utils": "@acpaas-ui/ngx-utils",
-      "file-saver": "file-saver",
-      "lodash": "lodash",
-      "query-string": "query-string",
-      "xlsx": "xlsx"
-    }
+    "entryFile": "src/public-api.ts"
   },
-  "whitelistedNonPeerDependencies": [
+  "allowedNonPeerDependencies": [
     "@acpaas-ui",
     "@angular/cdk",
     "file-saver",

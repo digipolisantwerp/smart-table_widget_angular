@@ -6,6 +6,8 @@ import { AbstractFilterComponent } from '../filter/abstract-filter-component';
   selector: 'aui-table-datepicker-filter',
   templateUrl: 'table-datepicker-filter.component.html',
   styleUrls: ['../filter/filter.component.scss'],
+  inputs: ['filter', 'optional'],
+  outputs: ['update'],
 })
 export class TableDatepickerFilterComponent extends AbstractFilterComponent implements OnInit {
   ngOnInit() {
