@@ -12,7 +12,6 @@ import { ApiService } from '../../services/api.service';
 import * as sinon from 'sinon';
 import { SinonSandbox, SinonStub } from 'sinon';
 import { DatePipe } from '@angular/common';
-import { LocalstorageService } from '@acpaas-ui/ngx-localstorage';
 import { PROVIDE_CONFIG, PROVIDE_ID } from '../../providers/indentifier.provider';
 import { TableFactory } from '../../services/table.factory';
 import { SmartTableConfig, SmartTableFilterConfig, SmartTableFilterDisplay } from '../../smart-table.types';
@@ -22,10 +21,12 @@ import { TableColumnSelectorComponent } from '../column-selector/column-selector
 import { ConfigurationService } from '../../services/configuration.service';
 import { StorageService } from '../../services/storage.service';
 
+
+// TODO PV CHECK TESTS
 describe('Smart Table Test', () => {
   let component: SmartTableComponent;
   let fixture: ComponentFixture<SmartTableComponent>;
-  let storageService: LocalstorageService;
+  let storageService: StorageService;
   let mockConfiguration: SmartTableConfig;
   let sandbox: SinonSandbox;
   let factory: TableFactory;
@@ -65,10 +66,6 @@ describe('Smart Table Test', () => {
         {
           provide: DatePipe,
           useValue: sinon.createStubInstance(DatePipe),
-        },
-        {
-          provide: LocalstorageService,
-          useValue: sinon.createStubInstance(LocalstorageService),
         },
         {
           provide: PROVIDE_ID,
@@ -113,12 +110,8 @@ describe('Smart Table Test', () => {
       },
     ] as any;
 
-    storageService = TestBed.get(LocalstorageService);
+    storageService = TestBed.get(StorageService);
     factory = TestBed.get(TableFactory);
-    sandbox.stub(storageService, 'storage').value({
-      getItem: sinon.stub(),
-      setItem: sinon.stub(),
-    });
     service = TestBed.get(ApiService);
     (service.getData as SinonStub).returns(cold('a'));
     const storage: StorageService = TestBed.get(StorageService);
