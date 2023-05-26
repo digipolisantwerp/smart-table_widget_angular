@@ -1,8 +1,11 @@
 import { Cell, CellWithMetadata, OrderBy, TableColumnFormat } from '@acpaas-ui/ngx-table';
-import { LocalStorageType } from '@acpaas-ui/ngx-localstorage';
 import { SmartTableFilter } from './components/filter/smart-table.filter';
 import { Type } from '@angular/core';
 
+export declare type LocalStorageType = 'localStorage' | 'sessionStorage';
+export interface ILocalStorageConfig {
+    storageType?: LocalStorageType;
+}
 export interface IModuleConfig {
   storageType?: LocalStorageType;
   identifier?: string;
@@ -35,6 +38,7 @@ export interface SmartTableConfig {
   columns?: SmartTableColumnConfig[];
   filters?: SmartTableFilterConfig[];
   options?: SmartTableOptions;
+  storageType?: LocalStorageType;
 }
 
 export interface SmartTableTranslationsConfig {

@@ -30,6 +30,8 @@ export class ApiService {
       filters: [],
       baseFilters: [],
       options: {},
+      storageType: this.moduleConfig.storageType
+
     })
       : this.http.get(`${apiUrl}/config`, { headers })).pipe(
         first(),
@@ -43,6 +45,7 @@ export class ApiService {
               ...SMARTTABLE_DEFAULT_OPTIONS,
               ...configuration.options,
             },
+            storageType: this.moduleConfig.storageType
           };
         }),
         map(config => {
@@ -54,6 +57,7 @@ export class ApiService {
                 ...config.options,
                 storageIdentifier: config.options.storageIdentifier || this.storageIdentifier,
               },
+              storageType: this.moduleConfig.storageType
             };
           } else {
             return config;

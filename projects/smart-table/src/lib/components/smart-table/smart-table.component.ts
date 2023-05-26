@@ -1,5 +1,4 @@
 import { OrderBy, TableColumn } from '@acpaas-ui/ngx-table';
-import { LocalstorageService } from '@acpaas-ui/ngx-localstorage';
 import { FlyoutService } from '@acpaas-ui/ngx-flyout';
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
@@ -136,7 +135,6 @@ export class SmartTableComponent implements OnInit, OnDestroy {
     private dataService: ApiService,
     private datePipe: DatePipe,
     private flyOutService: FlyoutService,
-    private localstorageService: LocalstorageService,
     private factory: TableFactory,
     private configurationService: ConfigurationService,
     private storageService: StorageService,

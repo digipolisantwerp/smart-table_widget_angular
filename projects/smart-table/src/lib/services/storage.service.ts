@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LocalstorageService } from '@acpaas-ui/ngx-localstorage';
 import { SmartTableConfig } from '../smart-table.types';
 
 @Injectable()
 export class StorageService {
-
-  constructor(private localstorageService: LocalstorageService) {
-  }
 
   getConfiguration(defaultConfiguration: SmartTableConfig): SmartTableConfig {
     if (!(defaultConfiguration
@@ -15,7 +11,7 @@ export class StorageService {
       && defaultConfiguration.options.persistTableConfig)) {
       return defaultConfiguration;
     }
-    const obj = this.getStoredItem(defaultConfiguration.options.storageIdentifier);
+    const obj = this.getStoredItem(defaultConfiguration.storageType, defaultConfiguration.options.storageIdentifier);
     const config = { ...defaultConfiguration };
     if (obj && obj.columns && Array.isArray(obj.columns)) {
       const localStorageColumns = (obj.columns || [])
@@ -50,21 +46,21 @@ export class StorageService {
     // tslint:disable-next-line:no-console
     console.info('Info: persisting table configuration to storage.');
     const name = configuration.options.storageIdentifier;
-    const obj = this.getStoredItem(name);
+    const obj = this.getStoredItem(configuration.storageType, name);
     obj.columns = [...configuration.columns];
     obj.options = {
       ...obj.options,
       defaultSortOrder: configuration.options.defaultSortOrder,
     };
-    this.setItemToStorage(name, obj);
+    this.setItemToStorage(configuration.storageType, name, obj);
   }
 
-  private setItemToStorage(name: string, object: any): void {
-    this.localstorageService.storage.setItem(name, JSON.stringify(object));
+  private setItemToStorage(storage:string ='localStorage', name: string, object: any): void {
+    window[storage].setItem(name, JSON.stringify(object));
   }
 
-  private getStoredItem(name: string): any {
-    let storageObj: any = this.localstorageService.storage.getItem(name);
+  private getStoredItem(storage:string = 'localStorage', name: string): any {
+    let storageObj: any = window[storage].getItem(name);
     try {
       storageObj = !storageObj ? {} : JSON.parse(storageObj);
       return storageObj;
