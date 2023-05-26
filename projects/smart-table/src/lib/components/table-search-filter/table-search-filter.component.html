@@ -1,12 +1,10 @@
 <ng-container *ngIf="filter && filter.options && filter.id">
-  <div class="a-input">
-    <label class="a-input__label" [for]="id">{{ filter.label }}</label>
-    <div class="a-input__wrapper">
-      <aui-search-filter size="small" [formControl]="formControl" [id]="id" name="filter-{{ filter.id }}"
-                         [placeholder]="filter.placeholder" [choices]="filter.options"
-                         labelResults=""></aui-search-filter>
-    </div>
-  </div>
+  <aui-search-filter
+    [formControl]="formControl"
+    [id]="id"
+    name="filter-{{ filter.id }}"
+    [choices]="filter.options"
+    labelResults=""
+    label="{{ filter.label }}"
+  ></aui-search-filter>
 </ng-container>
-
-

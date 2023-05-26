@@ -1,6 +1,6 @@
-@import '@a-ui/core/dist/assets/styles/_quarks';
+@import "@a-ui/core/dist/assets/styles/_quarks";
 
-$loading-overlay-color: rgba($white, .75);
+$loading-overlay-color: rgba($white, 0.75);
 
 .aui-smart-table {
   &__filters {
@@ -50,6 +50,8 @@ $loading-overlay-color: rgba($white, .75);
     margin: 0 -$spacer-xs / 4;
 
     > .aui-smart-table__filters {
+      display: flex;
+      align-items: end;
       padding: 0 $spacer-xs / 4;
     }
   }
@@ -79,7 +81,7 @@ $loading-overlay-color: rgba($white, .75);
     position: absolute;
     top: 0;
     width: 100%;
-    z-index: layer('base');
+    z-index: layer("base");
   }
 
   &__wrapper {
@@ -111,8 +113,9 @@ $loading-overlay-color: rgba($white, .75);
         text-align: center;
 
         @include at($screen-sm) {
-          &:not(:first-child):before { // Separate all child items
-            content: '|';
+          &:not(:first-child):before {
+            // Separate all child items
+            content: "|";
             padding: 0 $spacer-xs;
           }
         }
