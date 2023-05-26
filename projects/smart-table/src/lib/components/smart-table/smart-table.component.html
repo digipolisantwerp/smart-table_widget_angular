@@ -1,57 +1,107 @@
 <div class="aui-smart-table">
   <div class="aui-smart-table__filters aui-smart-table__filters--visible">
     <div class="aui-smart-table__filters--right">
-      <div class="aui-smart-table__button u-margin-left-xs a-input" *ngIf="totalResults > 0 && moduleConfig?.options?.noExport !== true">
+      <div
+        class="aui-smart-table__button u-margin-left-xs a-input"
+        *ngIf="totalResults > 0 && moduleConfig?.options?.noExport !== true"
+      >
         <div class="a-input__wrapper">
-          <button class="a-button-outline a-button-export has-icon"
-                  (click)="exportToExcel()"
-                  [attr.aria-label]="(configuration$ | async)?.options.translations?.export || 'Exporteer'"
-                  [title]="(configuration$ | async)?.options.translations?.export || 'Exporteer'">
+          <button
+            class="a-button a-button-outline a-button-export has-icon"
+            (click)="exportToExcel()"
+            [attr.aria-label]="
+              (configuration$ | async)?.options.translations?.export ||
+              'Exporteer'
+            "
+            [title]="
+              (configuration$ | async)?.options.translations?.export ||
+              'Exporteer'
+            "
+          >
             <aui-icon name="ai-office-file-sheet"></aui-icon>
           </button>
         </div>
       </div>
-      <div class="aui-smart-table__button u-margin-left-xs a-input" *ngIf="totalResults > 0">
+      <div
+        class="aui-smart-table__button u-margin-left-xs a-input"
+        *ngIf="totalResults > 0"
+      >
         <div class="a-input__wrapper">
-          <aui-table-column-selector [instanceId]="instanceId"></aui-table-column-selector>
+          <aui-table-column-selector
+            [instanceId]="instanceId"
+          ></aui-table-column-selector>
         </div>
       </div>
     </div>
 
     <div class="aui-smart-table__filters--left">
-      <aui-table-input-filter class="aui-smart-table__filter"
-                              *ngIf="genericFilter$ | async" [filter]="genericFilter$ | async">
+      <aui-table-input-filter
+        class="aui-smart-table__filter"
+        *ngIf="genericFilter$ | async"
+        [filter]="genericFilter$ | async"
+      >
       </aui-table-input-filter>
 
-      <ng-container *ngFor="let filter of (visibleFilters$ | async)" [ngSwitch]="filter.type">
+      <ng-container
+        *ngFor="let filter of visibleFilters$ | async"
+        [ngSwitch]="filter.type"
+      >
         <ng-container *ngSwitchCase="'select'">
-          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter">
+          <aui-table-select-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+          >
           </aui-table-select-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'input'">
-          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter">
+          <aui-table-input-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+          >
           </aui-table-input-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'datepicker'">
-          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter">
+          <aui-table-datepicker-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+          >
           </aui-table-datepicker-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'search-filter'">
-          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter">
+          <aui-table-search-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+          >
           </aui-table-search-filter>
         </ng-container>
       </ng-container>
 
-      <div class="aui-smart-table__button a-input" *ngIf="(optionalFilters$ | async).length">
+      <div
+        class="aui-smart-table__button a-input"
+        *ngIf="(optionalFilters$ | async).length"
+      >
         <div class="a-input__wrapper">
-          <button class="a-button-outline has-icon-right a-toggle-filters" (click)="toggleOptionalFilters()"
-                  [attr.aria-controls]="'toggle-' + instanceId" [attr.aria-expanded]="optionalFiltersVisible">
-            {{ (configuration$ | async)?.options.translations?.moreFilters || 'Extra filters'}}
-            <aui-icon *ngIf="!optionalFiltersVisible" name="ai-arrow-down-1"></aui-icon>
-            <aui-icon *ngIf="optionalFiltersVisible" name="ai-arrow-up-1"></aui-icon>
+          <button
+            class="a-button a-button-outline has-icon-right a-toggle-filters"
+            (click)="toggleOptionalFilters()"
+            [attr.aria-controls]="'toggle-' + instanceId"
+            [attr.aria-expanded]="optionalFiltersVisible"
+          >
+            {{
+              (configuration$ | async)?.options.translations?.moreFilters ||
+                "Extra filters"
+            }}
+            <aui-icon
+              *ngIf="!optionalFiltersVisible"
+              name="ai-arrow-down-1"
+            ></aui-icon>
+            <aui-icon
+              *ngIf="optionalFiltersVisible"
+              name="ai-arrow-up-1"
+            ></aui-icon>
           </button>
         </div>
       </div>
@@ -59,27 +109,45 @@
   </div>
 
   <div class="aui-smart-table__overflow">
-    <div class="aui-smart-table__filters aui-smart-table__filters--toggle"
-         [ngClass]="{'is-visible': optionalFiltersVisible}" id="toggle-{{ instanceId }}">
-      <ng-container *ngFor="let filter of (optionalFilters$ | async)" [ngSwitch]="filter.type">
+    <div
+      class="aui-smart-table__filters aui-smart-table__filters--toggle"
+      [ngClass]="{ 'is-visible': optionalFiltersVisible }"
+      id="toggle-{{ instanceId }}"
+    >
+      <ng-container
+        *ngFor="let filter of optionalFilters$ | async"
+        [ngSwitch]="filter.type"
+      >
         <ng-container *ngSwitchCase="'select'">
-          <aui-table-select-filter class="aui-smart-table__filter" [filter]="filter"
-                                   [optional]="true"></aui-table-select-filter>
+          <aui-table-select-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+            [optional]="true"
+          ></aui-table-select-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'input'">
-          <aui-table-input-filter class="aui-smart-table__filter" [filter]="filter"
-                                  [optional]="true"></aui-table-input-filter>
+          <aui-table-input-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+            [optional]="true"
+          ></aui-table-input-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'datepicker'">
-          <aui-table-datepicker-filter class="aui-smart-table__filter" [filter]="filter"
-                                       [optional]="true"></aui-table-datepicker-filter>
+          <aui-table-datepicker-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+            [optional]="true"
+          ></aui-table-datepicker-filter>
         </ng-container>
 
         <ng-container *ngSwitchCase="'search-filter'">
-          <aui-table-search-filter class="aui-smart-table__filter" [filter]="filter"
-                                   [optional]="true"></aui-table-search-filter>
+          <aui-table-search-filter
+            class="aui-smart-table__filter"
+            [filter]="filter"
+            [optional]="true"
+          ></aui-table-search-filter>
         </ng-container>
       </ng-container>
     </div>
@@ -87,15 +155,22 @@
 
   <div class="aui-smart-table__wrapper">
     <div class="u-margin-top u-margin-bottom">
-      <aui-table *ngIf="(visibleColumns$ | async)?.length"
-                 [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
-                 [noDataMessage]="(error$ | async) ? (configuration$ | async)?.options.errorMessage : (configuration$ | async)?.options.noDataMessage"
-                 [loading]="rowsLoading && !(error$ | async)"
-                 [columns]="visibleColumns$ | async"
-                 [rows]="rows$ |  async"
-                 [hasClickAction]="true"
-                 [activeSorting]="orderBy$ | async"
-                 (orderBy)="onOrderBy($event)" (rowClicked)="onClickRow($event)"></aui-table>
+      <aui-table
+        *ngIf="(visibleColumns$ | async)?.length"
+        [loadDataMessage]="(configuration$ | async)?.options.loadDataMessage"
+        [noDataMessage]="
+          (error$ | async)
+            ? (configuration$ | async)?.options.errorMessage
+            : (configuration$ | async)?.options.noDataMessage
+        "
+        [loading]="rowsLoading && !(error$ | async)"
+        [columns]="visibleColumns$ | async"
+        [rows]="rows$ | async"
+        [hasClickAction]="true"
+        [activeSorting]="orderBy$ | async"
+        (orderBy)="onOrderBy($event)"
+        (rowClicked)="onClickRow($event)"
+      ></aui-table>
     </div>
 
     <div class="aui-smart-table__actions" *ngIf="hasRows">
@@ -104,14 +179,16 @@
           class="aui-smart-table__items-per-page"
           [selectOptions]="(configuration$ | async)?.options.pageSizeOptions"
           [amountPerPage]="pageSize$ | async"
-          (returnAmount)="onPageSizeChanged($event)">
+          (returnAmount)="onPageSizeChanged($event)"
+        >
         </aui-items-per-page>
         <aui-item-counter
           *ngIf="totalResults > 0"
           class="aui-smart-table__item-counter u-margin-top-xs u-margin-bottom-xs"
           [currentPage]="currentPage$ | async"
           [totalAmount]="totalResults"
-          [amountPerPage]="pageSize$ | async">
+          [amountPerPage]="pageSize$ | async"
+        >
         </aui-item-counter>
       </div>
 
@@ -122,7 +199,8 @@
           [itemsPerPage]="pageSize$ | async"
           [totalValues]="totalResults"
           [currentPage]="currentPage$ | async"
-          (update)="onPageChanged($event)">
+          (update)="onPageChanged($event)"
+        >
         </aui-pagination>
         <aui-pagination
           class="u-show-on-mobile-devices"
@@ -132,13 +210,18 @@
           [itemsPerPage]="pageSize$ | async"
           [totalValues]="totalResults"
           [currentPage]="currentPage$ | async"
-          (update)="onPageChanged($event)">
+          (update)="onPageChanged($event)"
+        >
         </aui-pagination>
       </div>
     </div>
 
     <div class="aui-smart-table__loading-overlay" *ngIf="pageChanging">
-      <div class="a-spinner a-spinner--lg u-margin-bottom-xx" role="alert" aria-busy="true"></div>
+      <div
+        class="a-spinner a-spinner--lg u-margin-bottom-xx"
+        role="alert"
+        aria-busy="true"
+      ></div>
     </div>
   </div>
 </div>
