@@ -55,11 +55,11 @@ export class StorageService {
     this.setItemToStorage(configuration.storageType, name, obj);
   }
 
-  private setItemToStorage(storage:string ='localStorage', name: string, object: any): void {
+   setItemToStorage(storage:string ='localStorage', name: string, object: any): void {
     window[storage].setItem(name, JSON.stringify(object));
   }
 
-  private getStoredItem(storage:string = 'localStorage', name: string): any {
+   getStoredItem(storage:string = 'localStorage', name: string): any {
     let storageObj: any = window[storage].getItem(name);
     try {
       storageObj = !storageObj ? {} : JSON.parse(storageObj);
