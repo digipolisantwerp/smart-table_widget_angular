@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@acpaas-ui/ngx-flyout": "^6.0.0-beta.0",
-    "@acpaas-ui/ngx-forms": "^6.0.0-beta.0",
+    "@acpaas-ui/ngx-forms": "^6.0.0-beta.1",
     "@acpaas-ui/ngx-icon": "^6.0.0-beta.0",
     "@acpaas-ui/ngx-pagination": "^6.0.0-beta.0",
     "@acpaas-ui/ngx-table": "^6.0.0-beta.0",

@@ -1,6 +1,7 @@
 @import "@a-ui/core/dist/assets/styles/_quarks";
 
 $loading-overlay-color: rgba($white, 0.75);
+$spacer-xs-4: calc($spacer-xs / 4);
 
 .aui-smart-table {
   &__filters {
@@ -47,12 +48,12 @@ $loading-overlay-color: rgba($white, 0.75);
    * This trick fixes the problem.
    */
   &__overflow {
-    margin: 0 -$spacer-xs / 4;
+    margin: 0 (-$spacer-xs-4);
 
     > .aui-smart-table__filters {
       display: flex;
-      align-items: end;
-      padding: 0 $spacer-xs / 4;
+      align-items: flex-end;
+      padding: 0 $spacer-xs-4;
     }
   }
 
