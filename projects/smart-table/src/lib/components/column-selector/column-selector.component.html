@@ -1,4 +1,4 @@
-<div auiFlyout size="small" align="right">
+<div auiFlyout size="small" class="m-flyout m-flyout--bottom-right">
   <button
     class="a-button a-button-outline has-icon"
     [attr.aria-label]="
@@ -14,48 +14,46 @@
     <aui-icon name="ai-layout-column"></aui-icon>
   </button>
 
-  <div auiFlyoutZone>
-    <div class="u-margin-left-xs u-margin-top-xs">
-      <ul
-        class="a-list a-list--reset aui-smart-table__column-checklist u-text-left"
+  <div auiFlyoutZone class="m-flyout__content has-padding">
+    <ul
+      class="a-list a-list--reset aui-smart-table__column-checklist u-text-left"
+    >
+      <li
+        class="a-list__item"
+        *ngFor="let column of (configuration$ | async)?.columns; index as i"
       >
-        <li
-          class="a-list__item"
-          *ngFor="let column of (configuration$ | async)?.columns; index as i"
-        >
-          <div class="a-input a-input__checkbox">
-            <input
-              type="checkbox"
-              [disabled]="!(column.canHide !== false)"
-              id="{{ 'checkbox--' + i + '--' + column.key }}"
-              name="{{ 'checkbox--' + i + '--' + column.key }}"
-              [checked]="column.visible !== false"
-              (change)="toggleVisibilityHook(column.key)"
-            />
-            <label for="{{ 'checkbox--' + i + '--' + column.key }}">{{
-              column.label
-            }}</label>
-          </div>
-          <div class="o-sort-buttons">
-            <button
-              class="a-button-negative a-button--small has-icon"
-              [disabled]="i === 0"
-              (click)="moveColumnUp(i)"
-              [title]="labels.orderBefore"
-            >
-              <aui-icon name="ai-arrow-up-1"></aui-icon>
-            </button>
-            <button
-              class="a-button-negative a-button--small has-icon"
-              [disabled]="i === (configuration$ | async)?.columns?.length - 1"
-              (click)="moveColumnDown(i)"
-              [title]="labels.orderAfter"
-            >
-              <aui-icon name="ai-arrow-down-1"></aui-icon>
-            </button>
-          </div>
-        </li>
-      </ul>
-    </div>
+        <div class="a-input a-input__checkbox">
+          <input
+            type="checkbox"
+            [disabled]="!(column.canHide !== false)"
+            id="{{ 'checkbox--' + i + '--' + column.key }}"
+            name="{{ 'checkbox--' + i + '--' + column.key }}"
+            [checked]="column.visible !== false"
+            (change)="toggleVisibilityHook(column.key)"
+          />
+          <label for="{{ 'checkbox--' + i + '--' + column.key }}">{{
+            column.label
+          }}</label>
+        </div>
+        <div class="o-sort-buttons">
+          <button
+            class="a-button a-button-negative a-button--s has-icon u-margin-right-xxs"
+            [disabled]="i === 0"
+            (click)="moveColumnUp(i)"
+            [title]="labels.orderBefore"
+          >
+            <aui-icon name="ai-arrow-up-1"></aui-icon>
+          </button>
+          <button
+            class="a-button a-button-negative a-button--s has-icon"
+            [disabled]="i === (configuration$ | async)?.columns?.length - 1"
+            (click)="moveColumnDown(i)"
+            [title]="labels.orderAfter"
+          >
+            <aui-icon name="ai-arrow-down-1"></aui-icon>
+          </button>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>
