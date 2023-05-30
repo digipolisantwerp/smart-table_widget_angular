@@ -6,7 +6,7 @@
     "start:api": "cd projects/example-api && nodemon api.js",
     "start:ng": "ng serve --proxy-config proxy.conf.json",
     "copy": "copyfiles README.md CHANGELOG.md CONTRIBUTING.md LICENSE *.png dist/smart-table",
-    "build": "ng build && npm run copy",
+    "build": "ng build smart-table && npm run copy",
     "test": "ng test",
     "lint": "ng lint",
     "prepublishOnly": "npm run build"
