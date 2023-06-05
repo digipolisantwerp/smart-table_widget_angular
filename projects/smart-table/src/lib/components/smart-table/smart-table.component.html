@@ -7,7 +7,7 @@
       >
         <div class="a-input__wrapper">
           <button
-            class="a-button a-button-outline a-button-export has-icon"
+            class="a-button a-button--outlined has-icon"
             (click)="exportToExcel()"
             [attr.aria-label]="
               (configuration$ | async)?.options.translations?.export ||
@@ -85,7 +85,7 @@
       >
         <div class="a-input__wrapper">
           <button
-            class="a-button a-button-outline has-icon-right a-toggle-filters"
+            class="a-button a-button--outlined has-icon-right"
             (click)="toggleOptionalFilters()"
             [attr.aria-controls]="'toggle-' + instanceId"
             [attr.aria-expanded]="optionalFiltersVisible"

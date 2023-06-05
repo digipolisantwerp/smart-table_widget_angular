@@ -116,7 +116,7 @@ app.get('/api/movies/config', (req, res) => {
       "operator": "in",
       "label": "Jaren",
       "field": "title_year",
-      "placeholder": "Zoek jaartallen"
+      "description": "Zoek jaartallen"
     }],
     options: {
       defaultSortOrder: {

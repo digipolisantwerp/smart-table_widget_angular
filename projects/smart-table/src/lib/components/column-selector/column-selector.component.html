@@ -1,6 +1,6 @@
 <div auiFlyout size="small" class="m-flyout m-flyout--bottom-right">
   <button
-    class="a-button a-button-outline has-icon"
+    class="a-button a-button--outlined has-icon"
     [attr.aria-label]="
       (configuration$ | async)?.options.translations?.openColumnSelector ||
       'Toon/verberg kolommen'
@@ -15,9 +15,7 @@
   </button>
 
   <div auiFlyoutZone class="m-flyout__content has-padding">
-    <ul
-      class="a-list a-list--reset aui-smart-table__column-checklist u-text-left"
-    >
+    <ul class="a-list aui-smart-table__column-checklist u-text-left">
       <li
         class="a-list__item"
         *ngFor="let column of (configuration$ | async)?.columns; index as i"
@@ -37,7 +35,7 @@
         </div>
         <div class="o-sort-buttons">
           <button
-            class="a-button a-button-negative a-button--s has-icon u-margin-right-xxs"
+            class="a-button a-button--text a-button--s has-icon u-margin-right-xxs"
             [disabled]="i === 0"
             (click)="moveColumnUp(i)"
             [title]="labels.orderBefore"
@@ -45,7 +43,7 @@
             <aui-icon name="ai-arrow-up-1"></aui-icon>
           </button>
           <button
-            class="a-button a-button-negative a-button--s has-icon"
+            class="a-button a-button--text a-button--s has-icon"
             [disabled]="i === (configuration$ | async)?.columns?.length - 1"
             (click)="moveColumnDown(i)"
             [title]="labels.orderAfter"
